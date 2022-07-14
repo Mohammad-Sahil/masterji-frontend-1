@@ -7,10 +7,6 @@
   font-family: "Jost", sans-serif;
 }
 
-html {
-  font-size: 62.5%;
-}
-
 a {
   text-decoration: none;
 }
@@ -20,11 +16,17 @@ li {
 }
 
 .main-nav {
-  width: 100%;
-  height: 6rem;
   display: grid;
+  position: fixed;
+  overflow: hidden;
+  top:0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 5rem;
   grid-template-columns: 10rem 1fr 2fr 1fr 10rem;
-  box-shadow: rgb(50 50 93 / 25%) 0px 20px 70px -10px, rgb(0 0 0 / 30%) 0px 30px 60px -20px;
+  box-shadow: rgba(108, 108, 126, 0.25) 0px 0px 20px 0px;
 }
 
 .logo {
@@ -48,22 +50,20 @@ li {
 
 
 .logo h2 {
-  font-size: 3.5rem;
+  font-size:2rem;
+  vertical-align: middle;
   font-weight: 400;
   text-transform: uppercase;
-  background: -webkit-linear-gradient(#eee, rgb(69, 57, 248));
+  background: -webkit-linear-gradient(#eee, rgb(0, 0, 0));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.logo h2 span {
-  font-size: 3.5rem;
-}
 
 .menu-link ul li {
-    font-size: 2.3rem;
-    width: 20rem;
-  height: 100%;
+    font-size: 1.3rem;
+    width: 10rem;
+    height: 100%;
 }
 .menu-link ul li a {
     width: 100%;
@@ -71,6 +71,7 @@ li {
     display: flex;
     justify-content: center;
     align-items: center;
+    color:black;
 }
 
 .menu-link ul li:hover{
@@ -85,5 +86,5 @@ li {
   display: flex;
   align-items: center;
   justify-content: end;
-  font-size: 2.3rem;
+  font-size: 1.5rem;
 }

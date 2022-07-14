@@ -60,7 +60,6 @@ class FashionConsultants extends Component {
         return (
             <div>
                 <br/>
-                <br /><br/>
                 {/* <h4>Add Consultants</h4>
                 <br />
                 <form onSubmit>
@@ -98,7 +97,6 @@ class FashionConsultants extends Component {
                     <br />
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form> */}
-                <button type="button" className="btn btn-primary" onClick={() => this.handleModal({}, 'Create')}>Create</button>
                 <div class="table-responsive tableDiv">
                 <table className="table table-striped table-condensed">
                     <thead className="thead-dark">
@@ -130,7 +128,7 @@ class FashionConsultants extends Component {
                                 <td>{consultant.userImage}</td>
                                 <td>{consultant.workExperience}</td>
                                 <td>{consultant.workSample}</td>
-                                <td><button type="button" className="btn btn-sm btn-warning" onClick={() => this.handleModal(consultant, 'Update')}>Update</button></td>
+                                <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true"  onClick={() => this.handleModal(consultant, 'Update')}></i></td>
                                 <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson', cursor:'pointer'}} onClick={() => this.handleDelete(consultant)}></i></td>
                             </tr> 
                         )}
@@ -145,7 +143,8 @@ class FashionConsultants extends Component {
                                 <td>consultant.userImage</td>
                                 <td>consultant.workExperience</td>
                                 <td>consultant.workSample</td>
-                                <td> <button type="button" className="btn btn-sm btn-warning">Update</button></td>
+                                <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true" ></i></td>
+
                             <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
                         </tr> 
                         <tr>
@@ -159,7 +158,7 @@ class FashionConsultants extends Component {
                             <td>consultant.userImage</td>
                             <td>consultant.workExperience</td>
                             <td>consultant.workSample</td>
-                            <td> <button type="button" className="btn btn-sm btn-warning">Update</button></td>
+                            <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true" ></i></td>
                             <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
                         </tr> 
                         <tr>
@@ -173,7 +172,7 @@ class FashionConsultants extends Component {
                             <td>consultant.userImage</td>
                             <td>consultant.workExperience</td>
                             <td>consultant.workSample</td>
-                            <td><button type="button" className="btn btn-sm btn-warning">Update</button></td>
+                            <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true" ></i></td>
                             <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
                         </tr> 
                     </tbody>
@@ -189,12 +188,13 @@ class FashionConsultants extends Component {
                             </div>
                             <br />
                             <div style={{float:"right"}}>
-                            <span><button type="submit" className="btn btn-primary">Submit</button></span>&nbsp;&nbsp;&nbsp;
+                            <span><button type="submit" className="btn btn-primary">Submit</button></span>
                             <span><button type="button" className="btn btn-primary" onClick={() => this.setState({showModal:false})}>Close</button></span>
                             </div>
                     </form>
                     </Modal.Body>
                 </Modal>
+                <button type="button" className="btn btn-primary" onClick={() => this.handleModal({}, 'Create')}>Create</button>
             </div>
         );
     }
