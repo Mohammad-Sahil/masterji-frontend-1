@@ -1,14 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React from 'react'
+import {Route, Routes} from 'react-router-dom'
+import Admin from './Components/Admin'
 import FashionConsultants from './components/fashionConsultants';
 
-function App() {
+const App = () => {
   return (
-    <div className="container">
-      <FashionConsultants/>
-    </div>
-  );
+    <>
+      <Routes>
+        <Route path='/admin' element={<Admin/>} />
+        {/* <Route path='/admin/fashion' element={<FashionConsultants/>} /> */}
+      </Routes>
+    </>
+  )
 }
 
-export default App;
+export default App
