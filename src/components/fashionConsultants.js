@@ -1,8 +1,15 @@
 import React,{Component} from 'react';
+import {Modal} from 'react-bootstrap';
 
+import './table.css';
 class FashionConsultants extends Component {
     state = {
-        consultants:[]
+        consultants:[],
+        showModal:false,
+        modalFields:{
+            operation:'Create',
+            consultant:{}
+        }
       } 
 
     componentDidMount(){
@@ -14,13 +21,47 @@ class FashionConsultants extends Component {
             });
     }
 
+    handleModal(consultant,operation){
+        this.setState({showModal:!this.state.showModal})
+        let modalFields = {
+            operation, consultant
+        }
+        this.setState({modalFields});
+    }
+
+    handleChange = e => {
+        let modalFields = this.state.modalFields;
+        modalFields.consultant[e.currentTarget.name] = e.currentTarget.value;
+        this.setState({ modalFields });
+    };
+
+    handleCreate = e => {
+        e.preventDefault();        
+        const consultant = this.state.modalFields.consultant;
+        const consultants = [consultant , ...this.state.consultants];
+        this.setState({consultants});
+    }
+
+    handleUpdate = e => {
+        e.preventDefault();
+        const consultant = this.state.modalFields.consultant;
+        const consultants = [...this.state.consultants];
+        const index = consultants.indexOf(consultant);
+        consultants[index] = {...consultant};
+        this.setState({consultants});
+    }
+
+    handleDelete = consultant => {
+        const consultants = this.state.consultants.filter(c => c.userId !== consultant.userId);
+        this.setState({consultants});
+    }
+
     render() { 
         return (
             <div>
                 <br/>
-                <h2>Consultants</h2>
                 <br /><br/>
-                <h4>Add Consultants</h4>
+                {/* <h4>Add Consultants</h4>
                 <br />
                 <form onSubmit>
                     <div className="form-group">
@@ -56,9 +97,10 @@ class FashionConsultants extends Component {
                     </div>
                     <br />
                     <button type="submit" className="btn btn-primary">Submit</button>
-                </form>
-                <br/><br/>
-                <table className="table">
+                </form> */}
+                <button type="button" className="btn btn-primary" onClick={() => this.handleModal({}, 'Create')}>Create</button>
+                <div class="table-responsive tableDiv">
+                <table className="table table-striped table-condensed">
                     <thead className="thead-dark">
                         <tr>
                         <th scope="col">User Id</th>
@@ -71,6 +113,8 @@ class FashionConsultants extends Component {
                         <th scope="col">User Image</th>
                         <th scope="col">Work Experience</th>
                         <th scope="col">Work Sample</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -86,10 +130,71 @@ class FashionConsultants extends Component {
                                 <td>{consultant.userImage}</td>
                                 <td>{consultant.workExperience}</td>
                                 <td>{consultant.workSample}</td>
+                                <td><button type="button" className="btn btn-sm btn-warning" onClick={() => this.handleModal(consultant, 'Update')}>Update</button></td>
+                                <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson', cursor:'pointer'}} onClick={() => this.handleDelete(consultant)}></i></td>
                             </tr> 
                         )}
+                        <tr>
+                                <th scope="row">consultant.userId</th>
+                                <td>consultant.namnewnrwnfn</td>
+                                <td>consultant.city</td>
+                                <td>consultant.contact</td>
+                                <td>consultant.email</td>
+                                <td>consultant.expertise</td>
+                                <td>consultant.rate</td>
+                                <td>consultant.userImage</td>
+                                <td>consultant.workExperience</td>
+                                <td>consultant.workSample</td>
+                                <td> <button type="button" className="btn btn-sm btn-warning">Update</button></td>
+                            <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
+                        </tr> 
+                        <tr>
+                            <th scope="row">consultant.userId</th>
+                            <td>consultant.namnewnrwnfn</td>
+                            <td>consultant.city</td>
+                            <td>consultant.contact</td>
+                            <td>consultant.email</td>
+                            <td>consultant.expertise</td>
+                            <td>consultant.rate</td>
+                            <td>consultant.userImage</td>
+                            <td>consultant.workExperience</td>
+                            <td>consultant.workSample</td>
+                            <td> <button type="button" className="btn btn-sm btn-warning">Update</button></td>
+                            <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
+                        </tr> 
+                        <tr>
+                            <th scope="row">consultant.userId</th>
+                            <td>consultant.namnewnrwnfn</td>
+                            <td>consultant.city</td>
+                            <td>consultant.contact</td>
+                            <td>consultant.email</td>
+                            <td>consultant.expertise</td>
+                            <td>consultant.rate</td>
+                            <td>consultant.userImage</td>
+                            <td>consultant.workExperience</td>
+                            <td>consultant.workSample</td>
+                            <td><button type="button" className="btn btn-sm btn-warning">Update</button></td>
+                            <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
+                        </tr> 
                     </tbody>
                 </table>
+                </div>
+                <Modal show={this.state.showModal}>
+                    <Modal.Header>{this.state.modalFields.operation} Entry</Modal.Header>
+                    <Modal.Body>
+                        <form  onSubmit={this.state.modalFields.operation === 'Update' ? this.handleUpdate : this.handleCreate}>
+                            <div className="form-group">
+                                <label>First Name</label>
+                                <input type="text" defaultValue={this.state.modalFields.consultant.name} name="name" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Name" />
+                            </div>
+                            <br />
+                            <div style={{float:"right"}}>
+                            <span><button type="submit" className="btn btn-primary">Submit</button></span>&nbsp;&nbsp;&nbsp;
+                            <span><button type="button" className="btn btn-primary" onClick={() => this.setState({showModal:false})}>Close</button></span>
+                            </div>
+                    </form>
+                    </Modal.Body>
+                </Modal>
             </div>
         );
     }

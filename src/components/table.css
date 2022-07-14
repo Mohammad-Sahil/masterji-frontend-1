@@ -1,0 +1,16 @@
+.tableDiv{
+    border: 1px rgb(223, 223, 223) solid;
+    border-radius: 7px;
+    margin:10px;
+    padding:10px;
+}
+table{
+    font-size:smaller;
+}
+tr{
+    justify-content: center;
+    vertical-align: middle;
+}
+th,td{
+    padding:15px!important;
+}
