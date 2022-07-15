@@ -19,9 +19,6 @@ th,td{
     border-radius: 5px;
     border: 0;
 }
-.editButton:hover{
-    color: white;
-}
 .deleteButton{
     color:white;
     padding:5px 15px 5px 15px;

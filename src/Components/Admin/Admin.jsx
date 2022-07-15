@@ -9,13 +9,13 @@ const Admin = () => {
   return (
     <>
         <div className="admin_container">
-        <div className="row">
-          <div className="col col-2">
+        <div className="row p-0 m-0">
+          <div className="col col-2 p-0">
           <Sidebar/>
           </div>
           <div className="col col-10 p-0">
             <Navbar/>
-            <div className="container main-container">
+            <div className="container main-container m-0 p-0">
               <Outlet/>
             </div>
           </div>

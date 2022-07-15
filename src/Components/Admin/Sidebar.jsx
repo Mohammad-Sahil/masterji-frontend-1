@@ -35,7 +35,6 @@ const [sidebar, setSidebar] = useState(false);
 const showSidebar = () => setSidebar(!sidebar);
 
   return (<>
-        <div className='navbar'></div>
         <nav className='nav-menu active'>
           <ul className='nav-menu-items'>
           <li className='nav-text' style={{color:'white', fontSize:30, height:100}}>

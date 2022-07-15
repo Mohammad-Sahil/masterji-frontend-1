@@ -1,12 +1,11 @@
 
   .nav-menu {
-    background-color: #060b26;
-    width: 250px;
-    height: 100vh;
+    background-color: #000000;
+    height: 100%;
     display: flex;
     justify-content: center;
-    position: fixed;
     top: 0;
+    padding: 0px;
   }
   
   
@@ -27,12 +26,11 @@
     height: 100%;
     display: flex;
     align-items: center;
-    padding: 0 16px;
     border-radius: 4px;
   }
   
   .nav-text a:hover {
-    background-color: #1a83ff;
+    background-color: #ffc107;
   }
   
   .nav-menu-items {
@@ -40,7 +38,7 @@
   }
   
   .navbar-toggle {
-    background-color: #060b26;
+    background-color: #ffc107;
     width: 100%;
     height: 80px;
     display: flex;
