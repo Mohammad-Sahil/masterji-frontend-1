@@ -10,43 +10,23 @@ import { Link } from 'react-router-dom';
 const Sidebar = () => {
 const data = [
   {
-    title: 'Fabric Shops',
-    path: '/admin/manage/fabric',
+    title: 'Orders',
+    path: '/admin',
     cName: 'nav-text'
   },
   {
-    title: 'Fashion Consultant',
-    path: '/admin/manage/fashion',
+    title: 'Manage',
+    path: '/admin',
     cName: 'nav-text'
   },
   {
-    title: 'Garments',
-    path: '/admin/manage/garments',
+    title: 'Executives',
+    path: '/admin',
     cName: 'nav-text'
   },
   {
-    title: 'FAQ',
-    path: '/admin/manage/faq',
-    cName: 'nav-text'
-  },
-  {
-    title: 'About Us',
-    path: '/admin/manage/about',
-    cName: 'nav-text'
-  },
-  {
-    title: 'Users',
-    path: '/admin/manage/users',
-    cName: 'nav-text'
-  },
-  {
-    title: 'Queries',
-    path: '/admin/manage/queries',
-    cName: 'nav-text'
-  },
-  {
-    title: 'Consultant Booking',
-    path: '/admin/manage/consultant',
+    title: 'Tailors',
+    path: '/admin',
     cName: 'nav-text'
   }
 ];
