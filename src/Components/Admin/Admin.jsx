@@ -4,6 +4,7 @@ import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 
 import './Admin.css';
+import { Outlet } from 'react-router-dom';
 
 const Admin = () => {
   return (
@@ -16,7 +17,7 @@ const Admin = () => {
           <div className="col col-10 p-0">
             <Navbar/>
             <div className="container main-container">
-              <FashionConsultants/>
+              <Outlet/>
             </div>
           </div>
         </div>
