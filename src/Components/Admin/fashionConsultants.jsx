@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import {Modal} from 'react-bootstrap';
-
+import SearchBar from './searchBar';
 import './table.css';
 class FashionConsultants extends Component {
     state = {
@@ -9,7 +9,8 @@ class FashionConsultants extends Component {
         modalFields:{
             operation:'Create',
             consultant:{}
-        }
+        },
+        searchText:""
       } 
 
     componentDidMount(){
@@ -56,7 +57,20 @@ class FashionConsultants extends Component {
         this.setState({consultants});
     }
 
+    search = searchText => {
+        console.log(searchText);
+        this.setState({searchText});
+    }
+
     render() { 
+        const {consultants, searchText} = this.state;
+        let filteredConsultants = consultants;
+        filteredConsultants = filteredConsultants.filter(consultant => {
+            for(let property in consultant){
+                if(consultant[property].includes(searchText)) return true;
+            }
+            return false;
+        })
         return (
             <div>
                 <br/>
@@ -97,6 +111,15 @@ class FashionConsultants extends Component {
                     <br />
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form> */}
+                <div className="row">
+                    <div className="col-1">
+                        <button type="button" className="btn btn-primary addButton" style={{width:80}} onClick={() => this.handleModal({}, 'Create')}>Add</button>
+                    </div>
+                    <div className="col-11">
+                        <SearchBar search={this.search} searchInput={searchText} />
+                    </div>
+                </div>
+                <br />
                 <div class="table-responsive tableDiv">
                 <table className="table table-striped table-condensed">
                     <thead className="thead-dark">
@@ -116,7 +139,7 @@ class FashionConsultants extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.consultants.map(consultant => 
+                        {filteredConsultants.map(consultant => 
                             <tr key={consultant.userId}>
                                 <th scope="row">{consultant.userId}</th>
                                 <td>{consultant.name}</td>
@@ -128,11 +151,11 @@ class FashionConsultants extends Component {
                                 <td>{consultant.userImage}</td>
                                 <td>{consultant.workExperience}</td>
                                 <td>{consultant.workSample}</td>
-                                <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true"  onClick={() => this.handleModal(consultant, 'Update')}></i></td>
-                                <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson', cursor:'pointer'}} onClick={() => this.handleDelete(consultant)}></i></td>
+                                <td><button className="btn-warning editButton"><i class="fa fa-pencil"  aria-hidden="true"  onClick={() => this.handleModal(consultant, 'Update')}></i></button></td>
+                                <td><button className="btn-danger deleteButton"><i class="fa fa-trash-o" onClick={() => this.handleDelete(consultant)}></i></button></td>
                             </tr> 
                         )}
-                        <tr>
+                        {/* <tr>
                                 <th scope="row">consultant.userId</th>
                                 <td>consultant.namnewnrwnfn</td>
                                 <td>consultant.city</td>
@@ -174,7 +197,7 @@ class FashionConsultants extends Component {
                             <td>consultant.workSample</td>
                             <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true" ></i></td>
                             <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
-                        </tr> 
+                        </tr>  */}
                     </tbody>
                 </table>
                 </div>
@@ -194,7 +217,6 @@ class FashionConsultants extends Component {
                     </form>
                     </Modal.Body>
                 </Modal>
-                <button type="button" className="btn btn-primary" onClick={() => this.handleModal({}, 'Create')}>Create</button>
             </div>
         );
     }

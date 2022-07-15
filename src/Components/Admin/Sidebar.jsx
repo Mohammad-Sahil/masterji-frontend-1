@@ -55,19 +55,21 @@ const [sidebar, setSidebar] = useState(false);
 const showSidebar = () => setSidebar(!sidebar);
 
   return (<>
-<div className='navbar'>
-        </div>
+        <div className='navbar'></div>
         <nav className='nav-menu active'>
           <ul className='nav-menu-items'>
+          <li className='nav-text' style={{color:'white', fontSize:30, height:100}}>
+                  <span>MasterJi</span>
+              </li>
             {data.map((item, index) => {
-        return (
-          <li key={index} className={item.cName}>
-            <Link to={item.path}>
-              <span>{item.title}</span>
-            </Link>
-          </li>
-        );
-    })}
+            return (
+              <li key={index} className={item.cName}>
+                <Link to={item.path}>
+                  <span>{item.title}</span>
+                </Link>
+              </li>
+            );
+           })}
           </ul>
         </nav>
     

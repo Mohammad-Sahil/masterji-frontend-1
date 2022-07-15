@@ -8,9 +8,9 @@ const Navbar = () => {
     <>
       <nav className="main-nav">
         {/* 1st logo part  */}
-        <div className="logo">
+        {/* <div className="logo">
           <h2>Admin</h2>
-        </div>
+        </div> */}
 
         {/* 2nd menu part  */}
         <div
@@ -25,7 +25,7 @@ const Navbar = () => {
         </div>
 
         {/* 3rd social media links */}
-        <div className="logout">LogOut</div>
+        {/* <div className="logout">LogOut</div> */}
       </nav>
     </>
   );
