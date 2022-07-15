@@ -6,45 +6,45 @@ import { NavLink } from "react-router-dom";
 const Navbar = () => {
   const data = [
     {
-      title: 'Fabric Shops',
-      path: '/admin/manage/fabric',
-      cName: 'nav-text'
+      title: "Fabric Shops",
+      path: "/admin/manage/fabric",
+      cName: "nav-text",
     },
     {
-      title: 'Fashion Consultant',
-      path: '/admin/manage/fashion',
-      cName: 'nav-text'
+      title: "Fashion Consultant",
+      path: "/admin/manage/fashion",
+      cName: "nav-text",
     },
     {
-      title: 'Garments',
-      path: '/admin/manage/garments',
-      cName: 'nav-text'
+      title: "Garments",
+      path: "/admin/manage/garments",
+      cName: "nav-text",
     },
     {
-      title: 'FAQ',
-      path: '/admin/manage/faq',
-      cName: 'nav-text'
+      title: "FAQ",
+      path: "/admin/manage/faq",
+      cName: "nav-text",
     },
     {
-      title: 'About Us',
-      path: '/admin/manage/about',
-      cName: 'nav-text'
+      title: "About Us",
+      path: "/admin/manage/about",
+      cName: "nav-text",
     },
     {
-      title: 'Users',
-      path: '/admin/manage/users',
-      cName: 'nav-text'
+      title: "Users",
+      path: "/admin/manage/users",
+      cName: "nav-text",
     },
     {
-      title: 'Queries',
-      path: '/admin/manage/queries',
-      cName: 'nav-text'
+      title: "Queries",
+      path: "/admin/manage/queries",
+      cName: "nav-text",
     },
     {
-      title: 'Consultant Booking',
-      path: '/admin/manage/consultant',
-      cName: 'nav-text'
-    }
+      title: "Consultant Booking",
+      path: "/admin/manage/consultant",
+      cName: "nav-text",
+    },
   ];
   return (
     <>
@@ -55,19 +55,15 @@ const Navbar = () => {
         </div> */}
 
         {/* 2nd menu part  */}
-        <div
-          className={"menu-link mobile-menu-link"}
-        >
+        <div className={"menu-link mobile-menu-link"}>
           <ul>
-          {data.map((item, index) => {
-            return (
-              <li key={index}>
-                <NavLink to={item.path}>
-                  {item.title}
-                </NavLink>
-              </li>
-            );
-          })}
+            {data.map((item, index) => {
+              return (
+                <li key={index}>
+                  <NavLink to={item.path}>{item.title}</NavLink>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
