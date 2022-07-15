@@ -79,6 +79,9 @@ li {
     transition: 0.5s;
   cursor: pointer;
 }
+.menu-link ul li.active{
+    background-color: #ededed;
+}
 
 .logout {
     grid-column: 4/5;

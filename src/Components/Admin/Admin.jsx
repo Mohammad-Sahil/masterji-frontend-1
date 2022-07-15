@@ -1,5 +1,4 @@
 import React from 'react'
-import FashionConsultants from './fashionConsultants'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 

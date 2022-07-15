@@ -18,7 +18,7 @@ const Navbar = () => {
         >
           <ul>
             <li><NavLink to='/admin'> Orders </NavLink></li>
-            <li><NavLink to='/admin'> Manage </NavLink></li>
+            <li className="active"><NavLink to='/admin'> Manage </NavLink></li>
             <li><NavLink to='/admin'> Executives </NavLink></li>
             <li><NavLink to='/admin'> Tailors </NavLink></li>
           </ul>

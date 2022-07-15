@@ -11,42 +11,42 @@ const Sidebar = () => {
 const data = [
   {
     title: 'Fabric Shops',
-    path: '/admin/fabric',
+    path: '/admin/manage/fabric',
     cName: 'nav-text'
   },
   {
     title: 'Fashion Consultant',
-    path: '/admin/fashion',
+    path: '/admin/manage/fashion',
     cName: 'nav-text'
   },
   {
     title: 'Garments',
-    path: '/admin/garments',
+    path: '/admin/manage/garments',
     cName: 'nav-text'
   },
   {
     title: 'FAQ',
-    path: '/admin/faq',
+    path: '/admin/manage/faq',
     cName: 'nav-text'
   },
   {
     title: 'About Us',
-    path: '/admin/about',
+    path: '/admin/manage/about',
     cName: 'nav-text'
   },
   {
     title: 'Users',
-    path: '/admin/users',
+    path: '/admin/manage/users',
     cName: 'nav-text'
   },
   {
     title: 'Queries',
-    path: '/admin/queries',
+    path: '/admin/manage/queries',
     cName: 'nav-text'
   },
   {
     title: 'Consultant Booking',
-    path: '/admin/consultant',
+    path: '/admin/manage/consultant',
     cName: 'nav-text'
   }
 ];
