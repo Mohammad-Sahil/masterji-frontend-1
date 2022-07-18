@@ -1,31 +1,11 @@
-import React from "react";
-// import './Login.css'
+import React, { useState } from "react";
+import './Login.css'
 
 const Login = () => {
-//     const inputs = document.querySelectorAll(".input");
-
-
-// function addcl(){
-// 	let parent = this.parentNode.parentNode;
-// 	parent.classList.add("focus");
-// }
-
-// function remcl(){
-// 	let parent = this.parentNode.parentNode;
-// 	if(this.value == ""){
-// 		parent.classList.remove("focus");
-// 	}
-// }
-
-
-// inputs.forEach(input => {
-// 	input.addEventListener("focus", addcl);
-// 	input.addEventListener("blur", remcl);
-// });
-
-// const inputfocus = (e)=>{
-//     e.target.parentNode
-// }
+const [username, setusername] = useState()
+const [password, setpassword] = useState()
+const [userfocus, setuserfocus] = useState()
+const [passfocus, setpassfocus] = useState()
   return (
     <>
     <div className="logincontainer">
@@ -39,22 +19,32 @@ const Login = () => {
           <form action="index.html">
             <img src="/avatar.svg" />
             <h2 class="title">Welcome</h2>
-            <div class="input-div one">
+            <div class={`input-div one ${userfocus}`}>
               <div class="i">
                 <i class="fas fa-user"></i>
               </div>
               <div class="div">
                 <h5>Username</h5>
-                <input type="text" class="input" />
+                <input type="text" class="input" 
+                  value={username}
+                  onChange={(e)=>setusername(e.target.value)}
+                  onFocus={()=>setuserfocus('focus')}
+                  onBlur={()=>setuserfocus('')}
+                />
               </div>
             </div>
-            <div class="input-div pass">
+            <div class={`input-div one ${passfocus}`}>
               <div class="i">
                 <i class="fas fa-lock"></i>
               </div>
               <div class="div">
                 <h5>Password</h5>
-                <input type="password" class="input" />
+                <input type="password" class="input" 
+                  value={password}
+                  onChange={(e)=>setpassword(e.target.value)}
+                  onFocus={()=>setpassfocus('focus')}
+                  onBlur={()=>setpassfocus('')}
+                  />
               </div>
             </div>
             <a href="#">Forgot Password?</a>
