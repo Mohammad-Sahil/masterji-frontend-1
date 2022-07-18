@@ -26,6 +26,7 @@ li {
   width: 100%;
   height: 3rem;
   border-left: 1px solid rgb(230, 230, 230);
+  background-color: white;
 }
 
 .logo {
@@ -73,13 +74,13 @@ li {
     color:black;
 }
 
-.menu-link ul li:hover{
+.menu-link ul li a:hover{
     cursor: pointer;
     border-top: 3px solid #ffc107;
 
     
 }
-.menu-link ul li.active{
+.menu-link ul li a.active{
     border-top: 3px solid #ffc107;
 
 }

@@ -3,7 +3,7 @@ import {Modal} from 'react-bootstrap';
 import SearchBar from './searchBar';
 import './table.css';
 
-class Garment extends Component {
+class Garments extends Component {
     state = {
         garments:[],
         showModal:false,
@@ -216,4 +216,4 @@ class Garment extends Component {
     }
 }
  
-export default Garment;
+export default Garments;

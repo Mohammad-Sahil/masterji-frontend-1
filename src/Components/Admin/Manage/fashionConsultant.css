@@ -174,8 +174,8 @@
 .user-card .card-block .user-image:after, .user-card .card-block .user-image:before {
     content: "";
     width: 100%;
-    height: 48%;
-    border: 2px solid #4099ff;
+    height: 49%;
+    border: 2px solid #ffc107;
     position: absolute;
     left: 0;
     z-index: 10;
@@ -185,14 +185,4 @@
     top: 0;
     border-top-left-radius: 50px;
     border-top-right-radius: 50px;
-}
-
-.user-card .card-block .user-image:after, .user-card .card-block .user-image:before {
-    content: "";
-    width: 100%;
-    height: 48%;
-    border: 2px solid #4099ff;
-    position: absolute;
-    left: 0;
-    z-index: 10;
 }

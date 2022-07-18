@@ -119,7 +119,7 @@ class FashionConsultants extends Component {
                     <br />
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form> */}
-        <div className="fashionConsultantContainer row" style={Object.keys(expandedConsultant).length === 0 ? {marginRight:50}:{}}>
+        <div className="fashionConsultantContainer row gx-0" style={Object.keys(expandedConsultant).length === 0 ? {marginRight:50}:{}}>
           <div id="fashionConsultantTable" className={ Object.keys(expandedConsultant).length === 0 ? "fashionConsultantTable" : "fashionConsultantTable col-7"}>
             <div className="row">
               <div className="col-2">
@@ -152,7 +152,7 @@ class FashionConsultants extends Component {
                 </thead>
                 <tbody>
                   {filteredConsultants.map((consultant) => (
-                    <tr key={consultant.userId} onClick={() => this.expandConsultant(consultant)} style={expandedConsultant.userId === consultant.userId ? {backgroundColor:'#ffa'} : {}}>
+                    <tr key={consultant.userId} onClick={() => this.expandConsultant(consultant)} style={expandedConsultant.userId === consultant.userId ? {backgroundColor:'#ffa', cursor:'pointer'} : {cursor:'pointer'}}>
                       <td>{consultant.name}</td>
                       <td>{consultant.city}</td>
                       <td>{consultant.contact}</td>
@@ -269,7 +269,7 @@ class FashionConsultants extends Component {
                     <div class="user-image">
                         <img src={expandedConsultant.userImage || "https://p.kindpng.com/picc/s/78-785975_icon-profile-bio-avatar-person-symbol-chat-icon.png"} class="img-radius" alt="User-Profile-Image" />
                     </div>
-                    <h6 class="f-w-600 m-t-25 m-b-10" style={{fontSize:20}}>{expandedConsultant.name} &nbsp; <span style={{fontWeight:300}}>{expandedConsultant.city && <i class="fa fa-building-o" aria-hidden="true"></i>} {expandedConsultant.city}</span></h6>
+                    <h6 class="f-w-600 m-t-25 m-b-10" style={{fontSize:20}}>{expandedConsultant.name} &nbsp; <span style={{fontWeight:300, fontSize:20}}>{expandedConsultant.city && <i class="fa fa-building-o" aria-hidden="true"></i>} {expandedConsultant.city}</span></h6>
                     <p class="text">{expandedConsultant.expertise}</p>
                     <p class="text">{expandedConsultant.email && <i class="fa fa-envelope" aria-hidden="true"></i>} {expandedConsultant.email}  &nbsp;&nbsp;&nbsp; {expandedConsultant.contact && <i class="fa fa-phone" aria-hidden="true"></i>} {expandedConsultant.contact}</p>
                     <hr/>

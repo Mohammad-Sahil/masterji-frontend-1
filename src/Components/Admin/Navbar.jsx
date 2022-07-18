@@ -7,7 +7,7 @@ const Navbar = () => {
   const data = [
     {
       title: "Fashion Consultant",
-      path: "/admin/manage/fashion",
+      path: "fashion",
       cName: "nav-text",
     },
     {
@@ -59,8 +59,8 @@ const Navbar = () => {
           <ul>
             {data.map((item, index) => {
               return (
-                <li key={index} className={item.title==='Fashion Consultant' && 'active'}>
-                  <NavLink to={item.path}>{item.title}</NavLink>
+                <li key={index}>
+                  <NavLink activeclassname="active" to={item.path}>{item.title}</NavLink>
                 </li>
               );
             })}
