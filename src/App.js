@@ -26,7 +26,7 @@ const App = () => {
   let user = {
     Name:'Shera',
     Email:'sheraofficials@gmail.com',
-    Role:'developer'
+    Role:'admin'
   }
   useEffect(() => {
     dispatch(loaduseraction({user}))
