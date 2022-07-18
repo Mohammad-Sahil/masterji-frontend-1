@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from '../Navbar';
-import { Outlet , Routes, Route } from 'react-router-dom';
+import { Outlet , Routes, Route, useNavigate } from 'react-router-dom';
 
 import FashionConsultants from './FashionConsultants';
 import Fabric from './Fabric';
@@ -14,6 +14,11 @@ import ConsultantBooking from './ConsultantBooking';
 
 
 const Manage = () => {
+  const Navigate = useNavigate()
+  useEffect(() => {
+    Navigate('/admin/manage/fashion')
+  }, [])
+  
   return (
     <>
         <div>

@@ -4,9 +4,10 @@ import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
 import "./Sidebar.css";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
+  const location = useLocation()
   const data = [
     {
       title: "Orders",
@@ -15,7 +16,7 @@ const Sidebar = () => {
     },
     {
       title: "Manage",
-      path: "/admin/manage",
+      path: location.pathname.includes("/admin/manage") ? location.pathname : '/admin/manage',
       cName: "nav-text",
     },
     {
