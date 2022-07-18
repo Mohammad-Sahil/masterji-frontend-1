@@ -12,14 +12,15 @@ import FAQs from "./Components/Admin/Manage/FAQs";
 import Home from "./Components/Home";
 import Orders from "./Components/Admin/Orders";
 import Manage from "./Components/Admin/Manage/Manage";
-
+import Login from "./Components/Authentication/Login";
 import Executives from "./Components/Admin/Executives";
 import Tailors from "./Components/Admin/Tailors";
 const App = () => {
   return (
     <>
       <Routes>
-        <Route exact path="" element={<Home />} />
+        <Route exact path="/" element={<Home />} />
+        <Route exact path="/login" element={<Login />} />
         <Route exact path="/admin" element={<Admin />}>
           <Route path="manage" element={<Manage />}>
             <Route exact path="fashion" element={<FashionConsultants />} />
