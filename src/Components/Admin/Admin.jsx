@@ -8,16 +8,15 @@ import { Outlet } from 'react-router-dom';
 const Admin = () => {
   return (
     <>
-        <div className="admin_container">
-        <div className="row p-0 m-0">
+        <div className="admin_container" >
+        <div className="row p-0 m-0" >
           <div className="col col-2 p-0">
-          <Sidebar/>
+            <Sidebar/>
           </div>
           <div className="col col-10 p-0 main-container">
               <Outlet/>
           </div>
         </div>
-        
         </div>
     </>
   )

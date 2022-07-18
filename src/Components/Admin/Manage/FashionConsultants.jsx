@@ -16,7 +16,7 @@ class FashionConsultants extends Component {
   };
 
   componentDidMount() {
-    fetch("http://localhost:4000/fashionConsultants")
+    fetch("https://us-central1-masterji-online.cloudfunctions.net/app/fashionConsultant/v2/get")
       .then((response) => response.json())
       .then((consultants) => {
         console.log(consultants);
@@ -57,7 +57,7 @@ class FashionConsultants extends Component {
 
   handleDelete = (consultant) => {
     const consultants = this.state.consultants.filter(
-      (c) => c.userId !== consultant.userId
+      (c) => c.id !== consultant.id
     );
     this.setState({ consultants });
   };
@@ -76,7 +76,7 @@ class FashionConsultants extends Component {
     let filteredConsultants = consultants;
     filteredConsultants = filteredConsultants.filter((consultant) => {
       for (let property in consultant) {
-        if (consultant[property].toLowerCase().includes(searchText.toLowerCase())) return true;
+        if (typeof consultant[property] === 'string' && consultant[property].toLowerCase().includes(searchText.toLowerCase())) return true;
       }
       return false;
     });
@@ -152,7 +152,7 @@ class FashionConsultants extends Component {
                 </thead>
                 <tbody>
                   {filteredConsultants.map((consultant) => (
-                    <tr key={consultant.userId} onClick={() => this.expandConsultant(consultant)} style={expandedConsultant.userId === consultant.userId ? {backgroundColor:'#ffa', cursor:'pointer'} : {cursor:'pointer'}}>
+                    <tr key={consultant.id} onClick={() => this.expandConsultant(consultant)} style={expandedConsultant.id === consultant.id ? {backgroundColor:'#ffa', cursor:'pointer'} : {cursor:'pointer'}}>
                       <td>{consultant.name}</td>
                       <td>{consultant.city}</td>
                       <td>{consultant.contact}</td>
@@ -267,7 +267,7 @@ class FashionConsultants extends Component {
             <div class="card user-card">
                 <div class="card-block">
                     <div class="user-image">
-                        <img src={expandedConsultant.userImage || "https://p.kindpng.com/picc/s/78-785975_icon-profile-bio-avatar-person-symbol-chat-icon.png"} class="img-radius" alt="User-Profile-Image" />
+                        <img src={expandedConsultant.userImage ? expandedConsultant.userImage : "https://p.kindpng.com/picc/s/78-785975_icon-profile-bio-avatar-person-symbol-chat-icon.png"} class="img-radius" alt="User-Profile-Image" />
                     </div>
                     <h6 class="f-w-600 m-t-25 m-b-10" style={{fontSize:20}}>{expandedConsultant.name} &nbsp; <span style={{fontWeight:300, fontSize:20}}>{expandedConsultant.city && <i class="fa fa-building-o" aria-hidden="true"></i>} {expandedConsultant.city}</span></h6>
                     <p class="text">{expandedConsultant.expertise}</p>

@@ -36,6 +36,7 @@ const Sidebar = () => {
 
   return (
     <>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'></link>
       <nav className="nav-menu active">
         <ul className="nav-menu-items">
           <li className="nav-text" style={{ color: "white", fontSize: 30, height: 100 }}>
@@ -50,6 +51,20 @@ const Sidebar = () => {
               </li>
             );
           })}
+          {/* <li className="nav-text sidebar-footer"> */}
+            {/* <div className="row">
+              <div className="col-3">
+              <img color="white" src="https://png.pngtree.com/element_our/20190529/ourmid/pngtree-user-icon-image_1187018.jpg" alt="" />
+              </div>
+              <div className="col-6">
+              &nbsp;&nbsp;John Doe <br/><p style={{fontSize:15}}>&nbsp;&nbsp;Admin</p>
+              </div>
+              <div className="col-3">
+              <a href="#" class="log-out">&nbsp;&nbsp;&nbsp;<i class='fa fa-sign-out'></i></a>
+              </div>
+            </div> */}
+            {/* <span><img src="https://www.citypng.com/public/uploads/preview/profile-user-round-white-icon-symbol-png-11639594348fn8rlcxrqo.png" alt="" /></span><span>John Doe <br/><p style={{fontSize:15}}>Admin</p></span><span><a href="#" class="log-out">&nbsp;&nbsp;&nbsp;<i class='fa fa-sign-out'></i></a></span>
+          </li>  */}
         </ul>
       </nav>
     </>
