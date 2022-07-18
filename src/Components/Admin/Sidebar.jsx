@@ -43,7 +43,7 @@ const showSidebar = () => setSidebar(!sidebar);
             {data.map((item, index) => {
             return (
               <li key={index} className={item.cName}>
-                <Link to={item.path}>
+                <Link to={item.path} className={item.title==='Manage'?'active':''}>
                   <span>{item.title}</span>
                 </Link>
               </li>

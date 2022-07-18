@@ -1,13 +1,14 @@
 #fashionConsultantTable{
     margin:20px 20px 20px 30px;
     padding:20px;
-    border: 1px solid rgb(233, 233, 233);
+    /* border: 1px solid rgb(233, 233, 233); */
     border-radius: 5px;
+    background-color: white;
 }
 
 #fashionConsultantDetails{
     margin:20px 10px 20px 10px;
-    border: 1px solid rgb(233, 233, 233);
+    /* border: 1px solid rgb(233, 233, 233); */
     border-radius: 5px;
 
 }

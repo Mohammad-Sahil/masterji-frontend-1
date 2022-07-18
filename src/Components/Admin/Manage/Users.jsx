@@ -72,7 +72,7 @@ class Fabric extends Component {
             return false;
         })
         return (
-            <div>
+            <div className='container'>
                 <br/>
                 {/* <h4>Add Consultants</h4>
                 <br />

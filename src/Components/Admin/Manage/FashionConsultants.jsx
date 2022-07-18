@@ -76,7 +76,7 @@ class FashionConsultants extends Component {
     let filteredConsultants = consultants;
     filteredConsultants = filteredConsultants.filter((consultant) => {
       for (let property in consultant) {
-        if (consultant[property].includes(searchText)) return true;
+        if (consultant[property].toLowerCase().includes(searchText.toLowerCase())) return true;
       }
       return false;
     });
@@ -119,14 +119,14 @@ class FashionConsultants extends Component {
                     <br />
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form> */}
-        <div className="fashionConsultantContainer row m-0">
-          <div id="fashionConsultantTable" className="fashionConsultantTable col-7">
+        <div className="fashionConsultantContainer row" style={Object.keys(expandedConsultant).length === 0 ? {marginRight:50}:{}}>
+          <div id="fashionConsultantTable" className={ Object.keys(expandedConsultant).length === 0 ? "fashionConsultantTable" : "fashionConsultantTable col-7"}>
             <div className="row">
               <div className="col-2">
                 <button
                   type="button"
                   className="btn btn-warning addButton"
-                  style={{ width: 105, color:'white' }}
+                  style={{ width: '100%', color:'white' }}
                   onClick={() => this.handleModal({}, "Create")}
                 >
                   Add
@@ -159,28 +159,19 @@ class FashionConsultants extends Component {
                       <td>{consultant.email}</td>
                       <td>{consultant.expertise}</td>
                       <td>
-                        <button className="btn-warning editButton">
-                          <i
-                            class="fa fa-pencil"
-                            aria-hidden="true"
-                            onClick={() =>
-                              this.handleModal(consultant, "Update")
-                            }
-                          ></i>
+                        <button className="btn-warning editButton" onClick={() =>this.handleModal(consultant, "Update")}>
+                          <i class="fa fa-pencil" aria-hidden="true"></i>
                         </button>
                       </td>
                       <td>
-                        <button className="btn-danger deleteButton">
-                          <i
-                            class="fa fa-trash-o"
-                            onClick={() => this.handleDelete(consultant)}
-                          ></i>
+                        <button className="btn-danger deleteButton" onClick={() => this.handleDelete(consultant)}>
+                          <i class="fa fa-trash-o"></i>
                         </button>
                       </td>
                     </tr>
                   ))}
                   {/* <tr>
-                                <th scope="row">consultant.userId</th>
+                                <th scope="row">consultant.id</th>
                                 <td>consultant.namnewnrwnfn</td>
                                 <td>consultant.city</td>
                                 <td>consultant.contact</td>
@@ -195,7 +186,7 @@ class FashionConsultants extends Component {
                             <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
                         </tr> 
                         <tr>
-                            <th scope="row">consultant.userId</th>
+                            <th scope="row">consultant.id</th>
                             <td>consultant.namnewnrwnfn</td>
                             <td>consultant.city</td>
                             <td>consultant.contact</td>
@@ -209,7 +200,7 @@ class FashionConsultants extends Component {
                             <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
                         </tr> 
                         <tr>
-                            <th scope="row">consultant.userId</th>
+                            <th scope="row">consultant.id</th>
                             <td>consultant.namnewnrwnfn</td>
                             <td>consultant.city</td>
                             <td>consultant.contact</td>
@@ -270,22 +261,23 @@ class FashionConsultants extends Component {
               </Modal.Body>
             </Modal>
           </div>
+          { Object.keys(expandedConsultant).length !== 0 &&
           <div id="fashionConsultantDetails" className="fashionConsultantDetails col-4 p-0">
             <div class="container m-0 p-0">
             <div class="card user-card">
                 <div class="card-block">
                     <div class="user-image">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="img-radius" alt="User-Profile-Image" />
+                        <img src={expandedConsultant.userImage || "https://p.kindpng.com/picc/s/78-785975_icon-profile-bio-avatar-person-symbol-chat-icon.png"} class="img-radius" alt="User-Profile-Image" />
                     </div>
-                    <h6 class="f-w-600 m-t-25 m-b-10" style={{fontSize:20}}>{expandedConsultant.name}</h6>
-                    <p class="text">{expandedConsultant.expertise} &nbsp; | &nbsp;&nbsp; <i class="fa fa-building-o" aria-hidden="true"></i> {expandedConsultant.city}</p>
-                    <p class="text"><i class="fa fa-envelope" aria-hidden="true"></i> {expandedConsultant.email}  &nbsp;&nbsp;&nbsp; <i class="fa fa-phone" aria-hidden="true"></i> {expandedConsultant.contact}</p>
+                    <h6 class="f-w-600 m-t-25 m-b-10" style={{fontSize:20}}>{expandedConsultant.name} &nbsp; <span style={{fontWeight:300}}>{expandedConsultant.city && <i class="fa fa-building-o" aria-hidden="true"></i>} {expandedConsultant.city}</span></h6>
+                    <p class="text">{expandedConsultant.expertise}</p>
+                    <p class="text">{expandedConsultant.email && <i class="fa fa-envelope" aria-hidden="true"></i>} {expandedConsultant.email}  &nbsp;&nbsp;&nbsp; {expandedConsultant.contact && <i class="fa fa-phone" aria-hidden="true"></i>} {expandedConsultant.contact}</p>
                     <hr/>
                     <p class="m-t-15 text" style={{textAlign:'justify'}}>{expandedConsultant.workExperience}</p>
 
-                    <p class="text m-t-15" style={{fontSize:20, fontWeight:600}}>Price : {expandedConsultant.rate}</p>
+                    <p class="text m-t-15" style={{fontSize:20, fontWeight:600}}>{expandedConsultant.rate && "Price :"} {expandedConsultant.rate}</p>
 
-                    <p  class="text m-t-15"> Work Samples</p>
+                    {expandedConsultant.workSamples && <p  class="text m-t-15"> Work Samples</p>}
 
                     {/* <ul class="list-unstyled activity-leval">
                         <li class="active"></li>
@@ -321,6 +313,7 @@ class FashionConsultants extends Component {
 	</div>
 </div>
           </div>
+  }
         </div>
       </div>
     );

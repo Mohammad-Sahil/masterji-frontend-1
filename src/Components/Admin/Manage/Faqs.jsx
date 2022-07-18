@@ -6,6 +6,11 @@ class FAQs extends Component {
   state = {
     faqs: [],
     showModal: false,
+    modalFields: {
+      operation: "Create",
+      consultant: {},
+    },
+    searchText: "",
   };
 
   componentDidMount() {
@@ -19,7 +24,7 @@ class FAQs extends Component {
 
   render() {
     return (
-      <div>
+      <div className="container">
         <br />
         <br />
         <br />

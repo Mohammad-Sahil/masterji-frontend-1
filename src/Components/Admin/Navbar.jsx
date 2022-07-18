@@ -6,13 +6,13 @@ import { NavLink } from "react-router-dom";
 const Navbar = () => {
   const data = [
     {
-      title: "Fabric Shops",
-      path: "/admin/manage/fabric",
+      title: "Fashion Consultant",
+      path: "/admin/manage/fashion",
       cName: "nav-text",
     },
     {
-      title: "Fashion Consultant",
-      path: "/admin/manage/fashion",
+      title: "Fabric Shops",
+      path: "/admin/manage/fabric",
       cName: "nav-text",
     },
     {
@@ -59,7 +59,7 @@ const Navbar = () => {
           <ul>
             {data.map((item, index) => {
               return (
-                <li key={index}>
+                <li key={index} className={item.title==='Fashion Consultant' && 'active'}>
                   <NavLink to={item.path}>{item.title}</NavLink>
                 </li>
               );

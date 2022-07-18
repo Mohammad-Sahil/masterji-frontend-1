@@ -1,6 +1,6 @@
 
   .nav-menu {
-    background-color: #000000;
+    background-color: #ffc107;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -20,7 +20,7 @@
   
   .nav-text a {
     text-decoration: none;
-    color: #f5f5f5;
+    color: white;
     font-size: 18px;
     width: 95%;
     height: 100%;
@@ -30,11 +30,17 @@
   }
   
   .nav-text a:hover {
-    background-color: #ffc107;
+    border: 2px solid white;
   }
   
+  .nav-text a.active {
+    background-color: white;
+    color:#ffc107;
+  }
+
   .nav-menu-items {
     width: 100%;
+    padding-left: 0;
   }
   
   .navbar-toggle {
