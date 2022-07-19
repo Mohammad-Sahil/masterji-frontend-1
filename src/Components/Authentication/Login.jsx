@@ -1,31 +1,35 @@
-import React from "react";
-// import './Login.css'
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginuseraction } from "../../Actions/useraction";
+import './Login.css'
 
 const Login = () => {
-//     const inputs = document.querySelectorAll(".input");
 
+  const dispatch = useDispatch()
+  const Navigate = useNavigate()
+  const {loading,   isAuthenticated, user} = useSelector(state=>state.User)
 
-// function addcl(){
-// 	let parent = this.parentNode.parentNode;
-// 	parent.classList.add("focus");
-// }
+const [email, setemail] = useState()
+const [password, setpassword] = useState()
+const [userfocus, setuserfocus] = useState()
+const [passfocus, setpassfocus] = useState()
 
-// function remcl(){
-// 	let parent = this.parentNode.parentNode;
-// 	if(this.value == ""){
-// 		parent.classList.remove("focus");
-// 	}
-// }
+useEffect(() => {
+  // if(isAuthenticated){
+  //   Navigate('/admin')
+  // }
+}, [isAuthenticated])
 
+const loginhandle = (e)=>{
+  e.preventDefault()
+  const data = {
+    email,
+    password
+  }
+  dispatch(loginuseraction(data))
+}
 
-// inputs.forEach(input => {
-// 	input.addEventListener("focus", addcl);
-// 	input.addEventListener("blur", remcl);
-// });
-
-// const inputfocus = (e)=>{
-//     e.target.parentNode
-// }
   return (
     <>
     <div className="logincontainer">
@@ -39,26 +43,36 @@ const Login = () => {
           <form action="index.html">
             <img src="/avatar.svg" />
             <h2 class="title">Welcome</h2>
-            <div class="input-div one">
+            <div class={`input-div one ${userfocus || (email && 'focus')}`}>
               <div class="i">
                 <i class="fas fa-user"></i>
               </div>
               <div class="div">
-                <h5>Username</h5>
-                <input type="text" class="input" />
+                <h5>Email</h5>
+                <input type="text" class="input" 
+                  value={email}
+                  onChange={(e)=>setemail(e.target.value)}
+                  onFocus={()=>setuserfocus('focus')}
+                  onBlur={()=>setuserfocus('')}
+                />
               </div>
             </div>
-            <div class="input-div pass">
+            <div class={`input-div one ${passfocus || (password && 'focus')}`}>
               <div class="i">
                 <i class="fas fa-lock"></i>
               </div>
               <div class="div">
                 <h5>Password</h5>
-                <input type="password" class="input" />
+                <input type="password" class="input" 
+                  value={password}
+                  onChange={(e)=>setpassword(e.target.value)}
+                  onFocus={()=>setpassfocus('focus')}
+                  onBlur={()=>setpassfocus('')}
+                  />
               </div>
             </div>
-            <a href="#">Forgot Password?</a>
-            <input type="submit" class="btn" value="Login" />
+            <a href="/forgot">Forgot Password?</a>
+            <input type="submit" class="btn" value="Login" onClick={loginhandle}/>
           </form>
         </div>
       </div>
