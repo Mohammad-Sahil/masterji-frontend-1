@@ -50,7 +50,7 @@ const loginhandle = (e)=>{
               <div class="div">
                 <h5>Email</h5>
                 <input type="text" class="input" 
-                  value={email}
+                  value={email || ''}
                   onChange={(e)=>setemail(e.target.value)}
                   onFocus={()=>setuserfocus('focus')}
                   onBlur={()=>setuserfocus('')}
@@ -64,7 +64,7 @@ const loginhandle = (e)=>{
               <div class="div">
                 <h5>Password</h5>
                 <input type="password" class="input" 
-                  value={password}
+                  value={password || ''}
                   onChange={(e)=>setpassword(e.target.value)}
                   onFocus={()=>setpassfocus('focus')}
                   onBlur={()=>setpassfocus('')}

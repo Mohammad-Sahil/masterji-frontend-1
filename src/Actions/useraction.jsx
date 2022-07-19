@@ -25,12 +25,12 @@ export const loaduseraction = (data) => async (dispatch) => {
   
       const config = { headers: { "Content-Type": "application/json" } };
       const {data} = await axios.post("https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/login", entereddata, config);
-      // console.log(data)
+      console.log(data)
       // let data = entereddata
   
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: data.user,
+        payload: data.user[0],
       });
     } catch (error) {
       dispatch({
