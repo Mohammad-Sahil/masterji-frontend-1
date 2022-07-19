@@ -51,7 +51,7 @@ const Sidebar = () => {
               </li>
             );
           })}
-          {/* <li className="nav-text sidebar-footer"> */}
+          <li className="nav-text sidebar-footer">
             {/* <div className="row">
               <div className="col-3">
               <img color="white" src="https://png.pngtree.com/element_our/20190529/ourmid/pngtree-user-icon-image_1187018.jpg" alt="" />
@@ -63,8 +63,13 @@ const Sidebar = () => {
               <a href="#" class="log-out">&nbsp;&nbsp;&nbsp;<i class='fa fa-sign-out'></i></a>
               </div>
             </div> */}
-            {/* <span><img src="https://www.citypng.com/public/uploads/preview/profile-user-round-white-icon-symbol-png-11639594348fn8rlcxrqo.png" alt="" /></span><span>John Doe <br/><p style={{fontSize:15}}>Admin</p></span><span><a href="#" class="log-out">&nbsp;&nbsp;&nbsp;<i class='fa fa-sign-out'></i></a></span>
-          </li>  */}
+            <img src="https://walr.com/app/uploads/2022/03/audience-access.svg" alt="" /><span className="profileName">Yash Deorah <br/><p style={{fontSize:13}}>Admin</p></span>
+          </li> 
+          <li className="nav-text logout-footer">
+            <NavLink activeclassname="active" to="/login" >
+              <span>Log Out</span>
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </>

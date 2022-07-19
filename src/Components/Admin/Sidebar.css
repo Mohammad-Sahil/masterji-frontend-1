@@ -65,7 +65,28 @@
   }
 
   .sidebar-footer img {
+    margin-left: 5px;
     width: 2.7rem;
     border-radius: 50%;
   }
+
+  .sidebar-footer .signOut {
+    margin-left: 25px;
+    padding: 10px;
+    padding-right: 7px;
+    border-radius: 10%;
+  }
+
+  .sidebar-footer .signOut:hover{
+   border: 2px solid white;
+  }
+
+  .sidebar-footer .profileName {
+    font-weight: 500;
+    margin: 10px 0px 0px 27px;
+  }
   
+  
+  .sidebar-footer i {
+    font-size: 25px;
+  }
