@@ -1,4 +1,6 @@
+.admin_container{
+    height: 100vh;
+}
 .main-container{
     background-color: rgb(243, 243, 243);
 }
-
