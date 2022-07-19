@@ -1,11 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginuseraction } from "../../Actions/useraction";
 import './Login.css'
 
 const Login = () => {
-const [username, setusername] = useState()
+
+  const dispatch = useDispatch()
+  const Navigate = useNavigate()
+  const {loading,   isAuthenticated, user} = useSelector(state=>state.User)
+
+const [email, setemail] = useState()
 const [password, setpassword] = useState()
 const [userfocus, setuserfocus] = useState()
 const [passfocus, setpassfocus] = useState()
+
+useEffect(() => {
+  // if(isAuthenticated){
+  //   Navigate('/admin')
+  // }
+}, [isAuthenticated])
+
+const loginhandle = (e)=>{
+  e.preventDefault()
+  const data = {
+    email,
+    password
+  }
+  dispatch(loginuseraction(data))
+}
+
   return (
     <>
     <div className="logincontainer">
@@ -19,21 +43,21 @@ const [passfocus, setpassfocus] = useState()
           <form action="index.html">
             <img src="/avatar.svg" />
             <h2 class="title">Welcome</h2>
-            <div class={`input-div one ${userfocus}`}>
+            <div class={`input-div one ${userfocus || (email && 'focus')}`}>
               <div class="i">
                 <i class="fas fa-user"></i>
               </div>
               <div class="div">
-                <h5>Username</h5>
+                <h5>Email</h5>
                 <input type="text" class="input" 
-                  value={username}
-                  onChange={(e)=>setusername(e.target.value)}
+                  value={email}
+                  onChange={(e)=>setemail(e.target.value)}
                   onFocus={()=>setuserfocus('focus')}
                   onBlur={()=>setuserfocus('')}
                 />
               </div>
             </div>
-            <div class={`input-div one ${passfocus}`}>
+            <div class={`input-div one ${passfocus || (password && 'focus')}`}>
               <div class="i">
                 <i class="fas fa-lock"></i>
               </div>
@@ -47,8 +71,8 @@ const [passfocus, setpassfocus] = useState()
                   />
               </div>
             </div>
-            <a href="#">Forgot Password?</a>
-            <input type="submit" class="btn" value="Login" />
+            <a href="/forgot">Forgot Password?</a>
+            <input type="submit" class="btn" value="Login" onClick={loginhandle}/>
           </form>
         </div>
       </div>

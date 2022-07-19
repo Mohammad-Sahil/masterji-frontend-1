@@ -13,6 +13,7 @@ import Home from "./Components/Home";
 import Orders from "./Components/Admin/Orders";
 import Manage from "./Components/Admin/Manage/Manage";
 import Login from "./Components/Authentication/Login";
+import Forgot from "./Components/Authentication/Forgot";
 import Executives from "./Components/Admin/Executives";
 import Tailors from "./Components/Admin/Tailors";
 import Protected from "./Protected";
@@ -37,6 +38,7 @@ const App = () => {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route exact path="/login" element={<Login />} />
+        <Route exact path="/forgot" element={<Forgot />} />
         <Route exact path="/admin" element={<Protected element={Admin}/>}>
           <Route path="manage" element={<Protected element={Manage} />}>
             <Route exact path="fashion" element={<Protected Role={['admin','developer','analyser','manager','booking_manager','fashion_consultant']} element={FashionConsultants} />} />
