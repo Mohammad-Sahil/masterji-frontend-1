@@ -30,7 +30,7 @@ const App = () => {
     Role:'admin'
   }
   useEffect(() => {
-    dispatch(loaduseraction({user}))
+    dispatch(loaduseraction())
   }, [dispatch])
   
   return (

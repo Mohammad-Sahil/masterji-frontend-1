@@ -8,7 +8,7 @@ const Login = () => {
 
   const dispatch = useDispatch()
   const Navigate = useNavigate()
-  const {loading,   isAuthenticated, user} = useSelector(state=>state.User)
+  const {loading, isAuthenticated, user} = useSelector(state=>state.User)
 
 const [email, setemail] = useState()
 const [password, setpassword] = useState()
@@ -16,9 +16,9 @@ const [userfocus, setuserfocus] = useState()
 const [passfocus, setpassfocus] = useState()
 
 useEffect(() => {
-  // if(isAuthenticated){
-  //   Navigate('/admin')
-  // }
+  if(isAuthenticated){
+    Navigate('/admin')
+  }
 }, [isAuthenticated])
 
 const loginhandle = (e)=>{
@@ -72,7 +72,7 @@ const loginhandle = (e)=>{
               </div>
             </div>
             <a href="/forgot">Forgot Password?</a>
-            <input type="submit" class="btn" value="Login" onClick={loginhandle}/>
+            <input type="submit" class="btn" value="Login" disabled={false} onClick={loginhandle}/>
           </form>
         </div>
       </div>

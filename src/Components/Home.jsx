@@ -1,4 +1,12 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 const Home = () => {
+    const Navigate = useNavigate()
+    useEffect(() => {
+      Navigate('/admin')
+    }, [])
+    
     return ( 
     <>
         <br /><br />
