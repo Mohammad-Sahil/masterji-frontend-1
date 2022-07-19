@@ -9,7 +9,7 @@ const Admin = () => {
   return (
     <>
         <div className="admin_container" >
-        <div className="row p-0 m-0" >
+        <div className="row p-0 m-0 h-100" >
           <div className="col col-2 p-0">
             <Sidebar/>
           </div>
