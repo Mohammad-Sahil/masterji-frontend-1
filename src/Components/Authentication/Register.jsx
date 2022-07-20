@@ -32,17 +32,19 @@ const NewProduct = ({ history }) => {
 
   const registerhandle = (e) => {
     e.preventDefault();
+    if(!(!password || !cpassword) && password===cpassword){
 
-    const myForm = {
-      name,
-      email,
-      password,
-      cpassword,
-      role,
+      const myForm = {
+        name,
+        email,
+        password,
+        cpassword,
+        role,
+      };
+      // console.log(myForm);
+      dispatch(registeruseraction(myForm));
+    }
     };
-    // console.log(myForm);
-    dispatch(registeruseraction(myForm));
-  };
 
   const [namefocus, setnamefocus] = useState();
   const [emailfocus, setemailfocus] = useState();
