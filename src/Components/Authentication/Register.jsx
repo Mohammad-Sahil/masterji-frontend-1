@@ -2,15 +2,12 @@ import { Fragment, useEffect, useState } from "react";
 import "./Register.css";
 import { useSelector, useDispatch } from "react-redux";
 import { registeruseraction } from "../../Actions/useraction";
-// import { Button } from "@material-ui/core";
 import Metadata from "../Metadata";
-// import SideBar from "./Sidebar";
 
 const NewProduct = ({ history }) => {
   const dispatch = useDispatch();
 
-  //   const { loading, error, success } = useSelector((state) => state.newProduct);
-  let error, success;
+    const { loading, error, success } = useSelector((state) => state.RegisterUser);
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
@@ -19,14 +16,14 @@ const NewProduct = ({ history }) => {
 
   useEffect(() => {
     if (error) {
-      alert.error(error);
-      //   dispatch(clearErrors());
+      // alert.error(error);
+      // dispatch({});
     }
 
     if (success) {
       alert.success("User Registered Successfully");
       history.push("/admin/dashboard");
-      //   dispatch({ type: NEW_PRODUCT_RESET });
+        dispatch({ type: 'REGISTER_USER_RESET' });
     }
   }, [dispatch, alert, error, history, success]);
 
