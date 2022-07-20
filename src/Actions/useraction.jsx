@@ -10,13 +10,13 @@ export const loaduseraction = () => async (dispatch) => {
         authorization: String(cookies.get('jwt')),
         mode: "no-cors",
       }}
-      // const {data} = await axios.get("https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/me",config);
-      // console.log(data)
-  let data= {user : {
-    name:'Shera',
-    email:'sheraofficials@gmail.com',
-    role:'Admin'
-  }}
+      const {data} = await axios.get("https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/me",config);
+      console.log(data)
+  // let data= {user : {
+  //   name:'Shera',
+  //   email:'sheraofficials@gmail.com',
+  //   role:'Admin'
+  // }}
       dispatch({
         type: 'LOAD_USER_SUCCESS',
         payload: data.user,
