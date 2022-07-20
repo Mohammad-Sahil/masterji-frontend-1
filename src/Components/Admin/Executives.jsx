@@ -4,6 +4,7 @@ import "./Manage/table.css";
 import { Modal } from "react-bootstrap";
 
 import SearchBar from "./Manage/searchBar";
+import Metadata from "../Metadata";
 
 const DUMMY_Data = [
   {
@@ -27,13 +28,13 @@ class Executives extends Component {
       operation: "Create",
       executive: {},
     },
-    searchText: ""
+    searchText: "",
   };
 
   api_url = "https://us-central1-masterji-online.cloudfunctions.net/app/";
 
   componentDidMount() {
-    fetch(this.api_url+"executives/v2/get")
+    fetch(this.api_url + "executives/v2/get")
       .then((response) => response.json())
       .then((executives) => {
         console.log(executives);
@@ -60,28 +61,28 @@ class Executives extends Component {
     e.preventDefault();
     const executive = this.state.modalFields.executive;
     fetch(this.api_url + "executives/v2/post", {
-        method:"POST",
-        body:JSON.stringify({...executive}),
-        headers:{"Content-Type" : "application/json"}
+      method: "POST",
+      body: JSON.stringify({ ...executive }),
+      headers: { "Content-Type": "application/json" },
     })
-    .then(response => response.json())
-    .then((data) => {
+      .then((response) => response.json())
+      .then((data) => {
         console.log(data);
         const executives = [executive, ...this.state.executives];
-        this.setState({ executives, showModal:false  });
-    })
-    .catch(err => console.log(err));
+        this.setState({ executives, showModal: false });
+      })
+      .catch((err) => console.log(err));
   };
 
   handleUpdate = (e) => {
     e.preventDefault();
     const executive = this.state.modalFields.executive;
-      fetch(this.api_url + "executives/v2/put/" + executive.id, {
-          method:"PUT",
-          body:JSON.stringify({...executive}),
-          headers:{"Content-Type" : "application/json"}
-      })
-      .then(response => {
+    fetch(this.api_url + "executives/v2/put/" + executive.id, {
+      method: "PUT",
+      body: JSON.stringify({ ...executive }),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => {
         console.log(response);
         response.json();
       })
@@ -90,26 +91,24 @@ class Executives extends Component {
         const executives = [...this.state.executives];
         const index = executives.indexOf(executive);
         executives[index] = { ...executive };
-        this.setState({ executives, showModal:false });
+        this.setState({ executives, showModal: false });
       })
-      .catch(err => console.log("err" + err))
+      .catch((err) => console.log("err" + err));
   };
 
   handleDelete = (executive) => {
-
-    fetch(this.api_url + "executives/v2/delete/" + executive.id,{
-            method:"DELETE"
-        })
-        .then(response => response.json())
-        .then((data)=>{
-            console.log(data);
-            const executives = this.state.executives.filter(
-              (c) => c.id !== executive.id
-            );
-            this.setState({ executives });
-        })
-        .catch(err => console.log(err));
-   
+    fetch(this.api_url + "executives/v2/delete/" + executive.id, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        const executives = this.state.executives.filter(
+          (c) => c.id !== executive.id
+        );
+        this.setState({ executives });
+      })
+      .catch((err) => console.log(err));
   };
 
   search = (searchText) => {
@@ -123,19 +122,32 @@ class Executives extends Component {
     let filteredexecutives = executives;
     filteredexecutives = filteredexecutives.filter((executive) => {
       for (let property in executive) {
-        if (typeof executive[property] === 'string' && executive[property].toLowerCase().includes(searchText.toLowerCase())) return true;
+        if (
+          typeof executive[property] === "string" &&
+          executive[property].toLowerCase().includes(searchText.toLowerCase())
+        )
+          return true;
       }
       return false;
     });
     return (
-      <div>
-          <div style={{ margin:'20px 20px 20px 30px', padding:'20px', borderRadius: '5px', backgroundColor: 'white'}}>
+      <>
+        <Metadata title="Executives | Admin | Masterji" />
+        <div>
+          <div
+            style={{
+              margin: "20px 20px 20px 30px",
+              padding: "20px",
+              borderRadius: "5px",
+              backgroundColor: "white",
+            }}
+          >
             <div className="row">
               <div className="col-2">
                 <button
                   type="button"
                   className="btn btn-warning addButton"
-                  style={{ width: '100%', color:'white' }}
+                  style={{ width: "100%", color: "white" }}
                   onClick={() => this.handleModal({}, "Create")}
                 >
                   Add
@@ -171,12 +183,18 @@ class Executives extends Component {
                       <td>{executive.pincode}</td>
                       <td>{executive.assignedArea}</td>
                       <td>
-                        <button className="btn-warning editButton" onClick={() =>this.handleModal(executive, "Update")}>
+                        <button
+                          className="btn-warning editButton"
+                          onClick={() => this.handleModal(executive, "Update")}
+                        >
                           <i class="fa fa-pencil" aria-hidden="true"></i>
                         </button>
                       </td>
                       <td>
-                        <button className="btn-danger deleteButton" onClick={() => this.handleDelete(executive)}>
+                        <button
+                          className="btn-danger deleteButton"
+                          onClick={() => this.handleDelete(executive)}
+                        >
                           <i class="fa fa-trash-o"></i>
                         </button>
                       </td>
@@ -199,37 +217,93 @@ class Executives extends Component {
                 >
                   <div className="form-group">
                     <label>Name</label>
-                    <input type="text" defaultValue={modalExecutive.name} name="name" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Question"/>
+                    <input
+                      type="text"
+                      defaultValue={modalExecutive.name}
+                      name="name"
+                      className="form-control"
+                      id="nameModal"
+                      onChange={this.handleChange}
+                      placeholder="Enter Question"
+                    />
                   </div>
                   <br />
                   <div className="form-group">
                     <label>Contact</label>
-                    <input type="text" defaultValue={modalExecutive.id} name="id" className="form-control" id="idModal" onChange={this.handleChange} placeholder="Enter Contact Number"/>
+                    <input
+                      type="text"
+                      defaultValue={modalExecutive.id}
+                      name="id"
+                      className="form-control"
+                      id="idModal"
+                      onChange={this.handleChange}
+                      placeholder="Enter Contact Number"
+                    />
                   </div>
                   <br />
                   <div className="form-group">
                     <label>Email</label>
-                    <input type="text" defaultValue={modalExecutive.email} name="email" className="form-control" id="emailModal" onChange={this.handleChange} placeholder="Enter Email"/>
+                    <input
+                      type="text"
+                      defaultValue={modalExecutive.email}
+                      name="email"
+                      className="form-control"
+                      id="emailModal"
+                      onChange={this.handleChange}
+                      placeholder="Enter Email"
+                    />
                   </div>
                   <br />
                   <div className="form-group">
                     <label>Address</label>
-                    <input type="text" defaultValue={modalExecutive.address} name="address" className="form-control" id="addressModal" onChange={this.handleChange} placeholder="Enter Address"/>
+                    <input
+                      type="text"
+                      defaultValue={modalExecutive.address}
+                      name="address"
+                      className="form-control"
+                      id="addressModal"
+                      onChange={this.handleChange}
+                      placeholder="Enter Address"
+                    />
                   </div>
                   <br />
                   <div className="form-group">
                     <label>City</label>
-                    <input type="text" defaultValue={modalExecutive.city} name="city" className="form-control" id="cityModal" onChange={this.handleChange} placeholder="Enter City"/>
+                    <input
+                      type="text"
+                      defaultValue={modalExecutive.city}
+                      name="city"
+                      className="form-control"
+                      id="cityModal"
+                      onChange={this.handleChange}
+                      placeholder="Enter City"
+                    />
                   </div>
                   <br />
                   <div className="form-group">
                     <label>Pin Code</label>
-                    <input type="text" defaultValue={modalExecutive.pincode} name="pincode" className="form-control" id="pincodeModal" onChange={this.handleChange} placeholder="Enter Pin Code"/>
+                    <input
+                      type="text"
+                      defaultValue={modalExecutive.pincode}
+                      name="pincode"
+                      className="form-control"
+                      id="pincodeModal"
+                      onChange={this.handleChange}
+                      placeholder="Enter Pin Code"
+                    />
                   </div>
                   <br />
                   <div className="form-group">
                     <label>Assigned Area</label>
-                    <input type="text" defaultValue={modalExecutive.assignedArea} name="assignedArea" className="form-control" id="assignedAreaModal" onChange={this.handleChange} placeholder="Enter Assigned Area"/>
+                    <input
+                      type="text"
+                      defaultValue={modalExecutive.assignedArea}
+                      name="assignedArea"
+                      className="form-control"
+                      id="assignedAreaModal"
+                      onChange={this.handleChange}
+                      placeholder="Enter Assigned Area"
+                    />
                   </div>
                   <br />
                   <div style={{ float: "right" }}>
@@ -239,7 +313,11 @@ class Executives extends Component {
                       </button>
                     </span>
                     <span>
-                      <button type="button" className="btn btn-primary" onClick={() => this.setState({ showModal: false })}>
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={() => this.setState({ showModal: false })}
+                      >
                         Close
                       </button>
                     </span>
@@ -247,8 +325,9 @@ class Executives extends Component {
                 </form>
               </Modal.Body>
             </Modal>
-          </div> 
+          </div>
         </div>
+      </>
     );
   }
 }

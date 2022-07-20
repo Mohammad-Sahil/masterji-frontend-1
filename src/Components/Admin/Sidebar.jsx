@@ -11,7 +11,7 @@ const Sidebar = () => {
   const data = [
     {
       title: "Orders",
-      path: "/admin/orders",
+      path: location.pathname.includes("/admin/orders") ? location.pathname : '/admin/orders',
       cName: "nav-text",
     },
     {
@@ -21,12 +21,17 @@ const Sidebar = () => {
     },
     {
       title: "Executives",
-      path: "/admin/executives",
+      path: location.pathname.includes("/admin/executives") ? location.pathname : '/admin/executives',
       cName: "nav-text",
     },
     {
       title: "Tailors",
-      path: "/admin/tailors",
+      path: location.pathname.includes("/admin/tailors") ? location.pathname : '/admin/tailors',
+      cName: "nav-text",
+    },
+    {
+      title: "Register",
+      path: location.pathname.includes("/admin/register") ? location.pathname : '/admin/register',
       cName: "nav-text",
     },
   ];

@@ -3,6 +3,7 @@ import { Modal } from "react-bootstrap";
 import SearchBar from "./searchBar";
 import "./fashionConsultant.css";
 import "./table.css";
+import Metadata from "../../Metadata";
 class FashionConsultants extends Component {
   state = {
     consultants: [],
@@ -118,6 +119,9 @@ class FashionConsultants extends Component {
       return false;
     });
     return (
+      <>
+      <Metadata title='Fashion Consultant | Admin | Masterji'/>
+
       <div>
         {/* <h4>Add Consultants</h4>
                 <br />
@@ -376,6 +380,7 @@ class FashionConsultants extends Component {
   }
         </div>
       </div>
+      </>
     );
   }
 }

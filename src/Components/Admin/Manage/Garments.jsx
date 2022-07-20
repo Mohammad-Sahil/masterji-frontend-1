@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import {Modal} from 'react-bootstrap';
+import Metadata from '../../Metadata';
 import SearchBar from './searchBar';
 import './table.css';
 
@@ -73,6 +74,9 @@ class Garments extends Component {
             return false;
         })
         return (
+            <>
+            <Metadata title='Garments | Admin | Masterji'/>
+
             <div className='container'>
                 <br/>
                 {/* <h4>Add garments</h4>
@@ -212,6 +216,7 @@ class Garments extends Component {
                     </Modal.Body>
                 </Modal>
             </div>
+            </>
         );
     }
 }

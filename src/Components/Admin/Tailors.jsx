@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
+import Metadata from '../Metadata';
 
 class Tailors extends Component {
     state = {  } 
     render() { 
-        return <>Tailors</>;
+        return <>
+        <Metadata title='Tailors | Admin | Masterji'/>
+        Tailors
+        </>;
     }
 }
  

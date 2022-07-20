@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import {Modal} from 'react-bootstrap';
+import Metadata from '../../Metadata';
 import SearchBar from './searchBar';
 import './table.css';
 class Fabric extends Component {
@@ -72,6 +73,9 @@ class Fabric extends Component {
             return false;
         })
         return (
+            <>
+            <Metadata title='Fabric Shops | Admin | Masterji'/>
+
             <div className="container">
                 <br/>
                 {/* <h4>Add Consultants</h4>
@@ -216,6 +220,7 @@ class Fabric extends Component {
                     </Modal.Body>
                 </Modal>
             </div>
+            </>
         );
     }
 }

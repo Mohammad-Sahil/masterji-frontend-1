@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import SearchBar from "./searchBar";
+import Metadata from '../../Metadata';
 import "./table.css";
 class Queries extends Component {
   state = {
@@ -112,6 +113,8 @@ y
       return false;
     });
     return (
+      <>
+      <Metadata title='Queries | Admin | Masterji'/>
       <div>
           <div style={{ margin:'20px 20px 20px 30px', padding:'20px', borderRadius: '5px', backgroundColor: 'white'}}>
             <div className="row">
@@ -214,6 +217,7 @@ y
             </Modal>
           </div> 
         </div>
+        </>
     );
   }
 }

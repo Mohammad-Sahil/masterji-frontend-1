@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginuseraction } from "../../Actions/useraction";
+import Metadata from "../Metadata";
 import './Login.css'
 
 const Login = () => {
@@ -32,6 +33,7 @@ const loginhandle = (e)=>{
 
   return (
     <>
+    <Metadata title='Login | Admin | Masterji'/>
     <div className="logincontainer">
         
       <img class="wave" src="/wave.png" />

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import SearchBar from "./searchBar";
+import Metadata from '../../Metadata';
 import "./table.css";
 class About extends Component {
   state = {
@@ -111,6 +112,8 @@ class About extends Component {
       return false;
     });
     return (
+      <>
+      <Metadata title='About | Admin | Masterji'/>
       <div>
           <div style={{ margin:'20px 20px 20px 30px', padding:'20px', borderRadius: '5px', backgroundColor: 'white'}}>
             <div className="row">
@@ -207,6 +210,7 @@ class About extends Component {
             </Modal>
           </div> 
         </div>
+      </>
     );
   }
 }

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import SearchBar from "./searchBar";
+import Metadata from "../../Metadata";
+
 import "./table.css";
 class FAQs extends Component {
   state = {
@@ -113,6 +115,8 @@ class FAQs extends Component {
       return false;
     });
     return (
+      <>
+      
       <div>
           <div style={{ margin:'20px 20px 20px 30px', padding:'20px', borderRadius: '5px', backgroundColor: 'white'}}>
             <div className="row">
@@ -204,6 +208,7 @@ class FAQs extends Component {
             </Modal>
           </div> 
         </div>
+        </>
     );
   }
 }

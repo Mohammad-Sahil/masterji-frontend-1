@@ -4,10 +4,12 @@ import Sidebar from './Sidebar'
 
 import './Admin.css';
 import { Outlet } from 'react-router-dom';
+import Metadata from '../Metadata';
 
 const Admin = () => {
   return (
     <>
+    <Metadata title='Admin | Masterji'/>
         <div className="admin_container" >
         <div className="row p-0 m-0 h-100" >
           <div className="col col-2 p-0">

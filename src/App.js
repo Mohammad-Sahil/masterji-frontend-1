@@ -13,6 +13,7 @@ import Home from "./Components/Home";
 import Orders from "./Components/Admin/Orders";
 import Manage from "./Components/Admin/Manage/Manage";
 import Login from "./Components/Authentication/Login";
+import Register from "./Components/Authentication/Register";
 import Forgot from "./Components/Authentication/Forgot";
 import Executives from "./Components/Admin/Executives";
 import Tailors from "./Components/Admin/Tailors";
@@ -24,11 +25,6 @@ const App = () => {
   const dispatch = useDispatch()
   const {isAuthenticated} = useSelector(state=>state.User)
 
-  let user = {
-    Name:'Shera',
-    Email:'sheraofficials@gmail.com',
-    Role:'admin'
-  }
   useEffect(() => {
     dispatch(loaduseraction())
   }, [dispatch])
@@ -37,23 +33,27 @@ const App = () => {
     <>
       <Routes>
         <Route exact path="/" element={<Home />} />
+
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/forgot" element={<Forgot />} />
+
         <Route exact path="/admin" element={<Protected element={Admin}/>}>
+          <Route exact path="register" element={<Protected Role={['Admin']} element={Register} />} />
+
           <Route path="manage" element={<Protected element={Manage} />}>
-            <Route exact path="fashion" element={<Protected Role={['admin','developer','analyser','manager','booking_manager','fashion_consultant']} element={FashionConsultants} />} />
-            <Route exact path="fabric" element={<Protected Role={['admin','developer','analyser','manager','booking_manager','fabric_sourcing']} element={Fabric} />} />
-            <Route exact path="garments" element={<Protected Role={['admin','developer','analyser','manager','sales','booking_manager','delivery_manager']} element={Garments} />} />
-            <Route exact path="faq" element={<Protected Role={['admin','developer','analyser','manager']} element={FAQs} />} />
-            <Route exact path="about" element={<Protected Role={['admin','developer','analyser','manager']} element={About} />} />
-            <Route exact path="users" element={<Protected Role={['admin','developer','analyser','manager','user_manager','sales','booking_manager','delivery_manager']} element={Users} />} />
-            <Route exact path="queries" element={<Protected Role={['admin','developer','analyser','manager','customer']} element={Queries} />} />
-            <Route exact path="consultant" element={<Protected Role={['admin','developer','analyser','manager']} element={ConsultantBooking} />} />
+            <Route exact path="fashion" element={<Protected Role={['Admin','Developer','Analyser','Manager','Booking Manager','Fashion Consultant']} element={FashionConsultants} />} />
+            <Route exact path="fabric" element={<Protected Role={['Admin','Developer','Analyser','Manager','Booking Manager','Fabric Sourcing']} element={Fabric} />} />
+            <Route exact path="garments" element={<Protected Role={['Admin','Developer','Analyser','Manager','S','Booking Manager','Delivery Manager']} element={Garments} />} />
+            <Route exact path="faq" element={<Protected Role={['Admin','Developer','Analyser','Manager']} element={FAQs} />} />
+            <Route exact path="about" element={<Protected Role={['Admin','Developer','Analyser','Manager']} element={About} />} />
+            <Route exact path="users" element={<Protected Role={['Admin','Developer','Analyser','Manager','User Manager','S','Booking Manager','Delivery Manager']} element={Users} />} />
+            <Route exact path="queries" element={<Protected Role={['Admin','Developer','Analyser','Manager','Customer']} element={Queries} />} />
+            <Route exact path="consultant" element={<Protected Role={['Admin','Developer','Analyser','Manager']} element={ConsultantBooking} />} />
           </Route>
+
           <Route exact path="orders" element={<Protected element={Orders} />} />
           <Route exact path="executives" element={<Protected element={Executives} />} />
-          <Route exact path="tailors" element={<Protected Role={['admin','developer','analyser','manager','tailor']} element={Tailors} />} />
-
+          <Route exact path="Tailors" element={<Protected Role={['Admin','Developer','Analyser','Manager','Tailor']} element={Tailors} />} />
         </Route>
         <Route path='*' element={<Error />} />
       </Routes>
