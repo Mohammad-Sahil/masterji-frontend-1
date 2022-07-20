@@ -15,8 +15,10 @@ class FashionConsultants extends Component {
     expandedConsultant:{}
   };
 
+  api_url = "https://us-central1-masterji-online.cloudfunctions.net/app/";
+
   componentDidMount() {
-    fetch("https://us-central1-masterji-online.cloudfunctions.net/app/fashionConsultant/v2/get")
+    fetch(this.api_url+"fashionConsultant/v2/get")
       .then((response) => response.json())
       .then((consultants) => {
         console.log(consultants);
@@ -36,30 +38,64 @@ class FashionConsultants extends Component {
   handleChange = (e) => {
     let modalFields = this.state.modalFields;
     modalFields.consultant[e.currentTarget.name] = e.currentTarget.value;
+    console.log(modalFields.consultant)
     this.setState({ modalFields });
   };
 
   handleCreate = (e) => {
     e.preventDefault();
     const consultant = this.state.modalFields.consultant;
-    const consultants = [consultant, ...this.state.consultants];
-    this.setState({ consultants });
+    fetch(this.api_url + "fashionConsultant/v2/post", {
+        method:"POST",
+        body:JSON.stringify({...consultant}),
+        headers:{"Content-Type" : "application/json"}
+    })
+    .then(response => response.json())
+    .then((data) => {
+        console.log(data);
+        const consultants = [consultant, ...this.state.consultants];
+        this.setState({ consultants, showModal:false  });
+    })
+    .catch(err => console.log(err));
   };
 
   handleUpdate = (e) => {
     e.preventDefault();
     const consultant = this.state.modalFields.consultant;
-    const consultants = [...this.state.consultants];
-    const index = consultants.indexOf(consultant);
-    consultants[index] = { ...consultant };
-    this.setState({ consultants });
+      fetch(this.api_url + "fashionConsultant/v2/put/" + consultant.id, {
+          method:"PUT",
+          body:JSON.stringify({...consultant}),
+          headers:{"Content-Type" : "application/json"}
+      })
+      .then(response => {
+        console.log(response);
+        response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        const consultants = [...this.state.consultants];
+        const index = consultants.indexOf(consultant);
+        consultants[index] = { ...consultant };
+        this.setState({ consultants, showModal:false });
+      })
+      .catch(err => console.log("err" + err))
   };
 
   handleDelete = (consultant) => {
-    const consultants = this.state.consultants.filter(
-      (c) => c.id !== consultant.id
-    );
-    this.setState({ consultants });
+
+    fetch(this.api_url + "fashionConsultant/v2/delete/" + consultant.id,{
+            method:"DELETE"
+        })
+        .then(response => response.json())
+        .then((data)=>{
+            console.log(data);
+            const consultants = this.state.consultants.filter(
+              (c) => c.id !== consultant.id
+            );
+            this.setState({ consultants });
+        })
+        .catch(err => console.log(err));
+   
   };
 
   search = (searchText) => {
@@ -73,6 +109,7 @@ class FashionConsultants extends Component {
 
   render() {
     const { consultants, searchText, expandedConsultant } = this.state;
+    const modalConsultant = this.state.modalFields.consultant;
     let filteredConsultants = consultants;
     filteredConsultants = filteredConsultants.filter((consultant) => {
       for (let property in consultant) {
@@ -218,7 +255,7 @@ class FashionConsultants extends Component {
             </div>
             <Modal show={this.state.showModal}>
               <Modal.Header>
-                {this.state.modalFields.operation} Entry
+                {this.state.modalFields.operation} Consultant
               </Modal.Header>
               <Modal.Body>
                 <form
@@ -229,16 +266,43 @@ class FashionConsultants extends Component {
                   }
                 >
                   <div className="form-group">
-                    <label>First Name</label>
-                    <input
-                      type="text"
-                      defaultValue={this.state.modalFields.consultant.name}
-                      name="name"
-                      className="form-control"
-                      id="nameModal"
-                      onChange={this.handleChange}
-                      placeholder="Enter Name"
-                    />
+                    <label>Name</label>
+                    <input type="text" defaultValue={modalConsultant.name} name="name" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Name"/>
+                  </div>
+                  <br />
+                  <div className="form-group">
+                    <label>City</label>
+                    <input type="text" defaultValue={modalConsultant.city} name="city" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter City"/>
+                  </div>
+                  <br />
+                  <div className="form-group">
+                    <label>Contact</label>
+                    <input type="text" defaultValue={modalConsultant.contact} name="contact" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Contact"/>
+                  </div>
+                  <br />
+                  <div className="form-group">
+                    <label>Email</label>
+                    <input type="text" defaultValue={modalConsultant.email} name="email" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Email"/>
+                  </div>
+                  <br />
+                  <div className="form-group">
+                    <label>Expertise</label>
+                    <input type="text" defaultValue={modalConsultant.expertise} name="expertise" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Expertise"/>
+                  </div>
+                  <br />
+                  <div className="form-group">
+                    <label>Work Experience</label>
+                    <input type="text" defaultValue={modalConsultant.workExperience} name="workExperience" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Work Experience"/>
+                  </div>
+                  <br />
+                  <div className="form-group">
+                    <label>Price</label>
+                    <input type="text" defaultValue={modalConsultant.rate} name="rate" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Price"/>
+                  </div>
+                  <br />
+                  <div className="form-group">
+                    <label>User Image</label>
+                    <input type="text" defaultValue={modalConsultant.userImage} name="userImage" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter User Image"/>
                   </div>
                   <br />
                   <div style={{ float: "right" }}>
@@ -248,11 +312,7 @@ class FashionConsultants extends Component {
                       </button>
                     </span>
                     <span>
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() => this.setState({ showModal: false })}
-                      >
+                      <button type="button" className="btn btn-primary" onClick={() => this.setState({ showModal: false })}>
                         Close
                       </button>
                     </span>

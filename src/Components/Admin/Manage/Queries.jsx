@@ -1,218 +1,221 @@
-import React,{Component} from 'react';
-import {Modal} from 'react-bootstrap';
-import SearchBar from './searchBar';
-import './table.css';
-class Fabric extends Component {
-    state = {
-        consultants:[],
-        showModal:false,
-        modalFields:{
-            operation:'Create',
-            consultant:{}
-        },
-        searchText:""
-      } 
+import React, { Component } from "react";
+import { Modal } from "react-bootstrap";
+import SearchBar from "./searchBar";
+import "./table.css";
+class Queries extends Component {
+  state = {
+    queries: [],
+    showModal: false,
+    modalFields: {
+      operation: "Create",
+      query: {},
+    },
+    searchText: ""
+  };
+y
+  api_url = "https://us-central1-masterji-online.cloudfunctions.net/app/";
 
-    componentDidMount(){
-        fetch("http://localhost:4000/Fabric")
-            .then(response => response.json())
-            .then(consultants => {
-                console.log(consultants);
-                this.setState({consultants});
-            });
-    }
+  componentDidMount() {
+    fetch(this.api_url+"query/v2/get")
+      .then((response) => response.json())
+      .then((queries) => {
+        console.log(queries);
+        this.setState({ queries });
+      });
+  }
 
-    handleModal(consultant,operation){
-        this.setState({showModal:!this.state.showModal})
-        let modalFields = {
-            operation, consultant
-        }
-        this.setState({modalFields});
-    }
-
-    handleChange = e => {
-        let modalFields = this.state.modalFields;
-        modalFields.consultant[e.currentTarget.name] = e.currentTarget.value;
-        this.setState({ modalFields });
+  handleModal(query, operation) {
+    this.setState({ showModal: !this.state.showModal });
+    let modalFields = {
+      operation,
+      query,
     };
+    this.setState({ modalFields });
+  }
 
-    handleCreate = e => {
-        e.preventDefault();        
-        const consultant = this.state.modalFields.consultant;
-        const consultants = [consultant , ...this.state.consultants];
-        this.setState({consultants});
-    }
+  handleChange = (e) => {
+    let modalFields = this.state.modalFields;
+    modalFields.query[e.currentTarget.name] = e.currentTarget.value;
+    this.setState({ modalFields });
+  };
 
-    handleUpdate = e => {
-        e.preventDefault();
-        const consultant = this.state.modalFields.consultant;
-        const consultants = [...this.state.consultants];
-        const index = consultants.indexOf(consultant);
-        consultants[index] = {...consultant};
-        this.setState({consultants});
-    }
+  handleCreate = (e) => {
+    e.preventDefault();
+    const query = this.state.modalFields.query;
+    fetch(this.api_url + "query/v2/post", {
+        method:"POST",
+        body:JSON.stringify({...query}),
+        headers:{"Content-Type" : "application/json"}
+    })
+    .then(response => response.json())
+    .then((data) => {
+        console.log(data);
+        const queries = [data.data, ...this.state.queries];
+        this.setState({ queries, showModal:false  });
+    })
+    .catch(err => console.log(err));
+  };
 
-    handleDelete = consultant => {
-        const consultants = this.state.consultants.filter(c => c.userId !== consultant.userId);
-        this.setState({consultants});
-    }
+  handleUpdate = (e) => {
+    e.preventDefault();
+    const query = this.state.modalFields.query;
+    console.log(query)
+      fetch(this.api_url + "query/v2/put/" + query.id, {
+          method:"PUT",
+          body:JSON.stringify({...query}),
+          headers:{"Content-Type" : "application/json"}
+      })
+      .then(response => {
+        console.log(response);
+        response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        const queries = [...this.state.queries];
+        const index = queries.indexOf(query);
+        queries[index] = { ...data.data };
+        this.setState({ queries, showModal:false });
+      })
+      .catch(err => console.log("err" + err))
+  };
 
-    search = searchText => {
-        console.log(searchText);
-        this.setState({searchText});
-    }
+  handleDelete = (query) => {
 
-    render() { 
-        const {consultants, searchText} = this.state;
-        let filteredConsultants = consultants;
-        filteredConsultants = filteredConsultants.filter(consultant => {
-            for(let property in consultant){
-                if(consultant[property].includes(searchText)) return true;
-            }
-            return false;
+    fetch(this.api_url + "query/v2/delete/" + query.id,{
+            method:"DELETE"
         })
-        return (
-            <div className='container'>
-                <br/>
-                {/* <h4>Add Consultants</h4>
-                <br />
-                <form onSubmit>
-                    <div className="form-group">
-                        <input type="text" className="form-control" id="name" placeholder="Enter Name" />
-                    </div>
-                    <br />
-                    <div className="form-group">
-                        <input type="text" className="form-control" id="email" placeholder="Enter Email" />
-                    </div>
-                    <br />
-                    <div className="form-group">
-                        <input type="text" className="form-control" id="contact" placeholder="Enter Contact" />
-                    </div>
-                    <br />
-                    <div className="form-group">
-                        <input type="text" className="form-control" id="city" placeholder="Enter City" />
-                    </div>
-                    <br />
-                    <div className="form-group">
-                        <input type="text" className="form-control" id="expertise" placeholder="Enter Expertise" />
-                    </div>
-                    <br />
-                    <div className="form-group">
-                        <input type="text" className="form-control" id="workExperience" placeholder="Enter Work Experience" />
-                    </div>
-                    <br />
-                    <div className="form-group">
-                        <input type="text" className="form-control" id="rate" placeholder="Enter Rate" />
-                    </div>
-                    <br />
-                    <div className="form-group">
-                        <input type="text" className="form-control" id="workSample" placeholder="Enter Work Samples" />
-                    </div>
-                    <br />
-                    <button type="submit" className="btn btn-primary">Submit</button>
-                </form> */}
-                <div className="row">
-                    <div className="col-1">
-                        <button type="button" className="btn btn-primary addButton" style={{width:80}} onClick={() => this.handleModal({}, 'Create')}>Add</button>
-                    </div>
-                    <div className="col-11">
-                        <SearchBar search={this.search} searchInput={searchText} />
-                    </div>
-                </div>
-                <br />
-                <div class="table-responsive tableDiv">
-                <table className="table table-striped table-condensed">
-                    <thead className="thead-dark">
-                        <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Message</th>
-                        <th scope="col">Resolved</th>
-                        <th scope="col">Updated At</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredConsultants.map(consultant => 
-                            <tr key={consultant.userId}>
-                                <th scope="row">{consultant.userId}</th>
-                                <td>{consultant.name}</td>
-                                <td>{consultant.city}</td>
-                                <td>{consultant.contact}</td>
-                                <td>{consultant.email}</td>
-                                <td>{consultant.expertise}</td>
-                                <td>{consultant.rate}</td>
-                                <td>{consultant.userImage}</td>
-                                <td>{consultant.workExperience}</td>
-                                <td>{consultant.workSample}</td>
-                                <td><button className="btn-warning editButton"><i class="fa fa-pencil"  aria-hidden="true"  onClick={() => this.handleModal(consultant, 'Update')}></i></button></td>
-                                <td><button className="btn-danger deleteButton"><i class="fa fa-trash-o" onClick={() => this.handleDelete(consultant)}></i></button></td>
-                            </tr> 
-                        )}
-                        {/* <tr>
-                                <th scope="row">consultant.userId</th>
-                                <td>consultant.namnewnrwnfn</td>
-                                <td>consultant.city</td>
-                                <td>consultant.contact</td>
-                                <td>consultant.email</td>
-                                <td>consultant.expertise</td>
-                                <td>consultant.rate</td>
-                                <td>consultant.userImage</td>
-                                <td>consultant.workExperience</td>
-                                <td>consultant.workSample</td>
-                                <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true" ></i></td>
+        .then(response => response.json())
+        .then((data)=>{
+            console.log(data);
+            const queries = this.state.queries.filter(
+              (c) => c.id !== query.id
+            );
+            this.setState({ queries });
+        })
+        .catch(err => console.log(err));
+   
+  };
 
-                            <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
-                        </tr> 
-                        <tr>
-                            <th scope="row">consultant.userId</th>
-                            <td>consultant.namnewnrwnfn</td>
-                            <td>consultant.city</td>
-                            <td>consultant.contact</td>
-                            <td>consultant.email</td>
-                            <td>consultant.expertise</td>
-                            <td>consultant.rate</td>
-                            <td>consultant.userImage</td>
-                            <td>consultant.workExperience</td>
-                            <td>consultant.workSample</td>
-                            <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true" ></i></td>
-                            <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
-                        </tr> 
-                        <tr>
-                            <th scope="row">consultant.userId</th>
-                            <td>consultant.namnewnrwnfn</td>
-                            <td>consultant.city</td>
-                            <td>consultant.contact</td>
-                            <td>consultant.email</td>
-                            <td>consultant.expertise</td>
-                            <td>consultant.rate</td>
-                            <td>consultant.userImage</td>
-                            <td>consultant.workExperience</td>
-                            <td>consultant.workSample</td>
-                            <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true" ></i></td>
-                            <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
-                        </tr>  */}
-                    </tbody>
-                </table>
-                </div>
-                <Modal show={this.state.showModal}>
-                    <Modal.Header>{this.state.modalFields.operation} Entry</Modal.Header>
-                    <Modal.Body>
-                        <form  onSubmit={this.state.modalFields.operation === 'Update' ? this.handleUpdate : this.handleCreate}>
-                            <div className="form-group">
-                                <label>First Name</label>
-                                <input type="text" defaultValue={this.state.modalFields.consultant.name} name="name" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Name" />
-                            </div>
-                            <br />
-                            <div style={{float:"right"}}>
-                            <span><button type="submit" className="btn btn-primary">Submit</button></span>
-                            <span><button type="button" className="btn btn-primary" onClick={() => this.setState({showModal:false})}>Close</button></span>
-                            </div>
-                    </form>
-                    </Modal.Body>
-                </Modal>
+  search = (searchText) => {
+    console.log(searchText);
+    this.setState({ searchText });
+  };
+
+  render() {
+    const { queries, searchText } = this.state;
+    const modalQuery = this.state.modalFields.query;
+    let filteredQueries = queries;
+    filteredQueries = filteredQueries.filter((query) => {
+      for (let property in query) {
+        if (typeof query[property] === 'string' && query[property].toLowerCase().includes(searchText.toLowerCase())) return true;
+      }
+      return false;
+    });
+    return (
+      <div>
+          <div style={{ margin:'20px 20px 20px 30px', padding:'20px', borderRadius: '5px', backgroundColor: 'white'}}>
+            <div className="row">
+              <div className="col-2">
+                <button
+                  type="button"
+                  className="btn btn-warning addButton"
+                  style={{ width: '100%', color:'white' }}
+                  onClick={() => this.handleModal({}, "Create")}
+                >
+                  Add
+                </button>
+              </div>
+              <div className="col-10">
+                <SearchBar search={this.search} searchInput={searchText} />
+              </div>
             </div>
-        );
-    }
+            <br />
+            <div class="table-responsive tableDiv">
+              <table className="table table-condensed">
+                <thead className="thead-dark">
+                  <tr>
+                    <th scope="col">Email</th>
+                    <th scope="col">Message</th>
+                    <th scope="col">Created At</th>
+                    <th scope="col">Updated at</th>
+                    <th scope="col"><center>Resolved</center></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredQueries.map((query) => (
+                    <tr key={query.id}>
+                      <td>{query.email}</td>
+                      <td>{query.message}</td>
+                      <td>{query.date}</td>
+                      <td>{query.updatedAt}</td>
+                      <td align="center">{query.resolved?<i style={{color:'green', fontSize:'20px'}} class="fa fa-square" aria-hidden="true"></i>:<i style={{color:'red', fontSize:'20px'}}  class="fa fa-square fa-2x" aria-hidden="true"></i>}</td>
+                      <td>
+                        <button className="btn-warning editButton" onClick={() =>this.handleModal(query, "Update")}>
+                          <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </button>
+                      </td>
+                      <td>
+                        <button className="btn-danger deleteButton" onClick={() => this.handleDelete(query)}>
+                          <i class="fa fa-trash-o"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Modal show={this.state.showModal}>
+              <Modal.Header>
+                {this.state.modalFields.operation} Query
+              </Modal.Header>
+              <Modal.Body>
+                <form
+                  onSubmit={
+                    this.state.modalFields.operation === "Update"
+                      ? this.handleUpdate
+                      : this.handleCreate
+                  }
+                >
+                  <div className="form-group">
+                    <label>Email</label>
+                    <input type="text" defaultValue={modalQuery.email} name="email" className="form-control" id="emailModal" onChange={this.handleChange} placeholder="Enter Email"/>
+                  </div>
+                  <br />
+                  <div className="form-group">
+                    <label>Message</label>
+                    <input type="text" defaultValue={modalQuery.message} name="message" className="form-control" id="messageModal" onChange={this.handleChange} placeholder="Enter Message"/>
+                  </div>
+                  <br />
+                  <div className="form-group">
+                    <label>Resolved</label>
+                    <select value={modalQuery.resolved } class="form-select" aria-label="Default select example"  name="resolved" id="resolvedModal" onChange={this.handleChange} placeholder="Resolved/Pending">
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                    </select>
+                    {/* <input type="text" defaultValue={modalQuery.resolved} name="resolved" className="form-control" id="resolvedModal" onChange={this.handleChange} placeholder="Resolved/Pending"/> */}
+                  </div>
+                  <br />
+                  <div style={{ float: "right" }}>
+                    <span>
+                      <button type="submit" className="btn btn-primary">
+                        Submit
+                      </button>
+                    </span>
+                    <span>
+                      <button type="button" className="btn btn-primary" onClick={() => this.setState({ showModal: false })}>
+                        Close
+                      </button>
+                    </span>
+                  </div>
+                </form>
+              </Modal.Body>
+            </Modal>
+          </div> 
+        </div>
+    );
+  }
 }
- 
-export default Fabric;
+
+export default Queries;
