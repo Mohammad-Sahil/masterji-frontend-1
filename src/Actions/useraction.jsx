@@ -7,11 +7,11 @@ export const loaduseraction = () => async (dispatch) => {
       dispatch({ type: 'LOAD_USER_REQUEST' });
       
       const config = {headers: {
-        authorization: String(cookies.get('jwt')),
+        // authorization: String(cookies.get('jwt')),
         mode: "no-cors",
       }}
       const {data} = await axios.get("https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/me",config);
-      console.log(data)
+      // console.log(data)
   // let data= {user : {
   //   name:'Shera',
   //   email:'sheraofficials@gmail.com',
@@ -66,6 +66,24 @@ export const loaduseraction = () => async (dispatch) => {
     } catch (error) {
       dispatch({
         type: 'REGISTER_USER_FAIL',
+        payload: error.response.data.message,
+      });
+    }
+  };
+
+  export const logoutuseraction = () => async (dispatch) => {
+    try {
+      await axios.get("https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/logout",{headers: {
+        authorization: String(cookies.get('jwt')),
+        mode: "no-cors",
+      }});
+  
+      dispatch({
+        type: 'LOGOUT_USER_SUCCESS',
+      });
+    } catch (error) {
+      dispatch({
+        type: 'LOGOUT_USER_FAIL',
         payload: error.response.data.message,
       });
     }

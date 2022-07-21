@@ -1,12 +1,12 @@
 import React from "react";
-import * as FaIcons from "react-icons/fa";
-import * as AiIcons from "react-icons/ai";
-import * as IoIcons from "react-icons/io";
 import "./Sidebar.css";
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutuseraction } from "../../Actions/useraction";
 
 const Sidebar = () => {
+  const dispatch = useDispatch()
   const location = useLocation()
   const data = [
     {
@@ -38,6 +38,11 @@ const Sidebar = () => {
 
   const [sidebar, setSidebar] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
+
+  const logouthandle = (e)=>{
+    e.preventDefault()
+    dispatch(logoutuseraction())
+  }
 
   return (
     <>
@@ -71,7 +76,7 @@ const Sidebar = () => {
             <img src="https://walr.com/app/uploads/2022/03/audience-access.svg" alt="" /><span className="profileName">Yash Deorah <br/><p style={{fontSize:13}}>Admin</p></span>
           </li> 
           <li className="nav-text logout-footer">
-            <NavLink activeclassname="active" to="/login" >
+            <NavLink activeclassname="active" to={'/'} onClick={logouthandle} >
               <span>Log Out</span>
             </NavLink>
           </li>
