@@ -13,7 +13,7 @@ import Home from "./Components/Home";
 import Orders from "./Components/Admin/Orders";
 import Manage from "./Components/Admin/Manage/Manage";
 import Login from "./Components/Authentication/Login";
-import Register from "./Components/Authentication/Register";
+import Register from "./Components/Admin/Portal/Register";
 import Forgot from "./Components/Authentication/Forgot";
 import Executives from "./Components/Admin/Executives";
 import Tailors from "./Components/Admin/Tailors";
@@ -21,6 +21,7 @@ import Protected from "./Protected";
 import { useDispatch, useSelector } from "react-redux";
 import { loaduseraction } from "./Actions/useraction";
 import Error from "./Components/Layout/Error";
+// import PortalUsers from "./Components/Admin/Portal/PortalUsers";
 const App = () => {
   const dispatch = useDispatch()
   const {isAuthenticated} = useSelector(state=>state.User)
@@ -39,6 +40,7 @@ const App = () => {
 
         <Route exact path="/admin" element={<Protected element={Admin}/>}>
           <Route exact path="register" element={<Protected Role={['Admin']} element={Register} />} />
+          {/* <Route exact path="portalusers" element={<Protected Role={['Admin']} element={PortalUsers} />} /> */}
 
           <Route path="manage" element={<Protected element={Manage} />}>
             <Route exact path="fashion" element={<Protected Role={['Admin','Developer','Analyser','Manager','Booking Manager','Fashion Consultant']} element={FashionConsultants} />} />

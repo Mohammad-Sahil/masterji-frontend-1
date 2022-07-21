@@ -1,8 +1,8 @@
 import { Fragment, useEffect, useState } from "react";
 import "./Register.css";
 import { useSelector, useDispatch } from "react-redux";
-import { registeruseraction } from "../../Actions/useraction";
-import Metadata from "../Metadata";
+import { registeruseraction } from "../../../Actions/useraction";
+import Metadata from "../../Metadata";
 
 const NewProduct = ({ history }) => {
   const dispatch = useDispatch();
@@ -51,7 +51,7 @@ const NewProduct = ({ history }) => {
 
   return (
     <Fragment>
-<Metadata title='Login | Admin | Masterji'/>
+<Metadata title='Portal Register | Admin | Masterji'/>
      <div className="registercontainer">
         <div class="register-content">
           <form action="index.html">
