@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import SearchBar from "./searchBar";
 import Metadata from '../../Metadata';
 import "./table.css";
+
+
 class About extends Component {
   state = {
     entries: [],
@@ -16,13 +21,15 @@ class About extends Component {
 
   api_url = "https://us-central1-masterji-online.cloudfunctions.net/app/";
 
+
   componentDidMount() {
     fetch(this.api_url+"aboutus/v2/get")
       .then((response) => response.json())
       .then((entries) => {
         console.log(entries);
         this.setState({ entries });
-      });
+      })
+      .catch(err => toast.error(err));
   }
 
   handleModal(entry, operation) {
@@ -50,11 +57,11 @@ class About extends Component {
     })
     .then(response => response.json())
     .then((data) => {
-        console.log(data);
         const entries = [data.data, ...this.state.entries];
+        toast.success(data.message);
         this.setState({ entries, showModal:false  });
     })
-    .catch(err => console.log(err));
+    .catch(err => toast.error(err));
   };
 
   handleUpdate = (e) => {
@@ -65,18 +72,15 @@ class About extends Component {
           body:JSON.stringify({...entry}),
           headers:{"Content-Type" : "application/json"}
       })
-      .then(response => {
-        console.log(response);
-        response.json();
-      })
+      .then(response => response.json())
       .then((data) => {
-        console.log(data);
         const entries = [...this.state.entries];
         const index = entries.indexOf(entry);
         entries[index] = { ...data.data };
+        toast.success(data.message);
         this.setState({ entries, showModal:false });
       })
-      .catch(err => console.log("err" + err))
+      .catch(err => toast.error(err))
   };
 
   handleDelete = (entry) => {
@@ -86,13 +90,13 @@ class About extends Component {
         })
         .then(response => response.json())
         .then((data)=>{
-            console.log(data);
             const entries = this.state.entries.filter(
               (c) => c.id !== entry.id
             );
+            toast.success(data.message);
             this.setState({ entries });
         })
-        .catch(err => console.log(err));
+        .catch(err => toast.error(err))
    
   };
 
@@ -115,6 +119,7 @@ class About extends Component {
       <>
       <Metadata title='About | Admin | Masterji'/>
       <div>
+      <ToastContainer/>
           <div style={{ margin:'20px 20px 20px 30px', padding:'20px', borderRadius: '5px', backgroundColor: 'white'}}>
             <div className="row">
               <div className="col-2">

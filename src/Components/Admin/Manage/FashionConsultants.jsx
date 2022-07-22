@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import SearchBar from "./searchBar";
 import "./fashionConsultant.css";
 import "./table.css";
@@ -24,28 +27,31 @@ class FashionConsultants extends Component {
       .then((consultants) => {
         console.log(consultants);
         this.setState({ consultants });
-      });
+      })
+      .catch(err => toast.error(err));
+
   }
 
   handleModal(consultant, operation) {
-    this.setState({ showModal: !this.state.showModal });
+    console.log(consultant);
+    console.log(operation)
     let modalFields = {
       operation,
       consultant,
     };
-    this.setState({ modalFields });
+    this.setState({ modalFields,showModal: !this.state.showModal });
   }
 
   handleChange = (e) => {
     let modalFields = this.state.modalFields;
     modalFields.consultant[e.currentTarget.name] = e.currentTarget.value;
-    console.log(modalFields.consultant)
     this.setState({ modalFields });
   };
 
   handleCreate = (e) => {
     e.preventDefault();
     const consultant = this.state.modalFields.consultant;
+    console.log(consultant);
     fetch(this.api_url + "fashionConsultant/v2/post", {
         method:"POST",
         body:JSON.stringify({...consultant}),
@@ -54,10 +60,11 @@ class FashionConsultants extends Component {
     .then(response => response.json())
     .then((data) => {
         console.log(data);
-        const consultants = [consultant, ...this.state.consultants];
+        const consultants = [data.data, ...this.state.consultants];
+        toast.success(data.message);
         this.setState({ consultants, showModal:false  });
     })
-    .catch(err => console.log(err));
+    .catch(err => toast.error(err.message));
   };
 
   handleUpdate = (e) => {
@@ -68,18 +75,16 @@ class FashionConsultants extends Component {
           body:JSON.stringify({...consultant}),
           headers:{"Content-Type" : "application/json"}
       })
-      .then(response => {
-        console.log(response);
-        response.json();
-      })
+      .then(response => response.json())
       .then((data) => {
         console.log(data);
         const consultants = [...this.state.consultants];
         const index = consultants.indexOf(consultant);
-        consultants[index] = { ...consultant };
+        consultants[index] = { ...data.data };
+        toast.success(data.message);
         this.setState({ consultants, showModal:false });
       })
-      .catch(err => console.log("err" + err))
+      .catch(err => toast.error(err));
   };
 
   handleDelete = (consultant) => {
@@ -93,9 +98,10 @@ class FashionConsultants extends Component {
             const consultants = this.state.consultants.filter(
               (c) => c.id !== consultant.id
             );
+            toast.success(data.message);
             this.setState({ consultants });
         })
-        .catch(err => console.log(err));
+        .catch(err => toast.error(err));
    
   };
 
@@ -121,7 +127,7 @@ class FashionConsultants extends Component {
     return (
       <>
       <Metadata title='Fashion Consultant | Admin | Masterji'/>
-
+      <ToastContainer/>
       <div>
         {/* <h4>Add Consultants</h4>
                 <br />

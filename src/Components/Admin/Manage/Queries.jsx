@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import SearchBar from "./searchBar";
 import Metadata from '../../Metadata';
 import "./table.css";
@@ -22,7 +25,8 @@ y
       .then((queries) => {
         console.log(queries);
         this.setState({ queries });
-      });
+      })
+      .catch(err => toast.error(err));
   }
 
   handleModal(query, operation) {
@@ -34,6 +38,12 @@ y
     this.setState({ modalFields });
   }
 
+  toggleResolvedStatus = resolved => {
+    let modalFields = this.state.modalFields;
+    modalFields.query.resolved = !resolved;
+    this.setState({modalFields});
+  }
+
   handleChange = (e) => {
     let modalFields = this.state.modalFields;
     modalFields.query[e.currentTarget.name] = e.currentTarget.value;
@@ -43,6 +53,7 @@ y
   handleCreate = (e) => {
     e.preventDefault();
     const query = this.state.modalFields.query;
+    query['resolved'] = query.resolved || false;
     fetch(this.api_url + "query/v2/post", {
         method:"POST",
         body:JSON.stringify({...query}),
@@ -50,11 +61,11 @@ y
     })
     .then(response => response.json())
     .then((data) => {
-        console.log(data);
         const queries = [data.data, ...this.state.queries];
+        toast.success(data.message);
         this.setState({ queries, showModal:false  });
     })
-    .catch(err => console.log(err));
+    .catch(err => toast.error(err))
   };
 
   handleUpdate = (e) => {
@@ -66,18 +77,16 @@ y
           body:JSON.stringify({...query}),
           headers:{"Content-Type" : "application/json"}
       })
-      .then(response => {
-        console.log(response);
-        response.json();
-      })
+      .then(response => response.json())
       .then((data) => {
         console.log(data);
         const queries = [...this.state.queries];
         const index = queries.indexOf(query);
         queries[index] = { ...data.data };
+        toast.success(data.message);
         this.setState({ queries, showModal:false });
       })
-      .catch(err => console.log("err" + err))
+      .catch(err => toast.error(err))
   };
 
   handleDelete = (query) => {
@@ -91,9 +100,10 @@ y
             const queries = this.state.queries.filter(
               (c) => c.id !== query.id
             );
+            toast.success(data.message);
             this.setState({ queries });
         })
-        .catch(err => console.log(err));
+        .catch(err => toast.error(err))
    
   };
 
@@ -116,6 +126,7 @@ y
       <>
       <Metadata title='Queries | Admin | Masterji'/>
       <div>
+      <ToastContainer/>
           <div style={{ margin:'20px 20px 20px 30px', padding:'20px', borderRadius: '5px', backgroundColor: 'white'}}>
             <div className="row">
               <div className="col-2">
@@ -153,7 +164,7 @@ y
                       <td>{query.message}</td>
                       <td>{query.date}</td>
                       <td>{query.updatedAt}</td>
-                      <td align="center">{query.resolved?<i style={{color:'green', fontSize:'20px'}} class="fa fa-square" aria-hidden="true"></i>:<i style={{color:'red', fontSize:'20px'}}  class="fa fa-square fa-2x" aria-hidden="true"></i>}</td>
+                      <td align="center"><i style={{color:query.resolved?'green':'red', fontSize:'20px'}} class="fa fa-square" aria-hidden="true"></i></td>
                       <td>
                         <button className="btn-warning editButton" onClick={() =>this.handleModal(query, "Update")}>
                           <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -192,11 +203,10 @@ y
                   </div>
                   <br />
                   <div className="form-group">
-                    <label>Resolved</label>
-                    <select value={modalQuery.resolved } class="form-select" aria-label="Default select example"  name="resolved" id="resolvedModal" onChange={this.handleChange} placeholder="Resolved/Pending">
-                        <option value="false">No</option>
-                        <option value="true">Yes</option>
-                    </select>
+                  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked={modalQuery.resolved} onChange={() => this.toggleResolvedStatus(modalQuery.resolved)} />
+                  <label class="form-check-label" style={{marginLeft:10}} htmlFor="flexCheckChecked">
+                    Resolved
+                  </label>
                     {/* <input type="text" defaultValue={modalQuery.resolved} name="resolved" className="form-control" id="resolvedModal" onChange={this.handleChange} placeholder="Resolved/Pending"/> */}
                   </div>
                   <br />

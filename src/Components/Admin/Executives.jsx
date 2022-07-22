@@ -133,7 +133,8 @@ class Executives extends Component {
     return (
       <>
         <Metadata title="Executives | Admin | Masterji" />
-        <div>
+        Executives
+        {/* <div>
           <div
             style={{
               margin: "20px 20px 20px 30px",
@@ -326,7 +327,7 @@ class Executives extends Component {
               </Modal.Body>
             </Modal>
           </div>
-        </div>
+        </div> */}
       </>
     );
   }

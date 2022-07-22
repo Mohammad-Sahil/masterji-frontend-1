@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import SearchBar from "./searchBar";
 import Metadata from "../../Metadata";
 
@@ -23,7 +26,9 @@ class FAQs extends Component {
       .then((faqs) => {
         console.log(faqs);
         this.setState({ faqs });
-      });
+      })
+      .catch(err => toast.error(err));
+
   }
 
   handleModal(faq, operation) {
@@ -54,9 +59,10 @@ class FAQs extends Component {
     .then((data) => {
         console.log(data);
         const faqs = [data.data, ...this.state.faqs];
+        toast.success(data.message);
         this.setState({ faqs, showModal:false  });
     })
-    .catch(err => console.log(err));
+    .catch(err => toast.error(err));
   };
 
   handleUpdate = (e) => {
@@ -68,18 +74,16 @@ class FAQs extends Component {
           body:JSON.stringify({...faq}),
           headers:{"Content-Type" : "application/json"}
       })
-      .then(response => {
-        console.log(response);
-        response.json();
-      })
+      .then(response => response.json())
       .then((data) => {
         console.log(data);
         const faqs = [...this.state.faqs];
         const index = faqs.indexOf(faq);
         faqs[index] = { ...data.data };
+        toast.success(data.message);
         this.setState({ faqs, showModal:false });
       })
-      .catch(err => console.log("err" + err))
+      .catch(err => toast.error(err));
   };
 
   handleDelete = (faq) => {
@@ -93,9 +97,10 @@ class FAQs extends Component {
             const faqs = this.state.faqs.filter(
               (c) => c.id !== faq.id
             );
+            toast.success(data.message);
             this.setState({ faqs });
         })
-        .catch(err => console.log(err));
+        .catch(err => toast.error(err));
    
   };
 
@@ -116,7 +121,7 @@ class FAQs extends Component {
     });
     return (
       <>
-      
+      <ToastContainer/>
       <div>
           <div style={{ margin:'20px 20px 20px 30px', padding:'20px', borderRadius: '5px', backgroundColor: 'white'}}>
             <div className="row">
