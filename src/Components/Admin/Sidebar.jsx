@@ -55,7 +55,7 @@ const Sidebar = () => {
           {data.map((item, index) => {
             return (
               <li key={index} className={item.cName}>
-                <NavLink activeclassname="active" to={item.path} >
+                <NavLink to={item.path} >
                   <span>{item.title}</span>
                 </NavLink>
               </li>
@@ -76,7 +76,7 @@ const Sidebar = () => {
             <img src="https://walr.com/app/uploads/2022/03/audience-access.svg" alt="" /><span className="profileName">Yash Deorah <br/><p style={{fontSize:13}}>Admin</p></span>
           </li> 
           <li className="nav-text logout-footer">
-            <NavLink activeclassname="active" to={'/'} onClick={logouthandle} >
+            <NavLink activeclassname="active" to='' onClick={logouthandle} >
               <span>Log Out</span>
             </NavLink>
           </li>

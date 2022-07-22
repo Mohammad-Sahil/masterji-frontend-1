@@ -60,7 +60,7 @@ const Navbar = () => {
             {data.map((item, index) => {
               return (
                 <li key={index}>
-                  <NavLink activeclassname="active" to={item.path}>{item.title}</NavLink>
+                  <NavLink  to={item.path}>{item.title}</NavLink>
                 </li>
               );
             })}

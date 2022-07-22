@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { loginuseraction } from "../../Actions/useraction";
 import Metadata from "../Metadata";
 import './Login.css'
@@ -73,8 +73,8 @@ const loginhandle = (e)=>{
                   />
               </div>
             </div>
-            <a href="/forgot">Forgot Password?</a>
-            <input type="submit" class="btn" value="Login" disabled={false} onClick={loginhandle}/>
+            <NavLink to="/forgot">Forgot Password?</NavLink>
+            <input type="submit" class="btn" value="Login" disabled={loading ? true :false} onClick={loginhandle}/>
           </form>
         </div>
       </div>

@@ -1,11 +1,13 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
-import { RegisterReducer, UserReducer } from "./Reducers/userreducer";
+import { ForgotPasswordReducer, RegisterReducer, UserReducer } from "./Reducers/userreducer";
 
 const reducer = combineReducers({
   User:UserReducer,
-  RegisterUser:RegisterReducer
+  RegisterUser:RegisterReducer,
+  ForgotPassword: ForgotPasswordReducer,
+
 });
 
 let initialState = {

@@ -10,7 +10,7 @@ const Home = () => {
     
     return ( 
     <>
-    <Metadata title='Admin | Masterji'/>
+    <Metadata title='Home | Masterji'/>
         <br /><br />
         <center><a href="/admin"><button className="btn btn-primary">Admin</button></a></center>
     </> 

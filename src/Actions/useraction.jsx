@@ -7,19 +7,20 @@ export const loaduseraction = () => async (dispatch) => {
       dispatch({ type: 'LOAD_USER_REQUEST' });
       
       const config = {headers: {
-        // authorization: String(cookies.get('jwt')),
-        mode: "no-cors",
+        authorization: `BEARER ${String(cookies.get('jwt'))}`,
+        mode: "no-cors"
       }}
+      // console.log(cookies.get('jwt'))
       const {data} = await axios.get("https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/me",config);
       // console.log(data)
-  // let data= {user : {
+  // let data= {
   //   name:'Shera',
   //   email:'sheraofficials@gmail.com',
   //   role:'Admin'
-  // }}
+  // }
       dispatch({
         type: 'LOAD_USER_SUCCESS',
-        payload: data.user,
+        payload: data,
       });
     } catch (error) {
       // console.log(error.response)
@@ -56,8 +57,8 @@ export const loaduseraction = () => async (dispatch) => {
   
       const config = { headers: { "Content-Type": "application/json" } };
   
-      const { data } = await axios.post("https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/register", entereddata, { config });
-      console.log(data)
+      const { data } = await axios.post("https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/register", entereddata, config);
+      // console.log(data)
   
       dispatch({
         type: 'REGISTER_USER_SUCCESS',
@@ -73,10 +74,13 @@ export const loaduseraction = () => async (dispatch) => {
 
   export const logoutuseraction = () => async (dispatch) => {
     try {
-      await axios.get("https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/logout",{headers: {
-        authorization: String(cookies.get('jwt')),
-        mode: "no-cors",
-      }});
+      const config = {headers: {
+        authorization: `BEARER ${String(cookies.get('jwt'))}`,
+        mode: "no-cors"
+      }}
+      const {data} = await axios.get("https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/logout",config);
+
+      cookies.remove('jwt')
   
       dispatch({
         type: 'LOGOUT_USER_SUCCESS',
@@ -84,6 +88,45 @@ export const loaduseraction = () => async (dispatch) => {
     } catch (error) {
       dispatch({
         type: 'LOGOUT_USER_FAIL',
+        payload: error.response.data.message,
+      });
+    }
+  };
+
+  export const ForgotPassword = (email) => async (dispatch) => {
+    try {
+      dispatch({ type: 'FORGOT_PASSWORD_REQUEST' });
+  
+      const config = { headers: { "Content-Type": "application/json" } };
+  
+      const {data} = await axios.post(`https://us-central1-masterji-online.cloudfunctions.net/app/forgot/password`, email, config);
+      console.log(data)
+      dispatch({ type: 'FORGOT_PASSWORD_SUCCESS', payload: data.message });
+    } catch (error) {
+      dispatch({
+        type: 'FORGOT_PASSWORD_FAIL',
+        payload: error.response.data.message,
+      });
+    }
+  };
+  
+  export const resetPassword = (entereddata) => async (dispatch) => {
+    try {
+      dispatch({ type: 'RESET_PASSWORD_REQUEST' });
+  
+      const config = { headers: { "Content-Type": "application/json" } };
+  
+      const { data } = await axios.post(
+        `https://us-central1-masterji-online.cloudfunctions.net/app/forgot/reset-password`,
+        entereddata,
+        config
+      );
+      console.log(data)
+  
+      dispatch({ type: 'RESET_PASSWORD_SUCCESS', payload: data.success });
+    } catch (error) {
+      dispatch({
+        type: 'RESET_PASSWORD_FAIL',
         payload: error.response.data.message,
       });
     }
