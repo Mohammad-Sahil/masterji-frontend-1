@@ -484,7 +484,7 @@ const Orders = () => {
                         <div className="form-group">
                       <label>Provide a Reason</label>
                       <input
-                        type="number"
+                        type="text"
                         name="cancelReason"
                         className="form-control"
                         id="nameModal"
