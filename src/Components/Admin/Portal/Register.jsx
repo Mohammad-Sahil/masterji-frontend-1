@@ -60,8 +60,9 @@ const NewProduct = () => {
      <div className="registercontainer">
         <div class="register-content">
           <form action="index.html">
-            <img src="/avatar.png" />
-            <h2 class="title">Register New Portal User</h2>
+            <br />
+            <h4 class="title">Register New Portal User</h4>
+            <br />
             <div class={`input-div one ${namefocus || (name && "focus")}`}>
               <div class="i">
                 <i class="fas fa-user"></i>
@@ -166,6 +167,7 @@ const NewProduct = () => {
               disabled={false}
               onClick={registerhandle}
             />
+            <br />
           </form>
         </div>
       </div>

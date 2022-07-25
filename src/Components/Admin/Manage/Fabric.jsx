@@ -108,7 +108,7 @@ class Fabric extends Component {
         toast.success(data.message);
         this.setState({ shops, showModal:false  });
     })
-    .catch(err => toast.error(err));
+    .catch(err => toast.error(err.message));
     
   };
 
@@ -147,9 +147,14 @@ class Fabric extends Component {
             this.setState({ shops });
         })
         .catch(err => toast.error(err));
-
-   
   };
+
+  deleteFabricSample = (index, sample) => {
+    alert('Do you want to delete the sample');
+    let expandedShop = this.state.expandedShop;
+    expandedShop.fabricSample.splice(index,1);
+    this.setState({expandedShop});
+  }
 
   search = (searchText) => {
     console.log(searchText);
@@ -332,6 +337,21 @@ class Fabric extends Component {
                   
                   <br />
                   <p class="text m-t-15" style={{fontWeight:500 , fontSize:18}}> Fabric Samples</p>
+                    {expandedShop.fabricSample && 
+                    <div className="fabric-samples">
+                      <div class="fabric-samples-grid">
+                        {expandedShop.fabricSample.map((sample, index) => 
+                          <a>
+                            <div className="img-container">
+                            <img src={sample} alt="fabric sample" />
+                            </div>
+                            <button className="btn" onClick={() => this.deleteFabricSample(index, sample)}>X</button>
+                          </a>
+                        )}
+
+                      </div>
+                    </div>
+                    }
                 </div> 
               </div>
             </div>
