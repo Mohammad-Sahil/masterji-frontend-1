@@ -191,18 +191,18 @@ const Orders = () => {
   };
 
   useEffect(() => {
-    // setfiltered(
-    //   Orderslist.filter((order) => {
-    //     for (let property in order) {
-    //       if (
-    //         typeof order[property] === "string" &&
-    //         order[property].toLowerCase().includes(searchText.toLowerCase())
-    //       )
-    //         return true;
-    //     }
-    //     return false;
-    //   })
-    // );
+    setfiltered(
+      Orderslist.filter((order) => {
+        for (let property in order) {
+          if (
+            typeof order[property] === "string" &&
+            order[property]?.toLowerCase().includes(searchText?.toLowerCase())
+          )
+            return true;
+        }
+        return false;
+      })
+    );
   }, [searchText]);
 
   return (
