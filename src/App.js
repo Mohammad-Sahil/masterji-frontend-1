@@ -22,8 +22,9 @@ import Protected from "./Protected";
 import { useDispatch, useSelector } from "react-redux";
 import { loaduseraction } from "./Actions/useraction";
 import Error from "./Components/Layout/Error";
-// import PortalUsers from "./Components/Admin/Portal/PortalUsers";
+import PortalUsers from "./Components/Admin/Portal/PortalUsers";
 import ReactLoading from "react-loading";
+import Portal from "./Components/Admin/Portal/Portal";
 const App = () => {
   const dispatch = useDispatch();
   const { isAuthenticated,loading } = useSelector((state) => state.User);
@@ -58,12 +59,19 @@ const App = () => {
         <Route exact path="/reset/:id/:token" element={<ResetPass />} />
 
         <Route exact path="/admin" element={<Protected element={Admin} />}>
+          <Route exact path="portal" element={<Protected Role={["Admin"]} element={Portal} />} >
           <Route
             exact
             path="register"
             element={<Protected Role={["Admin"]} element={Register} />}
           />
-          {/* <Route exact path="portalusers" element={<Protected Role={['Admin']} element={PortalUsers} />} /> */}
+          <Route
+            exact
+            path="users"
+            element={<Protected Role={["Admin"]} element={PortalUsers} />}
+          />
+          </Route>
+
 
           <Route path="manage" element={<Protected element={Manage} />}>
             <Route

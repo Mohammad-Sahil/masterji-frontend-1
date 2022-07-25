@@ -58,45 +58,86 @@ const Orders = () => {
     e.preventDefault();
     settab(e.target.innerHTML);
   };
-  const garmentdatas = {
-    category: "FEMALE",
-    city: "bengaluru",
-    garment_details: {
-      alteration_price: 200,
-      design: [
-        {
-          back_design: {},
-          front_design: {},
-          general_design: {},
-          side_design: {},
-        },
-      ],
-
-      garment_type: "lehenga",
-      icon: "https://firebasestorage.googleapis.com/v0/b/masterji-19f75.appspot.com/o/GarmentCategory%2Ficon%2Flehnga_1645471363878?alt=media&token=c84c8d93-f6df-47a1-8977-ea391d8f83b8",
-      stitching_base_price: 1200,
-
-      stitching_process:
-        "1.one lining 2.side open with zipping 3.hook button 4.top belt with ribbon with tassel 5.down folding five inches 6.interlock and overlock",
-    },
-    stitching_category: [
-      {
-        category: "",
-        category_details: [
+  const garmentdatas = [
+    {
+      category: "FEMALE",
+      city: "bengaluru",
+      garment_details: {
+        alteration_price: 200,
+        design: [
           {
-            design: "",
-            price: 80,
-            subcategory: "Design",
-          },
-          {
-            design: "",
-            price: 150,
-            subcategory: "lining",
+            back_design: {},
+            front_design: {},
+            general_design: {},
+            side_design: {},
           },
         ],
+
+        garment_type: "lehenga",
+        icon: "https://firebasestorage.googleapis.com/v0/b/masterji-19f75.appspot.com/o/GarmentCategory%2Ficon%2Flehnga_1645471363878?alt=media&token=c84c8d93-f6df-47a1-8977-ea391d8f83b8",
+        stitching_base_price: 1200,
+
+        stitching_process:
+          "1.one lining 2.side open with zipping 3.hook button 4.top belt with ribbon with tassel 5.down folding five inches 6.interlock and overlock",
       },
-    ],
-  };
+      stitching_category: [
+        {
+          category: "",
+          category_details: [
+            {
+              design: "",
+              price: 80,
+              subcategory: "Design",
+            },
+            {
+              design: "",
+              price: 150,
+              subcategory: "lining",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      category: "FEMALE",
+      city: "bengaluru",
+      garment_details: {
+        alteration_price: 200,
+        design: [
+          {
+            back_design: {},
+            front_design: {},
+            general_design: {},
+            side_design: {},
+          },
+        ],
+
+        garment_type: "saree",
+        icon: "https://firebasestorage.googleapis.com/v0/b/masterji-19f75.appspot.com/o/GarmentCategory%2Ficon%2Flehnga_1645471363878?alt=media&token=c84c8d93-f6df-47a1-8977-ea391d8f83b8",
+        stitching_base_price: 1200,
+
+        stitching_process:
+          "1.one lining 2.side open with zipping 3.hook button 4.top belt with ribbon with tassel 5.down folding five inches 6.interlock and overlock",
+      },
+      stitching_category: [
+        {
+          category: "",
+          category_details: [
+            {
+              design: "",
+              price: 80,
+              subcategory: "Design",
+            },
+            {
+              design: "",
+              price: 150,
+              subcategory: "lining",
+            },
+          ],
+        },
+      ],
+    },
+  ];
   const [showModal, setshowModal] = useState();
   const [showModalcancel, setshowModalcancel] = useState();
 
@@ -136,12 +177,18 @@ const Orders = () => {
     );
   };
 
-  const [cancelReason, setcancelReason] = useState('')
+  const [cancelReason, setcancelReason] = useState("");
 
-  const handlecancel = async (e)=>{
-    e.preventDefault()
-    // await axios.put("https://us-central1-masterji-online.cloudfunctions.net/app/orders/v2/put")
-  }
+  const handlecancel = async (e) => {
+    e.preventDefault();
+    const data = {
+      cancelReason,
+      currentStatus:'PLACED'
+    }
+    await axios.put(`https://us-central1-masterji-online.cloudfunctions.net/app/orders/v2/put/${expandedorder.id}`,data)
+    setshowModalcancel(false)
+    func()
+  };
 
   useEffect(() => {
     // setfiltered(
@@ -207,7 +254,7 @@ const Orders = () => {
                     type="button"
                     className="btn btn-warning addButton"
                     style={{ width: "100%", color: "white" }}
-                    onClick={() => setshowModal(!showModal)}
+                    onClick={() =>{ setmodalFields({});setshowModal(!showModal)}}
                   >
                     Create Order
                   </button>
@@ -257,19 +304,20 @@ const Orders = () => {
                   </tbody>
                 </table>
               </div>
-              <Modal show={showModal}>
-                <Modal.Header>Consultant</Modal.Header>
+              <Modal dialogClassName="ordermodal" show={showModal}>
+                <Modal.Header>Create Order</Modal.Header>
                 <Modal.Body>
                   <form onSubmit={handleCreate}>
                     <div className="form-group">
                       <label>Customer Mobile Number</label>
                       <input
-                        type="number"
+                        type="text"
                         name="phoneNumber"
                         className="form-control"
                         id="nameModal"
                         onChange={handleChange}
                         placeholder="Mobile Number"
+                        value={modalFields.phoneNumber}
                       />
                     </div>
                     <br />
@@ -324,78 +372,86 @@ const Orders = () => {
                     <div className="form-group modalitem">
                       <label>Select garments for stitching or alteration</label>
                       <br />
-                      <input type="checkbox" name="shirt" id="shirt" />
-                      <label>shirt</label>
-                      <br />
-                      <input type="checkbox" name="bottom" id="bottom" />
-                      <label>bottom</label>
-                      <br />
-                      <input type="checkbox" name="lehenga" id="lehenga" />
-                      <label>lehenga</label>
-                      <br />
-                      <input type="checkbox" name="Blazer" id="Blazer" />
-                      <label>Blazer</label>
-                      <br />
-                      <input
-                        type="checkbox"
-                        name="Safari suit"
-                        id="Safari suit"
-                      />
-                      <label>Safari suit</label>
-                      <br />
-                      <input type="checkbox" name="shrug" id="shrug" />
-                      <label>shrug</label>
-                      <br />
-                      <input type="checkbox" name="pant" id="pant" />
-                      <label>pant</label>
-                      <br />
-                      <input type="checkbox" name="Top" id="Top" />
-                      <label>Top</label>
-                      <br />
-                      <input
-                        type="checkbox"
-                        name="salwar suit"
-                        id="salwar suit"
-                      />
-                      <label>salwar suit</label>
-                      <br />
-                      <input type="checkbox" name="pant" id="pant" />
-                      <label>pant</label>
-                      <br />
-                      <input
-                        type="checkbox"
-                        name="Kurta pajama"
-                        id="Kurta pajama"
-                      />
-                      <label>Kurta pajama</label>
-                      <br />
-                      <input
-                        type="checkbox"
-                        name="saree fall-zig zag"
-                        id="saree fall-zig zag"
-                      />
-                      <label>saree fall-zig zag</label>
-                      <br />
-                      <input type="checkbox" name="blouse" id="blouse" />
-                      <label>blouse</label>
-                      <br />
-                      <input type="checkbox" name="Waistcoat" id="Waistcoat" />
-                      <label>Waistcoat</label>
-                      <br />
-                      <input
-                        type="checkbox"
-                        name="Night dress"
-                        id="Night dress"
-                      />
-                      <label>Night dress</label>
-                      <br />
-                      <input type="checkbox" name="kurta" id="kurta" />
-                      <label>kurta</label>
-                      <br />
-                      <input type="checkbox" name="shirt" id="shirt" />
-                      <label>shirt</label>
+                      <table className="table table-condensed">
+                        <thead className="thead-dark">
+                          <tr>
+                            <th scope="col">Garment</th>
+                            <th scope="col">Select Action</th>
+                            <th scope="col">Price</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {garmentdatas.map((garment) => {
+                            return (
+                              <>
+                                <tr key={garment.id}>
+                                  <td>
+                                    <input
+                                      type="checkbox"
+                                      name={
+                                        garment.garment_details.garment_type
+                                      }
+                                      id={garment.garment_details.garment_type}
+                                    />
+                                    <span className="garmentname">
+                                      {garment.garment_details.garment_type} (
+                                      {garment.city})
+                                    </span>
+                                    <div className="design">
+                                      {garment.stitching_category[0].category_details?.map(
+                                        (elem) => {
+                                          return (
+                                            <>
+                                              <input
+                                                type="radio"
+                                                name='stitching_category'
+                                                  value={elem.subcategory}
+                                                  onClick={(e)=>{e.preventDefault();console.log(e.target.checked)}}
+                                              />
+                                              <span className="garmentname">
+                                                {elem.subcategory}
+                                                {`-  ₹ `}
+                                                {elem.price}
+                                              </span>
+                                              <br />
+                                            </>
+                                          );
+                                        }
+                                      )}
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <span className="garmentaction">
+                                      Alter Stitch
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <div className="priceborder">
+                                      <div>
+                                        Alter : ₹{" "}
+                                        {
+                                          garment.garment_details
+                                            .alteration_price
+                                        }
+                                      </div>
+                                      <div>
+                                        Stitch : ₹{" "}
+                                        {
+                                          garment.garment_details
+                                            .stitching_base_price
+                                        }
+                                      </div>
+                                    </div>
+                                  </td>
+
+                                  <br />
+                                </tr>
+                              </>
+                            );
+                          })}
+                        </tbody>
+                      </table>
                     </div>
-                    <br />
                     <div className="form-group">
                       <label>Discount</label>
                       <input
@@ -479,16 +535,16 @@ const Orders = () => {
                 </Modal.Body>
               </Modal>
               <Modal show={showModalcancel}>
-                    <Modal.Body>
-                        <form onSubmit={handlecancel}>
-                        <div className="form-group">
+                <Modal.Body>
+                  <form onSubmit={handlecancel}>
+                    <div className="form-group">
                       <label>Provide a Reason</label>
                       <input
                         type="text"
                         name="cancelReason"
                         className="form-control"
                         id="nameModal"
-                        onChange={(e)=>setcancelReason(e.target.value)}
+                        onChange={(e) => setcancelReason(e.target.value)}
                         placeholder="Reason"
                       />
                     </div>
@@ -509,8 +565,8 @@ const Orders = () => {
                         </button>
                       </span>
                     </div>
-                        </form>
-                    </Modal.Body>
+                  </form>
+                </Modal.Body>
               </Modal>
             </div>
             {Object.keys(expandedorder).length !== 0 && (
@@ -531,7 +587,7 @@ const Orders = () => {
                             type="button"
                             className="btn btn-warning addButton"
                             style={{ width: "100%", color: "white" }}
-                            onClick={() => setshowModalcancel(!showModalcancel)}
+                            onClick={() =>setshowModalcancel(!showModalcancel)}
                           >
                             Cancel Order
                           </button>
@@ -541,7 +597,7 @@ const Orders = () => {
                             type="button"
                             className="btn btn-warning addButton"
                             style={{ width: "100%", color: "white" }}
-                            // onClick={() => setshowModal(!showModal)}
+                            onClick={() =>{ setmodalFields(expandedorder); setshowModal(!showModal)}}
                           >
                             Edit
                           </button>
@@ -567,9 +623,7 @@ const Orders = () => {
                         </h6>
                         <div>
                           <span>
-                            {expandedorder.currentStatus === "Canceled"
-                              ? "CANCELED"
-                              : "PLACED"}
+                            {expandedorder.currentStatus}
                           </span>
                           <div className="when">
                             <span className="text">When:</span>
@@ -604,7 +658,9 @@ const Orders = () => {
                           <div className="prefferedpickup">
                             <div className="head">Preffered Pickup</div>
                             <div className="value">
-                              {expandedorder.orderDate}
+                              {(new Date(expandedorder.bookingDate._seconds*1000)).toDateString()}
+                              <br />
+                              {expandedorder.bookingTime}
                             </div>
                           </div>
                           <div className="comments">

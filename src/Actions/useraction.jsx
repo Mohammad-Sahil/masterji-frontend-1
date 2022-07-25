@@ -61,8 +61,7 @@ export const loaduseraction = () => async (dispatch) => {
       // console.log(data)
   
       dispatch({
-        type: 'REGISTER_USER_SUCCESS',
-        payload: data.user,
+        type: 'REGISTER_USER_SUCCESS'
       });
     } catch (error) {
       dispatch({

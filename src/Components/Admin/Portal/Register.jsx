@@ -3,8 +3,12 @@ import "./Register.css";
 import { useSelector, useDispatch } from "react-redux";
 import { registeruseraction } from "../../../Actions/useraction";
 import Metadata from "../../Metadata";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const NewProduct = ({ history }) => {
+const NewProduct = () => {
+  const Navigate = useNavigate()
   const dispatch = useDispatch();
 
     const { loading, error, success } = useSelector((state) => state.RegisterUser);
@@ -16,16 +20,14 @@ const NewProduct = ({ history }) => {
 
   useEffect(() => {
     if (error) {
-      // alert.error(error);
-      // dispatch({});
+      toast.error(error)
     }
 
     if (success) {
-      alert.success("User Registered Successfully");
-      history.push("/admin/dashboard");
+      toast.success('Register Successfull!')
         dispatch({ type: 'REGISTER_USER_RESET' });
     }
-  }, [dispatch, alert, error, history, success]);
+  }, [dispatch, alert, error, Navigate, success,toast]);
 
   const registerhandle = (e) => {
     e.preventDefault();
@@ -40,6 +42,7 @@ const NewProduct = ({ history }) => {
       };
       // console.log(myForm);
       dispatch(registeruseraction(myForm));
+      window.location.reload()
     }
     };
 
@@ -52,11 +55,13 @@ const NewProduct = ({ history }) => {
   return (
     <Fragment>
 <Metadata title='Portal Register | Admin | Masterji'/>
+<ToastContainer/>
+
      <div className="registercontainer">
         <div class="register-content">
           <form action="index.html">
-            <img src="/avatar.svg" />
-            <h2 class="title">Register User</h2>
+            <img src="/avatar.png" />
+            <h2 class="title">Register New Portal User</h2>
             <div class={`input-div one ${namefocus || (name && "focus")}`}>
               <div class="i">
                 <i class="fas fa-user"></i>
