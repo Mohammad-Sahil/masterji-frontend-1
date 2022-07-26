@@ -2,7 +2,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  background-color: white;
+  margin:50px;
+  border-radius: 8px;
+  zoom: 85%;
 }
 
 .registercontainer .img{
@@ -34,14 +37,14 @@
 	margin: 15px 0;
 	color: #333;
 	text-transform: uppercase;
-	font-size: 2.9rem;
+	font-size: 2rem;
 }
 
 .registercontainer .register-content .input-div{
 	position: relative;
     display: grid;
     grid-template-columns: 7% 93%;
-    margin: 25px 0;
+    margin: 40px 0;
     padding: 5px 0;
     border-bottom: 2px solid #d9d9d9;
 }
@@ -82,7 +85,7 @@
 	bottom: -2px;
 	width: 0%;
 	height: 2px;
-	background-color: #38d39f;
+	background-color: #ffc107;
 	transition: .4s;
 }
 
@@ -104,7 +107,7 @@
 }
 
 .registercontainer .input-div.focus > .i > i{
-	color: #38d39f;
+	color: #ffc107;
 }
 
 .registercontainer .input-div > div > input{
@@ -136,7 +139,7 @@
 }
 
 .registercontainer a:hover{
-	color: #38d39f;
+	color: #ffc107;
 }
 
 .registercontainer .btn{
@@ -146,7 +149,7 @@
 	border-radius: 25px;
 	outline: none;
 	border: none;
-	background-image: linear-gradient(to right, #32be8f, #38d39f, #32be8f);
+	background-image: linear-gradient(to right, #ffc107, #ffc107, #ffc107);
 	background-size: 200%;
 	font-size: 1.2rem;
 	color: #fff;

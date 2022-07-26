@@ -1,276 +1,252 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import SearchBar from "./searchBar";
-import "./fashionConsultant.css";
-import "./table.css";
+import "../Manage/fashionConsultant.css";
+import "../Manage/table.css";
 import Metadata from "../../Metadata";
-import './PortalUsers.css'
+import "./PortalUsers.css";
+import SearchBar from "../Manage/searchBar";
+import axios from "axios";
+import { useSelector } from "react-redux";
+
 
 const PortalUsers = () => {
+  // const {user:You} = useSelector(state=>state.User)
+  const You = {id:'1l5tqbk5f'}
+  const func = async ()=>{
+    const {data} = await axios.get('https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/get')
+    setfiltered(data)
+    setuserslist(data)
+  }
+  useEffect(() => {
+    func()
+  }, [])
+  
+  const [showModal, setshowModal] = useState()
+  const [showModaldelete, setshowModaldelete] = useState()
+  const [searchText, setsearchText] = useState()
+  const [showModalcancel, setshowModalcancel] = useState()
+  const [expandedusers, setexpandedusers] = useState([])
+  const [filtered, setfiltered] = useState([])
+  const [userslist, setuserslist] = useState([])
+  const [modalFields, setmodalFields] = useState({})
+  const handleCreate = ()=>{}
+  const handleChange = (e) => {
+    setmodalFields({
+      ...modalFields,
+      [e.currentTarget.name]: e.currentTarget.value,
+    });
+  };
+  const handleupdate = async(e)=>{
+    e.preventDefault()
+    const data = {
+      name:modalFields.name,
+      email:modalFields.email,
+      role:modalFields.role
+    }
+    const okk = await axios.put(`https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/put/${modalFields.id}`,data)
+    setshowModal(false)
+    func()
+  }
+  
+  const handledelete = async (e)=>{
+    e.preventDefault()
+    await axios.delete(`https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/delete/${modalFields.id}`)
+    setshowModaldelete(false)
+    func()
+  }
+
+  useEffect(() => {
+    setfiltered(
+      userslist.filter((user) => {
+        for (let property in user) {
+          if (
+            typeof user[property] === "string" &&
+            user[property]?.toLowerCase().includes(searchText?.toLowerCase())
+          )
+            return true;
+        }
+        return false;
+      })
+    );
+  }, [searchText]);
+
   return (
     <>
-       <Metadata title='Portal Users | Admin | Masterji'/>
+      <Metadata title="Portal Users | Admin | Masterji" />
+      <div
+              style={{
+                margin: "20px 20px 20px 30px",
+                padding: "20px",
+                buserRadius: "5px",
+                backgroundColor: "white",
+              }}
+              className={
+                Object.keys(expandedusers).length !== 0 &&
+                "fashionConsultantTable col-5"
+              }
+            >
+              <div className="row">
+                <div className="col-9">
+                  <SearchBar
+                    search={(v) => setsearchText(v)}
+                    searchInput={searchText}
+                  />
+                </div>
+              </div>
+              <br />
+              <div class="table-responsive tableDiv">
+                <table className="table table-condensed">
+                  <thead className="thead-dark">
+                    <tr>
+                      <th scope="col">Id</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Role</th>
+                      <th scope="col">Created At</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filtered.map((user) => (
+                      <tr key={user.id}>
+                        <td>{user.id}</td>
+                        <td>{user.email}</td>
+                        <td>{user.name}</td>
+                        <td>{user.role}</td>
+                        <td>{(new Date(user.createdAt._seconds*1000)).toLocaleDateString()}</td>
+                        <td>
+                        {You.id!==user.id && <>
 
-<div>
-  {/* <h4>Add Consultants</h4>
-          <br />
-          <form onSubmit>
-              <div className="form-group">
-                  <input type="text" className="form-control" id="name" placeholder="Enter Name" />
+                        <button className="btn-warning editButton" onClick={() =>{setmodalFields(user);setshowModal(!showModal)}}>
+                          <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </button>
+                        </> }
+                      </td>
+                      <td>
+                        {You.id!==user.id && <>
+                        <button className="btn-danger deleteButton" onClick={() => {setmodalFields(user);setshowModaldelete(!showModaldelete)}}>
+                          <i class="fa fa-trash-o"></i>
+                        </button>
+                        </> }
+                      </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-              <br />
-              <div className="form-group">
-                  <input type="text" className="form-control" id="email" placeholder="Enter Email" />
-              </div>
-              <br />
-              <div className="form-group">
-                  <input type="text" className="form-control" id="contact" placeholder="Enter Contact" />
-              </div>
-              <br />
-              <div className="form-group">
-                  <input type="text" className="form-control" id="city" placeholder="Enter City" />
-              </div>
-              <br />
-              <div className="form-group">
-                  <input type="text" className="form-control" id="expertise" placeholder="Enter Expertise" />
-              </div>
-              <br />
-              <div className="form-group">
-                  <input type="text" className="form-control" id="workExperience" placeholder="Enter Work Experience" />
-              </div>
-              <br />
-              <div className="form-group">
-                  <input type="text" className="form-control" id="rate" placeholder="Enter Rate" />
-              </div>
-              <br />
-              <div className="form-group">
-                  <input type="text" className="form-control" id="workSample" placeholder="Enter Work Samples" />
-              </div>
-              <br />
-              <button type="submit" className="btn btn-primary">Submit</button>
-          </form> */}
-  <div className="fashionConsultantContainer row gx-0" style={Object.keys(expandedConsultant).length === 0 ? {marginRight:50}:{}}>
-    <div id="fashionConsultantTable" className={ Object.keys(expandedConsultant).length === 0 ? "fashionConsultantTable" : "fashionConsultantTable col-7"}>
-      <div className="row">
-        <div className="col-2">
-          <button
-            type="button"
-            className="btn btn-warning addButton"
-            style={{ width: '100%', color:'white' }}
-            onClick={() => this.handleModal({}, "Create")}
-          >
-            Add
-          </button>
-        </div>
-        <div className="col-10">
-          <SearchBar search={this.search} searchInput={searchText} />
-        </div>
-      </div>
-      <br />
-      <div class="table-responsive tableDiv">
-        <table className="table table-condensed">
-          <thead className="thead-dark">
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">City</th>
-              <th scope="col">Contact</th>
-              <th scope="col">Email</th>
-              <th scope="col">Expertise</th>
-              <th scope="col"></th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredConsultants.map((consultant) => (
-              <tr key={consultant.id} onClick={() => this.expandConsultant(consultant)} style={expandedConsultant.id === consultant.id ? {backgroundColor:'#ffa', cursor:'pointer'} : {cursor:'pointer'}}>
-                <td>{consultant.name}</td>
-                <td>{consultant.city}</td>
-                <td>{consultant.contact}</td>
-                <td>{consultant.email}</td>
-                <td>{consultant.expertise}</td>
-                <td>
-                  <button className="btn-warning editButton" onClick={() =>this.handleModal(consultant, "Update")}>
-                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                  </button>
-                </td>
-                <td>
-                  <button className="btn-danger deleteButton" onClick={() => this.handleDelete(consultant)}>
-                    <i class="fa fa-trash-o"></i>
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {/* <tr>
-                          <th scope="row">consultant.id</th>
-                          <td>consultant.namnewnrwnfn</td>
-                          <td>consultant.city</td>
-                          <td>consultant.contact</td>
-                          <td>consultant.email</td>
-                          <td>consultant.expertise</td>
-                          <td>consultant.rate</td>
-                          <td>consultant.userImage</td>
-                          <td>consultant.workExperience</td>
-                          <td>consultant.workSample</td>
-                          <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true" ></i></td>
+              <Modal show={showModal}>
+                <Modal.Header>Consultant</Modal.Header>
+                <Modal.Body>
+                  <form onSubmit={modalFields.id ? handleupdate : handleCreate}>
+                    <div className="form-group">
+                      <label>Name</label>
+                      <input
+                        type="text"
+                        name="name"
+                        className="form-control"
+                        id="nameModal"
+                        onChange={handleChange}
+                        placeholder="Name"
+                        value={modalFields.name}
+                      />
+                    </div>
+                    <br />
+                    <div className="form-group">
+                      <label>Email</label>
+                      <input
+                        type="text"
+                        name="email"
+                        className="form-control"
+                        id="nameModal"
+                        onChange={handleChange}
+                        placeholder="Email"
+                        value={modalFields.email}
+                      />
+                    </div>
+                    <br />
+                    <div className="form-group">
+                      <label>Role</label>
+                      <br />
+                      <select
+                  type="text"
+                  class="input"
+                  name="role"
+                  value={modalFields.role}
+                  onChange={handleChange}>
+                  <option value="" disabled selected>Role</option>
+                  <option>Admin</option>
+                  <option>Developer</option>
+                  <option>Analyser</option>
+                  <option>Manager</option>
+                  <option>User Manager</option>
+                  <option>Sales</option>
+                  <option>Customer</option>
+                  <option>Booking Manager</option>
+                  <option>Fabric Sourcing</option>
+                  <option>Fashion Consultant</option>
+                  <option>Tailor</option>
+                  <option>Delivery Partner</option>
+                </select>
+                    </div>
+                    <br />
+                   <div style={{ float: "right" }}>
+                      <span>
+                        <button type="submit" className="btn btn-primary">
+                          Submit
+                        </button>
+                      </span>
+                      <span>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={() => setshowModal(false)}
+                        >
+                          Close
+                        </button>
+                      </span>
+                    </div>
+                  </form>
+                </Modal.Body>
+              </Modal>
+              <Modal show={showModaldelete}>
+                    <Modal.Body>
+                        <form onSubmit={handledelete}>
+                        <div className="form-group">
+                        <b>
 
-                      <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
-                  </tr> 
-                  <tr>
-                      <th scope="row">consultant.id</th>
-                      <td>consultant.namnewnrwnfn</td>
-                      <td>consultant.city</td>
-                      <td>consultant.contact</td>
-                      <td>consultant.email</td>
-                      <td>consultant.expertise</td>
-                      <td>consultant.rate</td>
-                      <td>consultant.userImage</td>
-                      <td>consultant.workExperience</td>
-                      <td>consultant.workSample</td>
-                      <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true" ></i></td>
-                      <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
-                  </tr> 
-                  <tr>
-                      <th scope="row">consultant.id</th>
-                      <td>consultant.namnewnrwnfn</td>
-                      <td>consultant.city</td>
-                      <td>consultant.contact</td>
-                      <td>consultant.email</td>
-                      <td>consultant.expertise</td>
-                      <td>consultant.rate</td>
-                      <td>consultant.userImage</td>
-                      <td>consultant.workExperience</td>
-                      <td>consultant.workSample</td>
-                      <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true" ></i></td>
-                      <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
-                  </tr>  */}
-          </tbody>
-        </table>
-      </div>
-      <Modal show={this.state.showModal}>
-        <Modal.Header>
-          {this.state.modalFields.operation} Consultant
-        </Modal.Header>
-        <Modal.Body>
-          <form
-            onSubmit={
-              this.state.modalFields.operation === "Update"
-                ? this.handleUpdate
-                : this.handleCreate
-            }
-          >
-            <div className="form-group">
-              <label>Name</label>
-              <input type="text" defaultValue={modalConsultant.name} name="name" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Name"/>
+                      <label>Are You Sure You want to delete this User?</label>
+                        </b>
+                    </div>
+                    <br />
+                      <label>Email : {modalFields.email}</label>
+                    <br />
+                      <label>Name : {modalFields.name}</label>
+                    <br />
+                      <label>Role : {modalFields.role}</label>
+                    <br />
+                    <div style={{ float: "right" }}>
+                      <span>
+                        <button type="submit" className="btn btn-primary">
+                          Yes
+                        </button>
+                      </span>
+                      <span>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={() => setshowModaldelete(false)}
+                        >
+                          No
+                        </button>
+                      </span>
+                    </div>
+                        </form>
+                    </Modal.Body>
+              </Modal>
             </div>
-            <br />
-            <div className="form-group">
-              <label>City</label>
-              <input type="text" defaultValue={modalConsultant.city} name="city" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter City"/>
-            </div>
-            <br />
-            <div className="form-group">
-              <label>Contact</label>
-              <input type="text" defaultValue={modalConsultant.contact} name="contact" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Contact"/>
-            </div>
-            <br />
-            <div className="form-group">
-              <label>Email</label>
-              <input type="text" defaultValue={modalConsultant.email} name="email" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Email"/>
-            </div>
-            <br />
-            <div className="form-group">
-              <label>Expertise</label>
-              <input type="text" defaultValue={modalConsultant.expertise} name="expertise" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Expertise"/>
-            </div>
-            <br />
-            <div className="form-group">
-              <label>Work Experience</label>
-              <input type="text" defaultValue={modalConsultant.workExperience} name="workExperience" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Work Experience"/>
-            </div>
-            <br />
-            <div className="form-group">
-              <label>Price</label>
-              <input type="text" defaultValue={modalConsultant.rate} name="rate" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Price"/>
-            </div>
-            <br />
-            <div className="form-group">
-              <label>User Image</label>
-              <input type="text" defaultValue={modalConsultant.userImage} name="userImage" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter User Image"/>
-            </div>
-            <br />
-            <div style={{ float: "right" }}>
-              <span>
-                <button type="submit" className="btn btn-primary">
-                  Submit
-                </button>
-              </span>
-              <span>
-                <button type="button" className="btn btn-primary" onClick={() => this.setState({ showModal: false })}>
-                  Close
-                </button>
-              </span>
-            </div>
-          </form>
-        </Modal.Body>
-      </Modal>
-    </div>
-    { Object.keys(expandedConsultant).length !== 0 &&
-    <div id="fashionConsultantDetails" className="fashionConsultantDetails col-4 p-0">
-      <div class="container m-0 p-0">
-      <div class="card user-card">
-          <div class="card-block">
-              <div class="user-image">
-                  <img src={expandedConsultant.userImage ? expandedConsultant.userImage : "https://p.kindpng.com/picc/s/78-785975_icon-profile-bio-avatar-person-symbol-chat-icon.png"} class="img-radius" alt="User-Profile-Image" />
-              </div>
-              <h6 class="f-w-600 m-t-25 m-b-10" style={{fontSize:20}}>{expandedConsultant.name} &nbsp; <span style={{fontWeight:300, fontSize:20}}>{expandedConsultant.city && <i class="fa fa-building-o" aria-hidden="true"></i>} {expandedConsultant.city}</span></h6>
-              <p class="text">{expandedConsultant.expertise}</p>
-              <p class="text">{expandedConsultant.email && <i class="fa fa-envelope" aria-hidden="true"></i>} {expandedConsultant.email}  &nbsp;&nbsp;&nbsp; {expandedConsultant.contact && <i class="fa fa-phone" aria-hidden="true"></i>} {expandedConsultant.contact}</p>
-              <hr/>
-              <p class="m-t-15 text" style={{textAlign:'justify'}}>{expandedConsultant.workExperience}</p>
-
-              <p class="text m-t-15" style={{fontSize:20, fontWeight:600}}>{expandedConsultant.rate && "Price :"} {expandedConsultant.rate}</p>
-
-              {expandedConsultant.workSamples && <p  class="text m-t-15"> Work Samples</p>}
-
-              {/* <ul class="list-unstyled activity-leval">
-                  <li class="active"></li>
-                  <li class="active"></li>
-                  <li class="active"></li>
-                  <li></li>
-                  <li></li>
-              </ul>
-              <div class="bg-c-yellow counter-block m-t-10 p-20">
-                  <div class="row">
-                      <div class="col-4">
-                          <i class="fa fa-comment"></i>
-                          <p>1256</p>
-                      </div>
-                      <div class="col-4">
-                          <i class="fa fa-user"></i>
-                          <p>8562</p>
-                      </div>
-                      <div class="col-4">
-                          <i class="fa fa-suitcase"></i>
-                          <p>189</p>
-                      </div>
-                  </div>
-              </div>
-              <p class="m-t-15 text-muted">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-              <hr/>
-              <div class="row justify-content-center user-social-link">
-                  <div class="col-auto"><a href="#!"><i class="fa fa-facebook text-facebook"></i></a></div>
-                  <div class="col-auto"><a href="#!"><i class="fa fa-twitter text-twitter"></i></a></div>
-                  <div class="col-auto"><a href="#!"><i class="fa fa-dribbble text-dribbble"></i></a></div>
-              </div>*/}
-          </div> 
-</div>
-</div>
-    </div>
-}
-  </div>
-</div>
     </>
-  )
-}
+  );
+};
 
-export default PortalUsers
+export default PortalUsers;

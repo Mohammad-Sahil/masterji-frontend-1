@@ -69,6 +69,27 @@
 .section4 .bullet{
     margin-right: 0.7rem;
 }
-.modalitem > input {
-    margin: 0.5rem;
+.ordermodal{
+    width: 50vw;
+    max-width: 100vw;
+}
+.ordermodal input {
+    margin: 0.3rem;
+    margin-left: 0;
+}
+.ordermodal td{
+    padding: 10px!important;
+}
+.garmentname{
+    margin-left: 0px;
+}
+.garmentaction{
+    /* margin-left: 10rem; */
+}
+.ordermodal .design{
+    margin-left: 15px;
+}
+.ordermodal .priceborder{
+    padding: 5px;
+    border-left: black 1px solid;
 }

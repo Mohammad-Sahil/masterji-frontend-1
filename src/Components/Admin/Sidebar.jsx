@@ -2,10 +2,11 @@ import React from "react";
 import "./Sidebar.css";
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutuseraction } from "../../Actions/useraction";
 
 const Sidebar = () => {
+  const {user} =useSelector(state=>state.User)
   const dispatch = useDispatch()
   const location = useLocation()
   const data = [
@@ -30,8 +31,8 @@ const Sidebar = () => {
       cName: "nav-text",
     },
     {
-      title: "Register",
-      path: location.pathname.includes("/admin/register") ? location.pathname : '/admin/register',
+      title: "Portal",
+      path: location.pathname.includes("/admin/portal/users") ? location.pathname : (location.pathname.includes("/admin/portal/register") ? location.pathname : '/admin/portal/users'),
       cName: "nav-text",
     },
   ];
@@ -73,12 +74,12 @@ const Sidebar = () => {
               <a href="#" class="log-out">&nbsp;&nbsp;&nbsp;<i class='fa fa-sign-out'></i></a>
               </div>
             </div> */}
-            <img src="https://walr.com/app/uploads/2022/03/audience-access.svg" alt="" /><span className="profileName">Yash Deorah <br/><p style={{fontSize:13}}>Admin</p></span>
+            <img src="https://walr.com/app/uploads/2022/03/audience-access.svg" alt="" /><span className="profileName">{user.name}<br/><p style={{fontSize:13}}>{user.role}</p></span>
           </li> 
           <li className="nav-text logout-footer">
-            <NavLink activeclassname="active" to='' onClick={logouthandle} >
+            <a onClick={logouthandle} style={{color:'white'}}>
               <span>Log Out</span>
-            </NavLink>
+            </a>
           </li>
         </ul>
       </nav>
