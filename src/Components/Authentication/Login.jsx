@@ -4,12 +4,14 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { loginuseraction } from "../../Actions/useraction";
 import Metadata from "../Metadata";
 import './Login.css'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
 
   const dispatch = useDispatch()
   const Navigate = useNavigate()
-  const {loading, isAuthenticated, user} = useSelector(state=>state.User)
+  const {loading, isAuthenticated, user,error} = useSelector(state=>state.User)
 
 const [email, setemail] = useState()
 const [password, setpassword] = useState()
@@ -18,9 +20,16 @@ const [passfocus, setpassfocus] = useState()
 
 useEffect(() => {
   if(isAuthenticated){
-    Navigate('/admin')
+    toast.success('Login Successfull!')
+    setTimeout(() => {
+      
+      Navigate('/admin')
+    }, 1000);
   }
-}, [isAuthenticated])
+  if(error){
+    toast.error(error)
+  }
+}, [isAuthenticated,error,toast,Navigate])
 
 const loginhandle = (e)=>{
   e.preventDefault()
@@ -34,16 +43,17 @@ const loginhandle = (e)=>{
   return (
     <>
     <Metadata title='Login | Admin | Masterji'/>
+    <ToastContainer/>
     <div className="logincontainer">
         
-      <img class="wave" src="/wave.png" />
+      <img class="wave" src="/Wave_Yellow.png" />
       <div class="container">
         <div class="img">
-          <img src="/Masterji_Logo_green.png" />
+          <img src="/Masterji_Logo_yellow.png" />
         </div>
         <div class="login-content">
           <form action="index.html">
-            <img src="/avatar.svg" />
+            <img src="/avatar.png" />
             <h2 class="title">Welcome</h2>
             <div class={`input-div one ${userfocus || (email && 'focus')}`}>
               <div class="i">

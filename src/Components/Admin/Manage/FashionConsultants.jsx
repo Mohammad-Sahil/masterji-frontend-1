@@ -28,13 +28,11 @@ class FashionConsultants extends Component {
         console.log(consultants);
         this.setState({ consultants });
       })
-      .catch(err => toast.error(err));
+      .catch(err => toast.error(err.message));
 
   }
 
   handleModal(consultant, operation) {
-    console.log(consultant);
-    console.log(operation)
     let modalFields = {
       operation,
       consultant,
@@ -59,12 +57,12 @@ class FashionConsultants extends Component {
     })
     .then(response => response.json())
     .then((data) => {
-        console.log(data);
         const consultants = [data.data, ...this.state.consultants];
         toast.success(data.message);
         this.setState({ consultants, showModal:false  });
     })
-    .catch(err => toast.error(err.message));
+    .catch(err => {
+      toast.error(err)});
   };
 
   handleUpdate = (e) => {
@@ -104,6 +102,13 @@ class FashionConsultants extends Component {
         .catch(err => toast.error(err));
    
   };
+
+  deleteWorkSample = (index, sample) => {
+    alert('Do you want to delete the sample');
+    let expandedConsultant = this.state.expandedConsultant;
+    expandedConsultant.workSamples.splice(index,1);
+    this.setState({expandedConsultant});
+  }
 
   search = (searchText) => {
     console.log(searchText);
@@ -345,9 +350,26 @@ class FashionConsultants extends Component {
                     <hr/>
                     <p class="m-t-15 text" style={{textAlign:'justify'}}>{expandedConsultant.workExperience}</p>
 
-                    <p class="text m-t-15" style={{fontSize:20, fontWeight:600}}>{expandedConsultant.rate && "Price :"} {expandedConsultant.rate}</p>
+                    <p class="text m-t-15" style={{fontSize:20, fontWeight:600}}>{expandedConsultant.rate && "Price : Rs. "} {expandedConsultant.rate}</p>
+                    <hr />
+                    {expandedConsultant.workSamples && 
+                    <div className="work-samples">
+                      <p  class="text m-t-15" style={{fontWeight:500, fontSize:18}}> Work Samples</p>
+                      <div className="work-samples">
+                      <div class="work-samples-grid">
+                        {expandedConsultant.workSamples.map((sample, index) => 
+                          <a>
+                            <div className="img-container">
+                            <img src={sample} alt="work sample" />
+                            </div>
+                            <button className="btn" onClick={() => this.deleteWorkSample(index, sample)}>X</button>
+                          </a>
+                        )}
 
-                    {expandedConsultant.workSamples && <p  class="text m-t-15"> Work Samples</p>}
+                      </div>
+                    </div>
+                    </div>
+                    }
 
                     {/* <ul class="list-unstyled activity-leval">
                         <li class="active"></li>

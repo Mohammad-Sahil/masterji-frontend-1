@@ -1,14 +1,12 @@
 export const UserReducer = (state = { user: {} }, action) => {
     switch (action.type) {
       case 'LOGIN_REQUEST':
-      case 'REGISTER_USER_REQUEST':
       case 'LOAD_USER_REQUEST':
         return {
           loading: true,
           isAuthenticated: false,
         };
       case 'LOGIN_SUCCESS':
-      case 'REGISTER_USER_SUCCESS':
       case 'LOAD_USER_SUCCESS':
         return {
           ...state,
@@ -17,7 +15,6 @@ export const UserReducer = (state = { user: {} }, action) => {
           user: action.payload,
         };
       case 'LOGIN_FAIL':
-      case 'REGISTER_USER_FAIL':
         return {
           ...state,
           loading: false,
@@ -56,18 +53,23 @@ export const RegisterReducer = (state = { }, action) => {
     switch (action.type) {
       case 'REGISTER_USER_REQUEST':
         return {
-          loading: true,
+          loading: true
         };
       case 'REGISTER_USER_SUCCESS':
         return {
           ...state,
-          loading: false,
+          success:true,
+          loading: false
         };
       case 'REGISTER_USER_FAIL':
         return {
           ...state,
           loading: false,
           error: action.payload,
+        };
+      case 'REGISTER_USER_RESET':
+        return {
+          loading: false
         };
       case 'CLEAR_ERRORS':
         return {
