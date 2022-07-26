@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Collapsible from 'react-collapsible';
 
 import SearchBar from "./searchBar";
 import "./fabricShop.css";
@@ -317,13 +318,36 @@ class Fabric extends Component {
                     </div>
                   </div>
                   <div style={{fontWeight:400, fontSize:17, textAlign:'left', margin:'5% 2%'}}>
-                    <h2>Garment Details</h2>
-                  </div><hr/>
-                  <div style={{fontWeight:400, fontSize:17, textAlign:'left', margin:'5% 2%'}}>
-                    <h2>Stitching Category</h2>
-                  </div><hr/>
-                  <div style={{fontWeight:400, fontSize:17, textAlign:'left', margin:'5% 2%'}}>
-                    <h2>Design for Representative</h2>
+                  <Collapsible trigger="Garment Details">
+                    <div className="mx-1 my-2 row">
+                    <div className="col">
+                        <strong>Alteration</strong>
+                        <p>₹ &nbsp;{expandedShop.garment_details?.alteration_price}</p>
+                      </div>
+                      <div className="col">
+                        <strong>Stitching</strong>
+                        <p>₹ &nbsp;{expandedShop.garment_details?.stitching_base_price}</p>
+                      </div>
+                      <div className="col">
+                        <strong>City</strong>
+                        <p className="text-capitalize">{expandedShop.city}</p>
+                      </div>
+                    </div>
+                  </Collapsible><hr/>
+                  <Collapsible trigger="Stitching Category">
+                  <div className="mx-3 my-2">
+                    <button className="btn btn-danger">Delete</button>
+                    <button className="btn btn-warning mx-2">Create Category</button>
+                  </div>
+                  </Collapsible><hr/>
+                  <Collapsible trigger="Design for Representative">
+                  <div className="mx-1 my-2 row">
+                    <p className="mb-0">Back Design</p>
+                    <p className="mb-0">Front Design</p>
+                    <p className="mb-0">General Design</p>
+                    <p className="mb-0">Side Design</p>
+                  </div>
+                  </Collapsible><hr/>
                   </div>
                   {/* <div style={{fontWeight:400, fontSize:17, textAlign:'left', margin:'3% 7%'}}>
                     <div class="text m-t-5">{expandedShop.shopVariety && "Variety "}&nbsp;&nbsp;{": "+expandedShop.shopVariety}</div>
