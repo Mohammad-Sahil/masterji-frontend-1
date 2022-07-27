@@ -1,12 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 
 import './Admin.css';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Metadata from '../Metadata';
 
+
+
 const Admin = () => {
+  const Location = useLocation()
+  const Navigate = useNavigate()
+  useEffect(() => {
+    if(Location.pathname==='/admin'){
+      Navigate('orders')
+    }
+  }, [])
   return (
     <>
     <Metadata title='Admin | Masterji'/>

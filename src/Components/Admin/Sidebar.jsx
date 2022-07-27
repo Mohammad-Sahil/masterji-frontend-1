@@ -77,7 +77,7 @@ const Sidebar = () => {
             <img src="https://walr.com/app/uploads/2022/03/audience-access.svg" alt="" /><span className="profileName">{user.name}<br/><p style={{fontSize:13}}>{user.role}</p></span>
           </li> 
           <li className="nav-text logout-footer">
-            <a onClick={logouthandle} style={{color:'white'}}>
+            <a onClick={logouthandle} style={{color:'white',cursor:'pointer'}}>
               <span>Log Out</span>
             </a>
           </li>
