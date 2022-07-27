@@ -91,7 +91,6 @@ const Orders = () => {
       active: tab === "All" ? true : false,
     },
   ];
-  const [test, settest] = useState([])
   const func = async () => {
     let orders = await axios.get(
       "https://us-central1-masterji-19f75.cloudfunctions.net/app/orders/v2/get"
@@ -99,8 +98,6 @@ const Orders = () => {
     // let orders = await axios.get(
     //   "https://us-central1-masterji-online.cloudfunctions.net/app/orders/v2/get"
     // );
-    console.log(orders.data)
-      settest(orders.data)
     setOrderslist(orders.data);
     setfiltered(orders.data);
 
@@ -307,8 +304,8 @@ const Orders = () => {
                   </thead>
                   <tbody>
                     {filtered.map((order) => {
-                      console.log(order)
-                      {/*return(  <tr
+                      {/* console.log(order) */}
+                      return(  <tr
                         key={order.id}
                         onClick={() => setexpandedorder(order)}
                         style={
@@ -322,14 +319,14 @@ const Orders = () => {
                           <div>{order.id}</div>
                         </td>
                         <td>
-                          {order.RfOrderItem}
-                          <div>{order.commentData}</div>
+                          {order.RfOrderItem[0]?.garment_details.garment_type}
+                          <div>{order.RfOrderItem[0]?.pricing.total_price===order.RfOrderItem[0]?.pricing.alter_price ? 'alter' : 'stitch'}</div>
                         </td>
                         <td>
                           {order.currentStatus}
                           <div>Assign Executive</div>
                         </td>
-                      </tr>) */}
+                      </tr>)
                     })}
                   </tbody>
                 </table>
@@ -726,7 +723,7 @@ const Orders = () => {
                           </div>
                           <div className="pricing">
                             <div className="head">Pickup Address</div>
-                            <div className="value">{expandedorder.address}</div>
+                            <div className="value">{expandedorder.address.address}</div>
                           </div>
                           <div className="prefferedpickup">
                             <div className="head">Preffered Pickup</div>
@@ -749,7 +746,11 @@ const Orders = () => {
 
                       <div className="section3">
                         <div className="head">1 Garments</div>
-                        <div className="item">{expandedorder.RfOrderItem}</div>
+                        {expandedorder.RfOrderItem.map(elem=>{
+                          return(
+                        <div className="item">{elem.garment_details.garment_type}</div>
+                          )
+                        })}
                       </div>
                       <div className="section4">
                         <div className="head">Status</div>
