@@ -51,8 +51,9 @@ const Sidebar = () => {
       <nav className="nav-menu active">
         <ul className="nav-menu-items">
           <li className="nav-text" style={{ color: "white", fontSize: 30, height: 100 }}>
-            <span>MasterJi</span>
+            <img style={{height:80, width:'90%'}} src="https://adminmasterji.firebaseapp.com/assets/icons/masterji_logo.svg" alt="" />
           </li>
+          <br />
           {data.map((item, index) => {
             return (
               <li key={index} className={item.cName}>
@@ -74,10 +75,10 @@ const Sidebar = () => {
               <a href="#" class="log-out">&nbsp;&nbsp;&nbsp;<i class='fa fa-sign-out'></i></a>
               </div>
             </div> */}
-            <img src="https://walr.com/app/uploads/2022/03/audience-access.svg" alt="" /><span className="profileName">{user.name}<br/><p style={{fontSize:13}}>{user.role}</p></span>
+            <img src="https://cdn4.iconfinder.com/data/icons/web-stuff/100/office_orange-19-512.png" alt="" /><span className="profileName">{user.name}<br/><p style={{fontSize:15}}>{user.role}</p></span>
           </li> 
           <li className="nav-text logout-footer">
-            <a onClick={logouthandle} style={{color:'white',cursor:'pointer'}}>
+            <a onClick={logouthandle} >
               <span>Log Out</span>
             </a>
           </li>

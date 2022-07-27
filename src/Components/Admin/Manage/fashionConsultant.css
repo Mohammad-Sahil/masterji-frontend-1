@@ -228,6 +228,48 @@
     cursor: pointer;
     border-radius: 20%;
   }
+
+  .upload-image-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+  .upload-image-wrapper .file-upload {
+    height: 108px;
+    width: 108px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid #FFFFFF;
+    overflow: hidden;
+    background-size: 100% 200%;
+    transition: all 0.5s;
+    color: #ffc107;
+    font-size: 50px;
+  }
+
+
+  .file-upload input[type=file] {
+        height: 109px;
+        width: 109px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .file-upload:hover {
+        background-position: 0 -100%;
+        background-color: #ffc107;
+        color: white;
+        cursor: pointer !important;
+        }
   
   @media (max-width: 1400px) {
     .work-samples-grid {
