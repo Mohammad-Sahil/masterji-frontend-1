@@ -22,6 +22,11 @@
     font-size: 0.7rem;
     padding: 0.7rem;
     font-weight: 500;
+    margin-left: 0px;
+}
+.section1 > div > span.CANCELLED{
+    color: #2214C5;
+    background: rgba(34, 20, 197, 0.25);
 }
 .section1 .when{
     display: flex;

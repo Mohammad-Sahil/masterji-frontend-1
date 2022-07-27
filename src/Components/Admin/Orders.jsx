@@ -694,11 +694,12 @@ const Orders = () => {
                           UNNAMED
                         </h6>
                         <div>
-                          <span>{expandedorder.currentStatus}</span>
+                          <span className={expandedorder.currentStatus==='CANCELLED' && 'CANCELLED'}>{expandedorder.currentStatus}</span>
                           <div className="when">
                             <span className="text">When:</span>
                             <span className="date">
-                              {expandedorder.orderDate}
+                              {new Date(expandedorder.orderDate).toDateString()}{' , '}
+                              {expandedorder.bookingTime}
                             </span>
                           </div>
                         </div>
@@ -728,9 +729,7 @@ const Orders = () => {
                           <div className="prefferedpickup">
                             <div className="head">Preffered Pickup</div>
                             <div className="value">
-                              {new Date(
-                                expandedorder.bookingDate._seconds * 1000
-                              ).toDateString()}
+                              {new Date(expandedorder.bookingDate).toDateString()}
                               <br />
                               {expandedorder.bookingTime}
                             </div>
@@ -748,7 +747,7 @@ const Orders = () => {
                         <div className="head">1 Garments</div>
                         {expandedorder.RfOrderItem.map(elem=>{
                           return(
-                        <div className="item">{elem.garment_details.garment_type}</div>
+                    <span className="item">{elem.garment_details.garment_type}{' : ₹'}{elem.pricing.total_price}</span>
                           )
                         })}
                       </div>
@@ -761,7 +760,7 @@ const Orders = () => {
                           <div className="statuscontext">
                             <div className="statustitle">Order Placed</div>
                             <div className="statusplaced">
-                              {expandedorder.orderDate}
+                              {new Date(expandedorder.orderDate).toDateString()}
                             </div>
                           </div>
                         </div>
