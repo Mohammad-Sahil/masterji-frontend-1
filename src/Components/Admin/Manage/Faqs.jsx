@@ -21,7 +21,7 @@ class FAQs extends Component {
   api_url = "https://us-central1-masterji-online.cloudfunctions.net/app/";
 
   componentDidMount() {
-    fetch(this.api_url+"faqs/v2/get")
+    fetch("https://us-central1-masterji-19f75.cloudfunctions.net/app/"+"faqs/v2/get")
       .then((response) => response.json())
       .then((faqs) => {
         console.log(faqs);

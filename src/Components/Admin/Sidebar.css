@@ -21,7 +21,7 @@
   
   .nav-text a {
     text-decoration: none;
-    color: white;
+    color: black;
     font-size: 18px;
     width: 95%;
     height: 100%;
@@ -31,11 +31,11 @@
   }
   
   .nav-text a:hover {
-    border: 2px solid white;
+    border: 2px solid black;
   }
   
   .nav-text a.active {
-    background-color: white;
+    background-color: black;
     color:#ffc107;
   }
 
@@ -59,13 +59,13 @@
 
   .sidebar-footer{
     position: fixed;
-    color: white ;
+    color: black ;
     bottom: 10px;
     font-size: larger;
   }
 
   .sidebar-footer img {
-    margin-left: 5px;
+    margin-left: 7px;
     width: 2.7rem;
     border-radius: 50%;
   }

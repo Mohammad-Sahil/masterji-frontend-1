@@ -3,10 +3,16 @@ import { Modal } from "react-bootstrap";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { storage } from "../../../firebase";
+import {ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
+import {v4} from 'uuid';
+
 import SearchBar from "./searchBar";
 import "./fashionConsultant.css";
 import "./table.css";
 import Metadata from "../../Metadata";
+
+
 class FashionConsultants extends Component {
   state = {
     consultants: [],
@@ -19,7 +25,9 @@ class FashionConsultants extends Component {
     expandedConsultant:{}
   };
 
+  //api_url = "http://localhost:5000/masterji-online/us-central1/app/";
   api_url = "https://us-central1-masterji-online.cloudfunctions.net/app/";
+
 
   componentDidMount() {
     fetch(this.api_url+"fashionConsultant/v2/get")
@@ -45,6 +53,63 @@ class FashionConsultants extends Component {
     modalFields.consultant[e.currentTarget.name] = e.currentTarget.value;
     this.setState({ modalFields });
   };
+
+  handleImageUpload = (e) => {
+    let modalFields = this.state.modalFields;
+    // let fileObj =  e.target.files[0];
+    // console.log(fileObj);
+    // var newFileObject  = {
+    //   'lastModified'     : fileObj.lastModified,
+    //   'lastModifiedDate' : fileObj.lastModifiedDate,
+    //   'name'             : fileObj.name,
+    //   'size'             : fileObj.size,
+    //   'type'             : fileObj.type
+    // };  
+    // modalFields.consultant[e.currentTarget.name] = newFileObject;
+    // console.log(modalFields.consultant);
+    // this.setState({ modalFields });
+
+   /* const toastId = React.useRef(null);
+
+    let image = e.target.files[0];
+    const storageRef = ref(storage, `images/${image.name + v4()}`);
+    const uploadTask = uploadBytesResumable(storageRef, image);
+     uploadTask.on('state_changed', 
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        if (toastId.current === null) {
+          toastId.current = toast('Upload in Progress', { progress });
+        } else {
+          toast.update(toastId.current, { progress });
+        }
+
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused');
+            break;
+          case 'running':
+            console.log('Upload is running');
+            break;
+        }
+      }, 
+      (error) => {
+        toast.error(error.message);
+      }, 
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          modalFields.consultant['userImage'] = downloadURL;
+          toast.success('Image uploaded successfully');
+        });
+      }
+    );
+
+    console.log(modalFields)*/
+
+  };
+
+  handleWorkSampleImages = e => {
+
+  }
 
   handleCreate = (e) => {
     e.preventDefault();
@@ -178,7 +243,7 @@ class FashionConsultants extends Component {
                 <button
                   type="button"
                   className="btn btn-warning addButton"
-                  style={{ width: '100%', color:'white' }}
+                  style={{ width: '100%' }}
                   onClick={() => this.handleModal({}, "Create")}
                 >
                   Add
@@ -222,49 +287,6 @@ class FashionConsultants extends Component {
                       </td>
                     </tr>
                   ))}
-                  {/* <tr>
-                                <th scope="row">consultant.id</th>
-                                <td>consultant.namnewnrwnfn</td>
-                                <td>consultant.city</td>
-                                <td>consultant.contact</td>
-                                <td>consultant.email</td>
-                                <td>consultant.expertise</td>
-                                <td>consultant.rate</td>
-                                <td>consultant.userImage</td>
-                                <td>consultant.workExperience</td>
-                                <td>consultant.workSample</td>
-                                <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true" ></i></td>
-
-                            <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
-                        </tr> 
-                        <tr>
-                            <th scope="row">consultant.id</th>
-                            <td>consultant.namnewnrwnfn</td>
-                            <td>consultant.city</td>
-                            <td>consultant.contact</td>
-                            <td>consultant.email</td>
-                            <td>consultant.expertise</td>
-                            <td>consultant.rate</td>
-                            <td>consultant.userImage</td>
-                            <td>consultant.workExperience</td>
-                            <td>consultant.workSample</td>
-                            <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true" ></i></td>
-                            <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
-                        </tr> 
-                        <tr>
-                            <th scope="row">consultant.id</th>
-                            <td>consultant.namnewnrwnfn</td>
-                            <td>consultant.city</td>
-                            <td>consultant.contact</td>
-                            <td>consultant.email</td>
-                            <td>consultant.expertise</td>
-                            <td>consultant.rate</td>
-                            <td>consultant.userImage</td>
-                            <td>consultant.workExperience</td>
-                            <td>consultant.workSample</td>
-                            <td><i class="fa fa-pencil-square-o fa-2x" style={{color:'gold', cursor:'pointer'}} aria-hidden="true" ></i></td>
-                            <td><i class="fa fa-trash-o fa-2x" style={{color:'crimson'}}></i></td>
-                        </tr>  */}
                 </tbody>
               </table>
             </div>
@@ -315,9 +337,19 @@ class FashionConsultants extends Component {
                     <input type="text" defaultValue={modalConsultant.rate} name="rate" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Price"/>
                   </div>
                   <br />
-                  <div className="form-group">
+                  {/* <div className="form-group">
                     <label>User Image</label>
                     <input type="text" defaultValue={modalConsultant.userImage} name="userImage" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter User Image"/>
+                  </div>
+                  <br /> */}
+                  <div className="form-group">
+                    <label>Upload User Image</label>
+                    <input type="file" name="userImage" className="form-control" id="imageModal" onChange={this.handleImageUpload} placeholder="Enter User Image" />
+                  </div>
+                  <br />
+                  <div className="form-group">
+                    <label>Upload Work Samples</label>
+                    <input type="file" name="workSamples" className="form-control" id="imageModal" onChange={this.handleWorkSampleImages} placeholder="Enter User Image" multiple/>
                   </div>
                   <br />
                   <div style={{ float: "right" }}>
@@ -366,6 +398,16 @@ class FashionConsultants extends Component {
                           </a>
                         )}
 
+                          <a>
+                            <div className="img-container">
+                              <div className="upload-image-wrapper">
+                              <div className="file-upload">
+                                <input type="file" name="uploadWorkSample" id="uploadWorkSample" />
+                                <i class="fa fa-arrow-up"></i>
+                              </div>
+                              </div>
+                            </div>
+                          </a>
                       </div>
                     </div>
                     </div>

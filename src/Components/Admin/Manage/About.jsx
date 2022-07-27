@@ -23,7 +23,7 @@ class About extends Component {
 
 
   componentDidMount() {
-    fetch(this.api_url+"aboutus/v2/get")
+    fetch("https://us-central1-masterji-19f75.cloudfunctions.net/app/"+"aboutus/v2/get")
       .then((response) => response.json())
       .then((entries) => {
         console.log(entries);

@@ -8,7 +8,7 @@ import About from "./Components/Admin/Manage/About";
 import Users from "./Components/Admin/Manage/Users";
 import Queries from "./Components/Admin/Manage/Queries";
 import ConsultantBooking from "./Components/Admin/Manage/ConsultantBooking";
-import FAQs from "./Components/Admin/Manage/Faqs";
+import FAQs from "./Components/Admin/Manage/FAQs";
 import Home from "./Components/Home";
 import Orders from "./Components/Admin/Orders";
 import Manage from "./Components/Admin/Manage/Manage";

@@ -15,6 +15,7 @@ class ConsultantBooking extends Component {
       operation: "Create",
       booking: {},
     },
+    consultants : [],
     searchText: "",
     expandedBooking:{
     }
@@ -26,10 +27,17 @@ class ConsultantBooking extends Component {
     fetch(this.api_url+"consultantbooking/v2/get")
       .then((response) => response.json())
       .then((bookings) => {
-        console.log(bookings);
         this.setState({ bookings });
       })
       .catch(err => toast.error(err.message));
+
+    fetch(this.api_url+"fashionConsultant/v2/get")
+      .then((response) => response.json())
+      .then((consultants) => {
+        this.setState({ consultants });
+      })
+      .catch(err => toast.error(err.message));
+
   }
 
   handleModal(booking, operation) {
@@ -44,7 +52,6 @@ class ConsultantBooking extends Component {
   handleChange = (e) => {
     let modalFields = this.state.modalFields;
     modalFields.booking[e.currentTarget.name] = e.currentTarget.value;
-    console.log(modalFields.booking)
     this.setState({ modalFields });
   };
 
@@ -113,7 +120,16 @@ class ConsultantBooking extends Component {
     this.setState({expandedBooking:booking})
   }
 
-  
+  handleConsultantChange = e => {
+    let modalFields = this.state.modalFields;
+    let index = e.currentTarget.value;
+    let consultant = this.state.consultants[index];
+    modalFields.booking['consultantId'] = consultant.id;
+    modalFields.booking['consultantName'] = consultant.name;
+    modalFields.booking['expertise'] = consultant.expertise;
+    modalFields.booking['consultantImage'] = consultant.userImage;
+    this.setState({ modalFields });
+  }
 
   render() {
     const { bookings, searchText, expandedBooking } = this.state;
@@ -154,6 +170,7 @@ class ConsultantBooking extends Component {
                 <thead className="thead-dark">
                   <tr>
                     <th scope="col">Sr No</th>
+                    <th scope="col">Booking Id</th>
                     <th scope="col">User Contact</th>
                     <th scope="col">Booking Date</th>
                     <th scope="col">Order Date</th>
@@ -167,6 +184,7 @@ class ConsultantBooking extends Component {
                   {filteredBookings.map((booking,index) => (
                     <tr key={booking.id} onClick={() => this.expandBooking(booking)} style={expandedBooking.id === booking.id ? {backgroundColor:'#ffa', cursor:'pointer'} : {cursor:'pointer'}}>
                       <td>{index}</td>
+                      <td>{booking.bookingId}</td>
                       <td>{booking.userId}</td>
                       <td>{booking.bookingDate}</td>
                       <td>{booking.orderDate}</td>
@@ -200,43 +218,65 @@ class ConsultantBooking extends Component {
                   }
                 >
                   <div className="form-group">
-                    <label>Shop Name</label>
-                    <input type="text" defaultValue={modalBooking.shopName} name="shopName" className="form-control" id="shopNameModal" onChange={this.handleChange} placeholder="Enter Name"/>
+                    <label>Booking Id</label>
+                    <input type="text" defaultValue={modalBooking.bookingId} name="bookingId" className="form-control" id="bookingIdModal" onChange={this.handleChange} placeholder="Enter User Contact"/>
                   </div>
                   <br />
                   <div className="form-group">
-                    <label>Owner's Name</label>
-                    <input type="text" defaultValue={modalBooking.name} name="name" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Owner's Name"/>
+                    <label>User Contact</label>
+                    <input type="text" defaultValue={modalBooking.userId} name="userId" className="form-control" id="userIdModal" onChange={this.handleChange} placeholder="Enter User Contact"/>
                   </div>
                   <br />
                   <div className="form-group">
-                    <label>Shop Variety</label>
-                    <input type="text" defaultValue={modalBooking.shopVariety} name="shopVariety" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Shop Variety"/>
+                    <label>Booking Date</label>
+                    <input type="text" defaultValue={modalBooking.bookingDate} name="bookingDate" className="form-control" id="bookingDateModal" onChange={this.handleChange} placeholder="Enter Booking Date"/>
                   </div>
                   <br />
                   <div className="form-group">
-                    <label>City</label>
-                    <input type="text" defaultValue={modalBooking.city} name="city" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter City"/>
+                    <label>Booking Time</label>
+                    <input type="text" defaultValue={modalBooking.bookingTime} name="bookingTime" className="form-control" id="bookingTimeModal" onChange={this.handleChange} placeholder="Enter Booking Time"/>
+                  </div>
+                  <br />
+                  {/* <div className="form-group">
+                    <label>Order Date</label>
+                    <input type="text" defaultValue={modalBooking.orderDate} name="orderDate" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Order Date"/>
+                  </div>
+                  <br /> */}
+                  <div className="form-group">
+                    <label>Payment Id</label>
+                    <input type="text" defaultValue={modalBooking.paymentId} name="paymentId" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Payment Id"/>
                   </div>
                   <br />
                   <div className="form-group">
-                    <label>Address</label>
-                    <input type="text" defaultValue={modalBooking.address} name="address" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Address"/>
+                    <label>Amount</label>
+                    <input type="text" defaultValue={modalBooking.amount} name="amount" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Amount"/>
+                  </div>
+                  <br />
+                  <select class="form-select" aria-label="Default select example" onChange={this.handleConsultantChange}>
+                    <option selected>Open this select menu</option>
+                    {
+                      this.state.consultants.map((consultant,key) => <option value={key}>{consultant.id} - {consultant.name}</option>)
+                    }
+                  </select>
+                  <br />
+                  <div className="form-group">
+                    <label>Consultant Id</label>
+                    <input type="text" defaultValue={modalBooking.consultantId} name="consultantId" className="form-control" id="consultantId" placeholder="Enter Consultant Id" disabled/>
                   </div>
                   <br />
                   <div className="form-group">
-                    <label>Contact</label>
-                    <input type="text" defaultValue={modalBooking.contact} name="contact" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Contact"/>
+                    <label>Consultant Name</label>
+                    <input type="text" defaultValue={modalBooking.consultantName} name="consultantName" className="form-control" id="nameModal" placeholder="Enter Consultant Name" disabled/>
                   </div>
                   <br />
                   <div className="form-group">
-                    <label>Specializations</label>
-                    <input type="text" onChange={this.handleChange} name="specialisation" className="form-control" id="specialisation" placeholder="Enter Specialisation separated by semicolon"/>
+                    <label>Expertise</label>
+                    <input type="text" defaultValue={modalBooking.expertise} name="expertise" className="form-control" id="nameModal" placeholder="Enter Expertise" disabled/>
                   </div>
                   <br />
                   <div className="form-group">
-                    <label>User Image</label>
-                    <input type="text" defaultValue={modalBooking.userImage} name="userImage" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter User Image"/>
+                    <label>Consultant Image</label>
+                    <input type="text" defaultValue={modalBooking.consultantImage} name="consultantImage" className="form-control" id="nameModal" placeholder="Enter Consultant Image" disabled/>
                   </div>
                   <br />
                   <div style={{ float: "right" }}>
@@ -280,9 +320,11 @@ class ConsultantBooking extends Component {
                   <h5 style={{textAlign:'left' , marginLeft:'4%'}}>Booking Details</h5>
                 
                   <div style={{fontWeight:400, fontSize:17, textAlign:'left', margin:'5% 5% 2% 5%'}}>
+                    <div className="m-t-10">{expandedBooking.userId && "Booking Id : "}&nbsp;&nbsp;{expandedBooking.bookingId}</div>
                     <div className="m-t-10">{expandedBooking.userId && "User Contact  : "}&nbsp;&nbsp;{expandedBooking.userId}</div>
                     <div className="m-t-10">{expandedBooking.bookingDate && "Booking Date : "}&nbsp;&nbsp;{expandedBooking.bookingDate}</div>
                     <div className="m-t-10">{expandedBooking.bookingTime && "Booking Time : "}&nbsp;&nbsp;{expandedBooking.bookingTime}</div>
+                    <div className="m-t-10">{expandedBooking.orderDate && "Order Date : "}&nbsp;&nbsp;{expandedBooking.orderDate}</div>
                     <div className="m-t-10">{expandedBooking.paymentId && "Payment ID : "}&nbsp;&nbsp;{expandedBooking.paymentId}</div>
                   </div>
                   <br />

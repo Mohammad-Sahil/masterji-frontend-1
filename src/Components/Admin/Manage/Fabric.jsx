@@ -282,9 +282,19 @@ class Fabric extends Component {
                     <input type="text" defaultValue={this.getSpecilisationString(modalShop.specialisation)} onChange={this.handleSpecialisationsChange} name="specialisation" className="form-control" id="specialisation" placeholder="Enter Specialisation separated by semicolon"/>
                   </div>
                   <br />
-                  <div className="form-group">
+                  {/* <div className="form-group">
                     <label>User Image</label>
                     <input type="text" defaultValue={modalShop.userImage} name="userImage" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter User Image"/>
+                  </div>
+                  <br /> */}
+                  <div className="form-group">
+                    <label>Upload User Image</label>
+                    <input type="file" name="userImage" className="form-control" id="imageModal" onChange={this.handleImageUpload} placeholder="Enter User Image" />
+                  </div>
+                  <br />
+                  <div className="form-group">
+                    <label>Upload Work Samples</label>
+                    <input type="file" name="fabricSamples" className="form-control" id="imageModal" onChange={this.handleFabricSampleImages} placeholder="Enter User Image" multiple/>
                   </div>
                   <br />
                   <div style={{ float: "right" }}>
@@ -348,6 +358,17 @@ class Fabric extends Component {
                             <button className="btn" onClick={() => this.deleteFabricSample(index, sample)}>X</button>
                           </a>
                         )}
+
+                          <a>
+                            <div className="img-container">
+                              <div className="upload-image-wrapper">
+                              <div className="file-upload">
+                                <input type="file" name="uploadWorkSample" id="uploadWorkSample" />
+                                <i class="fa fa-arrow-up"></i>
+                              </div>
+                              </div>
+                            </div>
+                          </a>
 
                       </div>
                     </div>
