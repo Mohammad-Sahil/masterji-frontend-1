@@ -5,8 +5,64 @@ import axios from "axios";
 import { Modal } from "react-bootstrap";
 import "./Orders.css";
 import SearchBar from "./Manage/searchBar";
+import { Switch } from "antd";
 
 const Orders = () => {
+  const [modal, setmodal] = useState('edit');
+  const [check, setcheck] = useState({});
+  const handlecheck = (data, sub) => {
+    setcheck({
+      ...check,
+      [data.id]: {
+        checked:
+          sub === "main"
+            ? !check[data.id]?.checked
+            : check[data.id]?.checked !== undefined
+            ? check[data.id]?.checked
+            : false,
+        stitch:
+          sub === "switch"
+            ? !check[data.id]?.stitch
+            : check[data.id]?.stitch !== undefined
+            ? check[data.id]?.stitch
+            : true,
+        data,
+        ["data"]: {
+          ...data,
+          stitching_category: [
+            {
+              ...data?.stitching_category[0],
+              category_details: [
+                {
+                  ...data?.stitching_category[0]?.category_details[0],
+                  checked:
+                    sub === 0
+                      ? !check[data?.id]?.data?.stitching_category[0]
+                          ?.category_details[0]?.checked
+                      : sub === 1
+                      ? false
+                      : check[data?.id]?.data?.stitching_category[0]
+                          ?.category_details[0]?.checked,
+                },
+                {
+                  ...data?.stitching_category[0]?.category_details[1],
+                  checked:
+                    sub === 1
+                      ? !check[data?.id]?.data?.stitching_category[0]
+                          ?.category_details[1]?.checked
+                      : sub === 0
+                      ? false
+                      : check[data?.id]?.data?.stitching_category[0]
+                          ?.category_details[1]?.checked,
+                },
+              ],
+            },
+          ],
+        },
+      },
+    });
+  };
+
   const [tab, settab] = useState("New");
   const navdata = [
     {
@@ -37,113 +93,85 @@ const Orders = () => {
   ];
   const func = async () => {
     let orders = await axios.get(
-      "https://us-central1-masterji-online.cloudfunctions.net/app/orders/v2/get"
+      "https://us-central1-masterji-19f75.cloudfunctions.net/app/orders/v2/get"
     );
+    // let orders = await axios.get(
+    //   "https://us-central1-masterji-online.cloudfunctions.net/app/orders/v2/get"
+    // );
     setOrderslist(orders.data);
     setfiltered(orders.data);
 
     let garments = await axios.get(
-      "https://us-central1-masterji-online.cloudfunctions.net/app/garments/v2/get"
+      "https://us-central1-masterji-19f75.cloudfunctions.net/app/garments/v2/get"
     );
-    setgarments(garments.data);
+    setgarmentdatas(garments.data);
   };
   useEffect(() => {
     func();
   }, []);
 
   const [Orderslist, setOrderslist] = useState([]);
-  const [garments, setgarments] = useState([]);
+  const [garmentdatas, setgarmentdatas] = useState([]);
   const [expandedorder, setexpandedorder] = useState([]);
   const tabhandle = (e) => {
     e.preventDefault();
     settab(e.target.innerHTML);
   };
-  const garmentdatas = [
-    {
-      category: "FEMALE",
-      city: "bengaluru",
-      garment_details: {
-        alteration_price: 200,
-        design: [
-          {
-            back_design: {},
-            front_design: {},
-            general_design: {},
-            side_design: {},
-          },
-        ],
 
-        garment_type: "lehenga",
-        icon: "https://firebasestorage.googleapis.com/v0/b/masterji-19f75.appspot.com/o/GarmentCategory%2Ficon%2Flehnga_1645471363878?alt=media&token=c84c8d93-f6df-47a1-8977-ea391d8f83b8",
-        stitching_base_price: 1200,
-
-        stitching_process:
-          "1.one lining 2.side open with zipping 3.hook button 4.top belt with ribbon with tassel 5.down folding five inches 6.interlock and overlock",
-      },
-      stitching_category: [
-        {
-          category: "",
-          category_details: [
-            {
-              design: "",
-              price: 80,
-              subcategory: "Design",
-            },
-            {
-              design: "",
-              price: 150,
-              subcategory: "lining",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      category: "FEMALE",
-      city: "bengaluru",
-      garment_details: {
-        alteration_price: 200,
-        design: [
-          {
-            back_design: {},
-            front_design: {},
-            general_design: {},
-            side_design: {},
-          },
-        ],
-
-        garment_type: "saree",
-        icon: "https://firebasestorage.googleapis.com/v0/b/masterji-19f75.appspot.com/o/GarmentCategory%2Ficon%2Flehnga_1645471363878?alt=media&token=c84c8d93-f6df-47a1-8977-ea391d8f83b8",
-        stitching_base_price: 1200,
-
-        stitching_process:
-          "1.one lining 2.side open with zipping 3.hook button 4.top belt with ribbon with tassel 5.down folding five inches 6.interlock and overlock",
-      },
-      stitching_category: [
-        {
-          category: "",
-          category_details: [
-            {
-              design: "",
-              price: 80,
-              subcategory: "Design",
-            },
-            {
-              design: "",
-              price: 150,
-              subcategory: "lining",
-            },
-          ],
-        },
-      ],
-    },
-  ];
   const [showModal, setshowModal] = useState();
   const [showModalcancel, setshowModalcancel] = useState();
 
   const [modalFields, setmodalFields] = useState({});
   const [address, setaddress] = useState({});
-  const [RfOrderItem, setRfOrderItem] = useState([]);
+
+  let RfOrderItem=[];
+  const getitem = () => {
+    if (check) {
+      for (let garm in check) {
+        if (check[garm]?.checked) {
+          let data = {};
+          data.garmentId = check[garm]?.data.id;
+          data.stitching_category = [];
+          data.workType = 0;
+          data.pricing = {
+            stitch_price:
+              check[garm]?.data?.garment_details?.stitching_base_price,
+            total_price: check[garm]?.stitch
+              ? check[garm]?.data?.garment_details?.stitching_base_price
+              : check[garm]?.data?.garment_details?.alteration_price,
+            add_on_price: 0,
+            alter_price: check[garm]?.data?.garment_details?.alteration_price,
+          };
+          data.garment_details = {
+            garment_type: check[garm]?.data?.garment_details?.garment_type,
+            icon: check[garm]?.data?.garment_details?.icon,
+            category: check[garm]?.data?.category,
+          };
+          let tempdata = [];
+          check[garm]?.data?.stitching_category[0].category_details.map(
+            (elem) => {
+              if(elem.checked){
+
+                tempdata = [
+                  ...tempdata,
+                  {
+                    category: check[garm]?.data?.stitching_category[0]?.category,
+                    sub_category: elem.subcategory,
+                    price: elem.price,
+                  },
+                ];
+              }
+            }
+          );
+          data.selected_category = [...tempdata];
+          RfOrderItem = [...RfOrderItem, {...data}];
+          return RfOrderItem
+        }
+      }
+    }
+  };
+  
+
   const [searchText, setsearchText] = useState();
   const [filtered, setfiltered] = useState([]);
 
@@ -161,15 +189,10 @@ const Orders = () => {
     });
   };
 
-  const handleChangeitem = (e) => {
-    setRfOrderItem({
-      ...RfOrderItem,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   const handleCreate = async (e) => {
     e.preventDefault();
+    getitem()
+    console.log(RfOrderItem)
     await axios.post(
       "https://us-central1-masterji-online.cloudfunctions.net/app/orders/v2/post",
       { ...modalFields, address, RfOrderItem },
@@ -183,11 +206,14 @@ const Orders = () => {
     e.preventDefault();
     const data = {
       cancelReason,
-      currentStatus:'PLACED'
-    }
-    await axios.put(`https://us-central1-masterji-online.cloudfunctions.net/app/orders/v2/put/${expandedorder.id}`,data)
-    setshowModalcancel(false)
-    func()
+      currentStatus: "CANCELED",
+    };
+    await axios.put(
+      `https://us-central1-masterji-online.cloudfunctions.net/app/orders/v2/put/${expandedorder.id}`,
+      data
+    );
+    setshowModalcancel(false);
+    func();
   };
 
   useEffect(() => {
@@ -254,7 +280,7 @@ const Orders = () => {
                     type="button"
                     className="btn btn-warning addButton"
                     style={{ width: "100%", color: "white" }}
-                    onClick={() =>{ setmodalFields({});setshowModal(!showModal)}}
+                    onClick={() =>{setmodal('create');setshowModal(!showModal)}}
                   >
                     Create Order
                   </button>
@@ -277,8 +303,9 @@ const Orders = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filtered.map((order) => (
-                      <tr
+                    {filtered.map((order) => {
+                      {/* console.log(order) */}
+                      return(  <tr
                         key={order.id}
                         onClick={() => setexpandedorder(order)}
                         style={
@@ -292,15 +319,15 @@ const Orders = () => {
                           <div>{order.id}</div>
                         </td>
                         <td>
-                          {order.RfOrderItem}
-                          <div>{order.commentData}</div>
+                          {order.RfOrderItem[0]?.garment_details.garment_type}
+                          <div>{order.RfOrderItem[0]?.pricing.total_price===order.RfOrderItem[0]?.pricing.alter_price ? 'alter' : 'stitch'}</div>
                         </td>
                         <td>
                           {order.currentStatus}
                           <div>Assign Executive</div>
                         </td>
-                      </tr>
-                    ))}
+                      </tr>)
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -328,6 +355,7 @@ const Orders = () => {
                         name="name"
                         className="form-control"
                         id="nameModal"
+                        value={modalFields.name}
                         onChange={handleChange}
                         placeholder="Customer Name"
                       />
@@ -337,6 +365,7 @@ const Orders = () => {
                         name="houseNo"
                         className="form-control"
                         id="nameModal"
+                        value={address.houseNo}
                         onChange={handleChangeaddress}
                         placeholder="House no./ Flat no."
                       />
@@ -346,6 +375,7 @@ const Orders = () => {
                         name="building"
                         className="form-control"
                         id="nameModal"
+                        value={address.building}
                         onChange={handleChangeaddress}
                         placeholder="Street / Building"
                       />
@@ -355,6 +385,7 @@ const Orders = () => {
                         name="landmark"
                         className="form-control"
                         id="nameModal"
+                        value={address.landmark}
                         onChange={handleChangeaddress}
                         placeholder="Area / Locality / Landmark"
                       />
@@ -364,11 +395,14 @@ const Orders = () => {
                         name="city"
                         className="form-control"
                         id="nameModal"
+                        value={address.city}
                         onChange={handleChangeaddress}
                         placeholder="City"
                       />
                     </div>
                     <br />
+                    {modal==='create' && <>
+
                     <div className="form-group modalitem">
                       <label>Select garments for stitching or alteration</label>
                       <br />
@@ -388,25 +422,46 @@ const Orders = () => {
                                   <td>
                                     <input
                                       type="checkbox"
-                                      name={
-                                        garment.garment_details.garment_type
+                                      checked={check[garment.id]?.checked}
+                                      onClick={() =>
+                                        handlecheck(garment, "main")
                                       }
-                                      id={garment.garment_details.garment_type}
+                                      name={garment.id}
+                                      style={{ cursor: "pointer" }}
                                     />
                                     <span className="garmentname">
                                       {garment.garment_details.garment_type} (
                                       {garment.city})
                                     </span>
                                     <div className="design">
-                                      {garment.stitching_category[0].category_details?.map(
-                                        (elem) => {
+                                      {garment.stitching_category[0]?.category_details?.map(
+                                        (elem, index) => {
                                           return (
                                             <>
                                               <input
-                                                type="radio"
-                                                name='stitching_category'
-                                                  value={elem.subcategory}
-                                                  onClick={(e)=>{e.preventDefault();console.log(e.target.checked)}}
+                                                type="checkbox"
+                                                name="stitching_category"
+                                                value={elem.subcategory}
+                                                key={elem.subcategory}
+                                                onClick={() =>
+                                                  handlecheck(garment, index)
+                                                }
+                                                checked={
+                                                  check[garment.id]?.data
+                                                    ?.stitching_category[0]
+                                                    ?.category_details[index]
+                                                    ?.checked
+                                                }
+                                                disabled={
+                                                  check[garment.id]?.checked
+                                                    ? false
+                                                    : true
+                                                }
+                                                style={
+                                                  check[garment.id]?.checked
+                                                    ? { cursor: "pointer" }
+                                                    : {}
+                                                }
                                               />
                                               <span className="garmentname">
                                                 {elem.subcategory}
@@ -422,7 +477,19 @@ const Orders = () => {
                                   </td>
                                   <td>
                                     <span className="garmentaction">
-                                      Alter Stitch
+                                      Alter{" "}
+                                      <Switch
+                                        disabled={
+                                          check[garment.id]?.checked
+                                            ? false
+                                            : true
+                                        }
+                                        checked={check[garment.id]?.stitch}
+                                        onClick={() =>
+                                          handlecheck(garment, "switch")
+                                        }
+                                      />{" "}
+                                      Stitch
                                     </span>
                                   </td>
                                   <td>
@@ -452,6 +519,7 @@ const Orders = () => {
                         </tbody>
                       </table>
                     </div>
+                    </> }
                     <div className="form-group">
                       <label>Discount</label>
                       <input
@@ -525,7 +593,7 @@ const Orders = () => {
                         <button
                           type="button"
                           className="btn btn-primary"
-                          onClick={() => setshowModal(false)}
+                          onClick={() => {setmodalFields({});setaddress({});setcheck({});setshowModal(false)}}
                         >
                           Close
                         </button>
@@ -559,7 +627,7 @@ const Orders = () => {
                         <button
                           type="button"
                           className="btn btn-primary"
-                          onClick={() => setshowModalcancel(false)}
+                          onClick={() => {setmodalFields({});setaddress({});setcheck({});setshowModalcancel(false)}}
                         >
                           Close
                         </button>
@@ -587,7 +655,7 @@ const Orders = () => {
                             type="button"
                             className="btn btn-warning addButton"
                             style={{ width: "100%", color: "white" }}
-                            onClick={() =>setshowModalcancel(!showModalcancel)}
+                            onClick={() => setshowModalcancel(!showModalcancel)}
                           >
                             Cancel Order
                           </button>
@@ -597,7 +665,11 @@ const Orders = () => {
                             type="button"
                             className="btn btn-warning addButton"
                             style={{ width: "100%", color: "white" }}
-                            onClick={() =>{ setmodalFields(expandedorder); setshowModal(!showModal)}}
+                            onClick={() => {
+                              setmodal('edit');
+                              setmodalFields(expandedorder);
+                              setshowModal(!showModal);
+                            }}
                           >
                             Edit
                           </button>
@@ -619,12 +691,10 @@ const Orders = () => {
                           class="f-w-600 m-t-25 m-b-10"
                           style={{ fontSize: 20 }}
                         >
-                          Unnamed
+                          UNNAMED
                         </h6>
                         <div>
-                          <span>
-                            {expandedorder.currentStatus}
-                          </span>
+                          <span>{expandedorder.currentStatus}</span>
                           <div className="when">
                             <span className="text">When:</span>
                             <span className="date">
@@ -653,12 +723,14 @@ const Orders = () => {
                           </div>
                           <div className="pricing">
                             <div className="head">Pickup Address</div>
-                            <div className="value">{expandedorder.address}</div>
+                            <div className="value">{expandedorder.address.address}</div>
                           </div>
                           <div className="prefferedpickup">
                             <div className="head">Preffered Pickup</div>
                             <div className="value">
-                              {(new Date(expandedorder.bookingDate._seconds*1000)).toDateString()}
+                              {new Date(
+                                expandedorder.bookingDate._seconds * 1000
+                              ).toDateString()}
                               <br />
                               {expandedorder.bookingTime}
                             </div>
@@ -674,7 +746,11 @@ const Orders = () => {
 
                       <div className="section3">
                         <div className="head">1 Garments</div>
-                        <div className="item">{expandedorder.RfOrderItem}</div>
+                        {expandedorder.RfOrderItem.map(elem=>{
+                          return(
+                        <div className="item">{elem.garment_details.garment_type}</div>
+                          )
+                        })}
                       </div>
                       <div className="section4">
                         <div className="head">Status</div>

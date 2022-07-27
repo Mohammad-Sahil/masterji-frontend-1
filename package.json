@@ -6,9 +6,14 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "antd": "^4.22.0",
     "axios": "^0.27.2",
     "brunch": "^4.0.1",
+<<<<<<< HEAD
     "firebase": "^9.9.1",
+=======
+    "moment": "^2.29.4",
+>>>>>>> c7851b0a9c2efa7e1c88630f3cf8b579b90ef947
     "react": "^18.2.0",
     "react-bootstrap": "^2.4.0",
     "react-collapsible": "^2.10.0",

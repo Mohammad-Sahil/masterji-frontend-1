@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import { ForgotPassword } from "../../Actions/useraction";
 import Metadata from '../Metadata'
 import './ForgotPass.css'
@@ -8,10 +9,23 @@ import './ForgotPass.css'
 const ForgotPass = () => {
   const dispatch = useDispatch()
   const Navigate = useNavigate()
-  const {loading, success, error, message} = useSelector(state=>state.ForgotPassword)
+  const {loading, error, message} = useSelector(state=>state.ForgotPassword)
 
 const [email, setemail] = useState()
 const [emailfocus, setemailfocus] = useState()
+
+useEffect(() => {
+  if(message){
+    toast.success(message)
+    setTimeout(() => {
+      Navigate('/login')
+    }, 1000);
+  }
+  if(error){
+    toast.error(error)
+  }
+}, [message])
+
 
 const forgothandle = (e)=>{
   e.preventDefault()
@@ -20,21 +34,22 @@ const forgothandle = (e)=>{
     dispatch(ForgotPassword(data))
   }
 }
-  return (
-    <>
+return (
+  <>
     <Metadata title='Forgot Password | Admin | Masterji'/>
-
+  <ToastContainer/>
+    
 
     <div className="forgotcontainer">
         
-      <img class="wave" src="/wave.png" />
+      <img class="wave" src="/Wave_Yellow.png" />
       <div class="container">
         <div class="img">
-          <img src="/Masterji_Logo_green.png" />
+          <img src="/Masterji_Logo_yellow.png" />
         </div>
         <div class="forgot-content">
           <form action="index.html">
-            <img src="/avatar.svg" />
+            <img src="/avatar.png" />
             <h2 class="title">Forgot Password?</h2>
             <div class={`input-div one ${emailfocus || (email && 'focus')}`}>
               <div class="i">

@@ -10,8 +10,7 @@ import { useSelector } from "react-redux";
 
 
 const PortalUsers = () => {
-  // const {user:You} = useSelector(state=>state.User)
-  const You = {id:'1l5tqbk5f'}
+  const {user:You} = useSelector(state=>state.User)
   const func = async ()=>{
     const {data} = await axios.get('https://us-central1-masterji-online.cloudfunctions.net/app/auth/v2/get')
     setfiltered(data)
