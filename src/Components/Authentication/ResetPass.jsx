@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast, ToastContainer } from 'react-toastify'
 import { resetPassword } from '../../Actions/useraction'
 import Metadata from '../Metadata'
 
@@ -9,12 +10,26 @@ const ResetPass = () => {
   const dispatch = useDispatch()
   const Navigate = useNavigate()
   const params = useParams()
-  const {loading, success, error, message} = useSelector(state=>state.ForgotPassword)
+  const {loading, error, message} = useSelector(state=>state.ForgotPassword)
   
 const [pass, setpass] = useState()
 const [cpass, setcpass] = useState()
 const [passfocus, setpassfocus] = useState()
 const [cpassfocus, setcpassfocus] = useState()
+
+useEffect(() => {
+  if(message){
+    toast.success(message)
+    setTimeout(() => {
+      Navigate('/login')
+    }, 1000);
+  }
+  if(error){
+    toast.error(error)
+    dispatch({type:'CLEAR_ERRORS'})
+  }
+}, [message,error])
+
 const resethandle = (e)=>{
     e.preventDefault()
     if(!(!pass || !cpass) && pass===cpass){
@@ -24,22 +39,24 @@ const resethandle = (e)=>{
             newPass:pass
         }
         dispatch(resetPassword(data))
+    }else{
+      toast.error('Passwords Doesnt Match')
     }
 }
   return (
     <>
     <Metadata title='Reset Password | Admin | Masterji'/>
-    
+    <ToastContainer/>
     <div className="forgotcontainer">
         
-      <img class="wave" src="/wave.png" />
+      <img class="wave" src="/Wave_Yellow.png" />
       <div class="container">
         <div class="img">
-          <img src="/Masterji_Logo_green.png" />
+          <img src="/Masterji_Logo_yellow.png" />
         </div>
         <div class="forgot-content">
           <form action="index.html">
-            <img src="/avatar.svg" />
+            <img src="/avatar.png" />
             <h2 class="title">Reset Password</h2>
             <div class={`input-div one ${passfocus || (pass && 'focus')}`}>
               <div class="i">

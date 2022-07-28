@@ -100,7 +100,7 @@ export const RegisterReducer = (state = { }, action) => {
         return {
           ...state,
           loading: false,
-          success: action.payload,
+          message: action.payload,
         };
   
       case 'FORGOT_PASSWORD_FAIL':

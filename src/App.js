@@ -8,7 +8,7 @@ import About from "./Components/Admin/Manage/About";
 import Users from "./Components/Admin/Manage/Users";
 import Queries from "./Components/Admin/Manage/Queries";
 import ConsultantBooking from "./Components/Admin/Manage/ConsultantBooking";
-import FAQs from "./Components/Admin/Manage/Faqs";
+import FAQs from "./Components/Admin/Manage/FAQs";
 import Home from "./Components/Home";
 import Orders from "./Components/Admin/Orders";
 import Manage from "./Components/Admin/Manage/Manage";
@@ -25,6 +25,8 @@ import Error from "./Components/Layout/Error";
 import PortalUsers from "./Components/Admin/Portal/PortalUsers";
 import ReactLoading from "react-loading";
 import Portal from "./Components/Admin/Portal/Portal";
+import 'antd/dist/antd.css'
+
 const App = () => {
   const dispatch = useDispatch();
   const { isAuthenticated,loading } = useSelector((state) => state.User);
@@ -56,7 +58,7 @@ const App = () => {
 
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/forgot" element={<ForgotPass />} />
-        <Route exact path="/reset/:id/:token" element={<ResetPass />} />
+        <Route exact path="/forgot/:id/:token" element={<ResetPass />} />
 
         <Route exact path="/admin" element={<Protected element={Admin} />}>
           <Route exact path="portal" element={<Protected Role={["Admin"]} element={Portal} />} >
