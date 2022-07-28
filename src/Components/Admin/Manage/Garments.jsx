@@ -9,6 +9,24 @@ import "./fabricShop.css";
 import "./table.css";
 import Metadata from "../../Metadata";
 
+const stitching_category = [
+  {
+      category_details: [
+          {
+              design: [],
+              price: 80,
+              subcategory: "Design"
+          },
+          {
+              design: [],
+              subcategory: "lining",
+              price: 150
+          }
+      ],
+      category: "Pant Stitching"
+  }
+]
+
 class Fabric extends Component {
   state = {
     shops: [
@@ -40,8 +58,13 @@ class Fabric extends Component {
       // }
     ],
     showModal: false,
+    showCategoryModal: false,
     category: "",
     modalFields: {
+      operation: "Create",
+      shop: {},
+    },
+    modalFields2: {
       operation: "Create",
       shop: {},
     },
@@ -50,13 +73,21 @@ class Fabric extends Component {
     }
   };
 
-  api_url = "https://us-central1-masterji-online.cloudfunctions.net/app/";
+  api_url = "https://us-central1-masterji-19f75.cloudfunctions.net/app/";
 
   componentDidMount() {
     fetch(this.api_url+"garments/v2/get")
       .then((response) => response.json())
       .then((shops) => {
         console.log(shops);
+        this.setState({ shops });
+      })
+      .catch(err => toast.error(err.message));
+  }
+  componentDidUpdate(){
+    fetch(this.api_url+"garments/v2/get")
+      .then((response) => response.json())
+      .then((shops) => {
         this.setState({ shops });
       })
       .catch(err => toast.error(err.message));
@@ -70,12 +101,26 @@ class Fabric extends Component {
     };
     this.setState({ modalFields });
   }
+  handleCategoryModal(shop, operation) {
+    this.setState({ showCategoryModal: !this.state.showCategoryModal });
+    let modalFields2 = {
+      operation,
+      shop,
+    };
+    this.setState({ modalFields2 });
+  }
 
   handleChange = (e) => {
     let modalFields = this.state.modalFields;
     modalFields.shop[e.currentTarget.name] = e.currentTarget.value;
     console.log(modalFields.shop)
     this.setState({ modalFields });
+  };
+  handleChange2 = (e) => {
+    let modalFields2 = this.state.modalFields2;
+    modalFields2.shop[e.currentTarget.name] = e.currentTarget.value;
+    console.log(modalFields2.shop)
+    this.setState({ modalFields2 });
   };
 
   handleSpecialisationsChange = (e) => {
@@ -137,9 +182,27 @@ class Fabric extends Component {
   handleUpdate = (e) => {
     e.preventDefault();
     const shop = this.state.modalFields.shop;
+    const expandDetails = this.state.expandedShop;
+    const { alteration, city, garment, stitching, stitchingProcess } = this.state.modalFields.shop;
       fetch(this.api_url + "garments/v2/put/" + shop.id, {
           method:"PUT",
-          body:JSON.stringify({...shop}),
+          body:JSON.stringify({
+            category: this.state.category,
+            city: city || expandDetails.city,
+            garment_details: {
+              stitching_process: stitchingProcess || expandDetails.garment_details.stitching_process,
+              alteration_price: alteration || expandDetails.garment_details.alteration_price,
+              garment_type: garment || expandDetails.garment_details.garment_type,
+              icon: "https://firebasestorage.googleapis.com/v0/b/masterji-19f75.appspot.com/o/GarmentCategory%2Ficon%2Flehnga_1645471363878?alt=media&token=c84c8d93-f6df-47a1-8977-ea391d8f83b8",
+              stitching_base_price: stitching || expandDetails.garment_details.stitching_base_price,
+              design: {
+                  back_design: [],
+                  general_design: [],
+                  side_design: [],
+                  front_design: []
+              }
+          }
+          }),
           headers:{"Content-Type" : "application/json"}
       })
       .then(response => response.json())
@@ -150,6 +213,59 @@ class Fabric extends Component {
         shops[index] = { ...data.data };
         toast.success(data.message);
         this.setState({ shops, showModal:false });
+      })
+      .catch(err => toast.error(err));
+  };
+
+  handleCategoryUpdate = (e) => {
+    e.preventDefault();
+    const { category, price1, price2, subcategory1, subcategory2} = this.state.modalFields2.shop;
+      fetch(this.api_url + "garments/v2/put/" + this.state.expandedShop?.id, {
+          method:"PUT",
+          body:JSON.stringify({stitching_category: [{
+                category_details: [
+                    {
+                        design: [],
+                        price: price1,
+                        subcategory: subcategory1
+                    },
+                    {
+                        design: [],
+                        subcategory: subcategory2,
+                        price: price2
+                    }
+                ],
+                category: category
+            }]}),
+          headers:{"Content-Type" : "application/json"}
+      })
+      .then(response => response.json())
+      .then((data) => {
+        console.log("this is the data we sent for handleCategoryUpdate >>> ", data);
+        console.log("this is  data.data", data.data)
+        const shops = this.state.expandedShop;
+        this.setState({expandedShop: data.data});
+        toast.success("Stitching Category updated successfully");
+        this.setState({ ...shops, showCategoryModal:false });
+      })
+      .catch(err => toast.error(err));
+  };
+  
+  handleCategoryUpdate2 = (e) => {
+    e.preventDefault();
+    const shop = this.state.modalFields2.shop;
+      fetch(this.api_url + "garments/v2/put/" + this.state.expandedShop?.id, {
+          method:"PUT",
+          body:JSON.stringify({stitching_category: []}),
+          headers:{"Content-Type" : "application/json"}
+      })
+      .then(response => response.json())
+      .then((data) => {
+        console.log("this is  data.data of delete>>.", data.data)
+        const shops = this.state.expandedShop;
+        this.setState({expandedShop: data.data})
+        toast.success("Stitching Category deleted successfully");
+        this.setState({ ...shops, showCategoryModal:false });
       })
       .catch(err => toast.error(err));
   };
@@ -232,7 +348,10 @@ class Fabric extends Component {
                 </thead>
                 <tbody>
                   {filteredShops.map((shop) => (
-                    <tr key={shop.id} onClick={() => this.expandShop(shop)} style={expandedShop.id === shop.id ? {backgroundColor:'#ffa', cursor:'pointer'} : {cursor:'pointer'}}>
+                    <tr key={shop.id} onClick={() => {
+                        this.expandShop(shop)
+                        this.setState({category: shop.category})
+                      }} style={expandedShop.id === shop.id ? {backgroundColor:'#ffa', cursor:'pointer'} : {cursor:'pointer'}}>
                       <td className="text-capitalize">{shop.garment_details?.garment_type}</td>
                       <td>{shop.garment_details?.stitching_base_price}</td>
                       <td>{shop.garment_details?.alteration_price}</td>
@@ -273,11 +392,14 @@ class Fabric extends Component {
               <div className="form-check">
                   <label className="form-check-label" onClick={() => this.setState({ category: "MALE" })}>
                   <input
+                    checked={this.state.category === "MALE" ? true : false}
                     className="form-check-input radio-inline" type="radio" name="category" id="gridRadios1" value="MALE"/>
                   MALE</label>
                   <label onClick={() => this.setState({ category: "FEMALE" })}
                     className="form-check-label mx-5">
-                  <input className="form-check-input radio-inline" type="radio" name="category" id="gridRadios2" value="FEMALE"/>
+                  <input
+                    checked={this.state.category === "FEMALE" ? true : false}
+                    className="form-check-input radio-inline" type="radio" name="category" id="gridRadios2" value="FEMALE"/>
                   FEMALE</label>
               </div>
                   <br/>
@@ -346,7 +468,7 @@ class Fabric extends Component {
                   <div className="row">
                     <div className="col-5">
                       <div className="user-image">
-                          <img src={expandedShop.garment_details.icon ? expandedShop.garment_details.icon : "https://5.imimg.com/data5/RL/PY/MY-3431802/all-type-of-garments-500x500.jpg"} className="img-radius" alt="User-Profile-Image" />
+                          <img src={expandedShop.garment_details?.icon ? expandedShop.garment_details?.icon : "https://5.imimg.com/data5/RL/PY/MY-3431802/all-type-of-garments-500x500.jpg"} className="img-radius" alt="User-Profile-Image" />
                       </div>
                     </div>
                     <div className="col-7 align-left">
@@ -373,10 +495,106 @@ class Fabric extends Component {
                     </div>
                   </Collapsible><hr/>
                   <Collapsible trigger="Stitching Category">
+                  <div className="my-2 d-flex justify-content-end">
+                    <button className="btn btn-danger mx-2" onClick={this.handleCategoryUpdate2}>Delete</button>
+                    <button className="btn btn-warning" onClick={() => this.handleCategoryModal({}, "Create")}>Create Category</button>
+                  </div><hr/>
                   <div className="mx-3 my-2">
-                    <button className="btn btn-danger">Delete</button>
-                    <button className="btn btn-warning mx-2">Create Category</button>
+                    <div><p>Category: {expandedShop?.stitching_category[0]?.category}</p></div>
+                    <div className="row mx-auto">
+                      <div className="col-2"><img className="bg-danger" style={{height: "100%"}} src={expandedShop.stitching_category[0]?.category_details[0]?.design[0] ? expandedShop.stitching_category[0]?.category_details[0]?.design[0] : expandedShop.garment_details.icon} alt="DesignImg"/></div>
+                      <div className="col-5">
+                        <p className="m-0">Subcategory</p>
+                        <strong>{expandedShop.stitching_category[0]?.category_details[0]?.subcategory}</strong>
+                      </div>
+                      <div className="col-5">
+                        <p className="m-0">Price</p>
+                        <strong>{expandedShop.stitching_category[0]?.category_details[0]?.price}</strong>
+                      </div>
+                    </div>
+                  </div><hr/>
+                  <div className="mx-3 my-2">
+                    <div><p>Category: Lehnga</p></div>
+                    <div className="row mx-auto">
+                      <div className="col-2"><img src={expandedShop.stitching_category[0]?.category_details[1]?.design[0] ? expandedShop.stitching_category[0]?.category_details[1]?.design[0] : expandedShop.garment_details.icon} alt="DesignImg"/></div>
+                      <div className="col-5">
+                        <p className="m-0">Subcategory</p>
+                        <strong>{expandedShop.stitching_category[0]?.category_details[1]?.subcategory}</strong>
+                      </div>
+                      <div className="col-5">
+                        <p className="m-0">Price</p>
+                        <strong>{expandedShop.stitching_category[0]?.category_details[1]?.price}</strong>
+                      </div>
+                    </div>
                   </div>
+                  <Modal show={this.state.showCategoryModal}>
+              <Modal.Header>
+                {this.state.modalFields2.operation} Category
+              </Modal.Header>
+              <Modal.Body>
+                <form
+                  onSubmit={this.handleCategoryUpdate}
+                    // this.state.modalFields2.operation === "Update"
+                    //   ? this.handleUpdate
+                    //   : this.handleCreate
+                  // }
+                >
+                <div className="form-group" style={{margin: "0 11px"}}>
+                      <label>Category</label>
+                      <input type="text"
+                      // defaultValue={modalShop.garment_details?.stitching_base_price}
+                      name="category" className="form-control" id="nameModal" onChange={this.handleChange2} placeholder="Enter Category" required/>
+                    </div>
+                    <hr className="mx-4"/>
+                 <div className="uploadOne">
+                  <div className="form-group" style={{margin: "0 11px"}}>
+                      <label>Upload Design 1 (Optional)</label>
+                      <input type="file" name="stitchingProcess" className="form-control" id="nameModal" placeholder="Upload Icon"/>
+                    </div>
+                    <div className="row mx-auto my-3">
+                      <div className="form-group col-6">
+                        <label>Subcatogery 1</label>
+                        <input type="text" name="subcategory1" className="form-control" id="nameModal" onChange={this.handleChange2} placeholder="Enter Subcatogery" required/>
+                      </div>
+                      <div className="form-group col-6">
+                        <label>Price</label>
+                        <input type="number" name="price1" className="form-control" id="nameModal" onChange={this.handleChange2} placeholder="Enter Price" required/>
+                      </div>
+                    </div>
+                 </div>
+                 <hr className="mx-4"/>
+                 <div className="uploadOne">
+                  <div className="form-group" style={{margin: "0 11px"}}>
+                      <label>Upload Design 2 (Optional)</label>
+                      <input type="file" name="stitchingProcess" className="form-control" id="nameModal" placeholder="Upload Icon"/>
+                    </div>
+                    <div className="row mx-auto my-3">
+                      <div className="form-group col-6">
+                        <label>Subcatogery 2</label>
+                        <input type="text" name="subcategory2" className="form-control" id="nameModal" onChange={this.handleChange2} placeholder="Enter Subcatogery" required/>
+                      </div>
+                      <div className="form-group col-6">
+                        <label>Price</label>
+                        <input type="number" name="price2" className="form-control" id="nameModal" onChange={this.handleChange2} placeholder="Enter Price" required/>
+                      </div>
+                    </div>
+                 </div>
+                  <div style={{ float: "right" }}>
+                    <span>
+                      <button type="submit" className="btn btn-primary">
+                        Submit
+                      </button>
+                    </span>
+                    <span>
+                      <button type="button" className="btn btn-primary" onClick={() => this.setState({ showCategoryModal: false })}>
+                        Close
+                      </button>
+                    </span>
+                  </div>
+                </form>
+              </Modal.Body>
+            </Modal>
+                  
                   </Collapsible><hr/>
                   <Collapsible trigger="Design for Representative">
                   <div className="mx-1 my-2 row">

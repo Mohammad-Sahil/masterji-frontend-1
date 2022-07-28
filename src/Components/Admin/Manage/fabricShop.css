@@ -276,6 +276,18 @@
     .fabric-samples-grid a {
     }
   }
-  
-  
+  .Collapsible{
+    margin: 0 -10px;
+    background-color: #eeeeee78;
+    padding: 5px;
+  }
+  .Collapsible .Collapsible__trigger{
+    color:rgba(0, 0, 0, 0.55);
+    font-size: 20px;
+    font-weight: 400;
+  }
+  .Collapsible .Collapsible__trigger.is-open{
+    color:rgba(0, 0, 0, 0.75);
+    /* font-weight: 600; */
+  }
   
