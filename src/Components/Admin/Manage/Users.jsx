@@ -158,8 +158,6 @@ class Fabric extends Component {
             this.setState({ shops });
         })
         .catch(err => toast.error(err));
-
-   
   };
 
   search = (searchText) => {
@@ -185,7 +183,7 @@ class Fabric extends Component {
     });
     return (
       <>
-      <Metadata title='Garments | Admin | Masterji'/>
+      <Metadata title='Users | Admin | Masterji'/>
       <div>
       <ToastContainer/>
 

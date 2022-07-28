@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const SearchBar = ({ searchInput, search }) => {
+const SearchBar = ({ searchInput, search, placeholder }) => {
     return ( 
         <div className="input-group">
                 <input type="search" 
@@ -8,7 +8,7 @@ const SearchBar = ({ searchInput, search }) => {
                     className="form-control"
                     value={searchInput || ""} 
                     onChange={e => search(e.target.value)}
-                    placeholder="Search" />
+                    placeholder={placeholder ? placeholder : "Search"} />
         </div>
      );
 }

@@ -9,6 +9,24 @@ import "./fabricShop.css";
 import "./table.css";
 import Metadata from "../../Metadata";
 
+const stitching_category = [
+  {
+      category_details: [
+          {
+              design: [],
+              price: 80,
+              subcategory: "Design"
+          },
+          {
+              design: [],
+              subcategory: "lining",
+              price: 150
+          }
+      ],
+      category: "Pant Stitching"
+  }
+]
+
 class Fabric extends Component {
   state = {
     shops: [
@@ -40,7 +58,13 @@ class Fabric extends Component {
       // }
     ],
     showModal: false,
+    showCategoryModal: false,
+    category: "",
     modalFields: {
+      operation: "Create",
+      shop: {},
+    },
+    modalFields2: {
       operation: "Create",
       shop: {},
     },
@@ -49,13 +73,21 @@ class Fabric extends Component {
     }
   };
 
-  api_url = "https://us-central1-masterji-online.cloudfunctions.net/app/";
+  api_url = "https://us-central1-masterji-19f75.cloudfunctions.net/app/";
 
   componentDidMount() {
     fetch(this.api_url+"garments/v2/get")
       .then((response) => response.json())
       .then((shops) => {
-        console.log("This is shops>> ",shops);
+        console.log(shops);
+        this.setState({ shops });
+      })
+      .catch(err => toast.error(err.message));
+  }
+  componentDidUpdate(){
+    fetch(this.api_url+"garments/v2/get")
+      .then((response) => response.json())
+      .then((shops) => {
         this.setState({ shops });
       })
       .catch(err => toast.error(err.message));
@@ -69,12 +101,26 @@ class Fabric extends Component {
     };
     this.setState({ modalFields });
   }
+  handleCategoryModal(shop, operation) {
+    this.setState({ showCategoryModal: !this.state.showCategoryModal });
+    let modalFields2 = {
+      operation,
+      shop,
+    };
+    this.setState({ modalFields2 });
+  }
 
   handleChange = (e) => {
     let modalFields = this.state.modalFields;
     modalFields.shop[e.currentTarget.name] = e.currentTarget.value;
     console.log(modalFields.shop)
     this.setState({ modalFields });
+  };
+  handleChange2 = (e) => {
+    let modalFields2 = this.state.modalFields2;
+    modalFields2.shop[e.currentTarget.name] = e.currentTarget.value;
+    console.log(modalFields2.shop)
+    this.setState({ modalFields2 });
   };
 
   handleSpecialisationsChange = (e) => {
@@ -97,15 +143,34 @@ class Fabric extends Component {
 
   handleCreate = (e) => {
     e.preventDefault();
-    const shop = this.state.modalFields.shop;
-    fetch(this.api_url + "fabricShops/v2/post", {
+    // const shop = this.state.modalFields.shop;
+    const { alteration, city, garment, stitching, stitchingProcess } = this.state.modalFields.shop;
+    console.log(this.state.category)
+    fetch(this.api_url + "garments/v2/post", {
         method:"POST",
-        body:JSON.stringify({...shop}),
+        body:JSON.stringify({
+          stitching_category: [],
+          category: this.state.category,
+          garment_details: {
+              stitching_process: stitchingProcess,
+              alteration_price: alteration,
+              garment_type: garment,
+              icon: "https://firebasestorage.googleapis.com/v0/b/masterji-19f75.appspot.com/o/GarmentCategory%2Ficon%2Flehnga_1645471363878?alt=media&token=c84c8d93-f6df-47a1-8977-ea391d8f83b8",
+              stitching_base_price: stitching,
+              design: {
+                  back_design: [],
+                  general_design: [],
+                  side_design: [],
+                  front_design: []
+              }
+          },
+          city: city
+      }),
         headers:{"Content-Type" : "application/json"}
     })
     .then(response => response.json())
     .then((data) => {
-        console.log(data);
+        console.log("This is shops>> ",data);
         const shops = [data.data, ...this.state.shops];
         toast.success(data.message);
         this.setState({ shops, showModal:false  });
@@ -117,14 +182,32 @@ class Fabric extends Component {
   handleUpdate = (e) => {
     e.preventDefault();
     const shop = this.state.modalFields.shop;
-      fetch(this.api_url + "fabricShops/v2/put/" + shop.id, {
+    const expandDetails = this.state.expandedShop;
+    const { alteration, city, garment, stitching, stitchingProcess } = this.state.modalFields.shop;
+      fetch(this.api_url + "garments/v2/put/" + shop.id, {
           method:"PUT",
-          body:JSON.stringify({...shop}),
+          body:JSON.stringify({
+            category: this.state.category,
+            city: city || expandDetails.city,
+            garment_details: {
+              stitching_process: stitchingProcess || expandDetails.garment_details.stitching_process,
+              alteration_price: alteration || expandDetails.garment_details.alteration_price,
+              garment_type: garment || expandDetails.garment_details.garment_type,
+              icon: "https://firebasestorage.googleapis.com/v0/b/masterji-19f75.appspot.com/o/GarmentCategory%2Ficon%2Flehnga_1645471363878?alt=media&token=c84c8d93-f6df-47a1-8977-ea391d8f83b8",
+              stitching_base_price: stitching || expandDetails.garment_details.stitching_base_price,
+              design: {
+                  back_design: [],
+                  general_design: [],
+                  side_design: [],
+                  front_design: []
+              }
+          }
+          }),
           headers:{"Content-Type" : "application/json"}
       })
       .then(response => response.json())
       .then((data) => {
-        console.log(data);
+        console.log("this is the data we sent",data);
         const shops = [...this.state.shops];
         const index = shops.indexOf(shop);
         shops[index] = { ...data.data };
@@ -134,9 +217,62 @@ class Fabric extends Component {
       .catch(err => toast.error(err));
   };
 
+  handleCategoryUpdate = (e) => {
+    e.preventDefault();
+    const { category, price1, price2, subcategory1, subcategory2} = this.state.modalFields2.shop;
+      fetch(this.api_url + "garments/v2/put/" + this.state.expandedShop?.id, {
+          method:"PUT",
+          body:JSON.stringify({stitching_category: [{
+                category_details: [
+                    {
+                        design: [],
+                        price: price1,
+                        subcategory: subcategory1
+                    },
+                    {
+                        design: [],
+                        subcategory: subcategory2,
+                        price: price2
+                    }
+                ],
+                category: category
+            }]}),
+          headers:{"Content-Type" : "application/json"}
+      })
+      .then(response => response.json())
+      .then((data) => {
+        console.log("this is the data we sent for handleCategoryUpdate >>> ", data);
+        console.log("this is  data.data", data.data)
+        const shops = this.state.expandedShop;
+        this.setState({expandedShop: data.data});
+        toast.success("Stitching Category updated successfully");
+        this.setState({ ...shops, showCategoryModal:false });
+      })
+      .catch(err => toast.error(err));
+  };
+  
+  handleCategoryUpdate2 = (e) => {
+    e.preventDefault();
+    const shop = this.state.modalFields2.shop;
+      fetch(this.api_url + "garments/v2/put/" + this.state.expandedShop?.id, {
+          method:"PUT",
+          body:JSON.stringify({stitching_category: []}),
+          headers:{"Content-Type" : "application/json"}
+      })
+      .then(response => response.json())
+      .then((data) => {
+        console.log("this is  data.data of delete>>.", data.data)
+        const shops = this.state.expandedShop;
+        this.setState({expandedShop: data.data})
+        toast.success("Stitching Category deleted successfully");
+        this.setState({ ...shops, showCategoryModal:false });
+      })
+      .catch(err => toast.error(err));
+  };
+
   handleDelete = (shop) => {
 
-    fetch(this.api_url + "fabricshops/v2/delete/" + shop.id,{
+    fetch(this.api_url + "garments/v2/delete/" + shop.id,{
             method:"DELETE"
         })
         .then(response => response.json())
@@ -170,7 +306,7 @@ class Fabric extends Component {
     let filteredShops = shops;
     filteredShops = filteredShops.filter((shop) => {
       for (let property in shop) {
-        if (typeof shop[property] === 'string' && shop[property].toLowerCase().includes(searchText.toLowerCase())) return true;
+        if (typeof shop.garment_details?.garment_type === 'string' && shop.garment_details?.garment_type.toLowerCase().includes(searchText.toLowerCase())) return true;
       }
       return false;
     });
@@ -194,11 +330,11 @@ class Fabric extends Component {
                 </button>
               </div>
               <div className="col-10">
-                <SearchBar search={this.search} searchInput={searchText} />
+                <SearchBar placeholder="Ex. Shirt" search={this.search} searchInput={searchText} />
               </div>
             </div>
             <br />
-            <div class="table-responsive tableDiv">
+            <div className="table-responsive tableDiv">
               <table className="table table-condensed">
                 <thead className="thead-dark">
                   <tr>
@@ -212,19 +348,22 @@ class Fabric extends Component {
                 </thead>
                 <tbody>
                   {filteredShops.map((shop) => (
-                    <tr key={shop.id} onClick={() => this.expandShop(shop)} style={expandedShop.id === shop.id ? {backgroundColor:'#ffa', cursor:'pointer'} : {cursor:'pointer'}}>
+                    <tr key={shop.id} onClick={() => {
+                        this.expandShop(shop)
+                        this.setState({category: shop.category})
+                      }} style={expandedShop.id === shop.id ? {backgroundColor:'#ffa', cursor:'pointer'} : {cursor:'pointer'}}>
                       <td className="text-capitalize">{shop.garment_details?.garment_type}</td>
                       <td>{shop.garment_details?.stitching_base_price}</td>
                       <td>{shop.garment_details?.alteration_price}</td>
                       <td className="text-capitalize">{shop.city}</td>
                       <td>
                         <button className="btn-warning editButton" onClick={() =>this.handleModal(shop, "Update")}>
-                          <i class="fa fa-pencil" aria-hidden="true"></i>
+                          <i className="fa fa-pencil" aria-hidden="true"></i>
                         </button>
                       </td>
                       <td>
                         <button className="btn-danger deleteButton" onClick={() => this.handleDelete(shop)}>
-                          <i class="fa fa-trash-o"></i>
+                          <i className="fa fa-trash-o"></i>
                         </button>
                       </td>
                     </tr>
@@ -234,7 +373,7 @@ class Fabric extends Component {
             </div>
             <Modal show={this.state.showModal}>
               <Modal.Header>
-                {this.state.modalFields.operation} Shop
+                {this.state.modalFields.operation} Garments
               </Modal.Header>
               <Modal.Body>
                 <form
@@ -244,44 +383,65 @@ class Fabric extends Component {
                       : this.handleCreate
                   }
                 >
-                  <div className="form-group">
-                    <label>Shop Name</label>
-                    <input type="text" defaultValue={modalShop.shopName} name="shopName" className="form-control" id="shopNameModal" onChange={this.handleChange} placeholder="Enter Name"/>
-                  </div>
-                  <br />
-                  <div className="form-group">
-                    <label>Owner's Name</label>
-                    <input type="text" defaultValue={modalShop.name} name="name" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Owner's Name"/>
-                  </div>
-                  <br />
-                  <div className="form-group">
-                    <label>Shop Variety</label>
-                    <input type="text" defaultValue={modalShop.shopVariety} name="shopVariety" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Shop Variety"/>
-                  </div>
-                  <br />
+                <div className="modelHeader d-flex align-items-center">
+                <div className="col-4"><div className="garmentsModel d-flex align-items-center"><div className="d-flex justify-content-center align-items-center" style={{width:'30px',height:'30px',borderRadius: "50%", background: "#eee"}}>1</div>Garments details</div></div>
+                <hr className="col-3"/>
+                <div className="col-5 px-2" style={{marginLeft: "auto", marginRight: "0"}}><div className="garmentsModel d-flex align-items-center"><div className="d-flex justify-content-center align-items-center" style={{width:'30px',height:'30px',borderRadius: "50%", background: "#eee"}}>2</div>Garments samples</div></div>
+                </div>
+                <hr/>
+              <div className="form-check">
+                  <label className="form-check-label" onClick={() => this.setState({ category: "MALE" })}>
+                  <input
+                    checked={this.state.category === "MALE" ? true : false}
+                    className="form-check-input radio-inline" type="radio" name="category" id="gridRadios1" value="MALE"/>
+                  MALE</label>
+                  <label onClick={() => this.setState({ category: "FEMALE" })}
+                    className="form-check-label mx-5">
+                  <input
+                    checked={this.state.category === "FEMALE" ? true : false}
+                    className="form-check-input radio-inline" type="radio" name="category" id="gridRadios2" value="FEMALE"/>
+                  FEMALE</label>
+              </div>
+                  <br/>
                   <div className="form-group">
                     <label>City</label>
-                    <input type="text" defaultValue={modalShop.city} name="city" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter City"/>
+                    <input type="text" defaultValue={modalShop.city} name="city" className="form-control" id="shopNameModal" onChange={this.handleChange} placeholder="Enter City" required/>
                   </div>
                   <br />
                   <div className="form-group">
-                    <label>Address</label>
-                    <input type="text" defaultValue={modalShop.address} name="address" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Address"/>
+                    <label>Alteration Price</label>
+                    <input type="number" defaultValue={modalShop.garment_details?.alteration_price} name="alteration" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Alteration Price" required/>
                   </div>
                   <br />
                   <div className="form-group">
-                    <label>Contact</label>
-                    <input type="text" defaultValue={modalShop.contact} name="contact" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Contact"/>
+                    <label>Garment Type</label>
+                    <input type="text" defaultValue={modalShop.garment_details?.garment_type} name="garment" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Garment Type" required/>
                   </div>
                   <br />
                   <div className="form-group">
-                    <label>Specializations</label>
-                    <input type="text" defaultValue={this.getSpecilisationString(modalShop.specialisation)} onChange={this.handleSpecialisationsChange} name="specialisation" className="form-control" id="specialisation" placeholder="Enter Specialisation separated by semicolon"/>
+                    <label>Stitching Base Price</label>
+                    <input type="number" defaultValue={modalShop.garment_details?.stitching_base_price} name="stitching" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter Stitching Base Price" required/>
                   </div>
                   <br />
                   <div className="form-group">
-                    <label>User Image</label>
-                    <input type="text" defaultValue={modalShop.userImage} name="userImage" className="form-control" id="nameModal" onChange={this.handleChange} placeholder="Enter User Image"/>
+                    <label>Stitching Process</label>
+                    <textarea defaultValue={modalShop.garment_details?.stitching_process} name="stitchingProcess" className="form-control" id="exampleFormControlTextarea1" onChange={this.handleChange} placeholder="Enter Stitching Process" required></textarea>
+                  </div>
+                  <br />
+                  <div className="form-group">
+                    <label>Icon Upload</label>
+                    <input type="file" name="stitchingProcess" className="form-control" id="nameModal" placeholder="Upload Icon"/>
+                  </div>
+                  <br />
+                  <div className="form-group">
+                    <label>Back Design</label>
+                    <input type="file" name="stitchingProcess" className="form-control" id="nameModal" placeholder="Upload Icon"/>
+                    <label>Front Design</label>
+                    <input type="file" name="stitchingProcess" className="form-control" id="nameModal" placeholder="Upload Icon"/>
+                    <label>Back Design</label>
+                    <input type="file" name="stitchingProcess" className="form-control" id="nameModal" placeholder="Upload Icon"/>
+                    <label>Front Design</label>
+                    <input type="file" name="stitchingProcess" className="form-control" id="nameModal" placeholder="Upload Icon"/>
                   </div>
                   <br />
                   <div style={{ float: "right" }}>
@@ -302,19 +462,19 @@ class Fabric extends Component {
           </div>
           { Object.keys(expandedShop).length !== 0 &&
           <div id="fabricShopDetails" className="fabricShopDetails col-5 p-0">
-            <div class="container m-0 p-0">
-              <div class="card user-card">
-                <div class="card-block">
+            <div className="container m-0 p-0">
+              <div className="card user-card">
+                <div className="card-block">
                   <div className="row">
                     <div className="col-5">
-                      <div class="user-image">
-                          <img src={expandedShop.userImage ? expandedShop.userImage : "https://5.imimg.com/data5/RL/PY/MY-3431802/all-type-of-garments-500x500.jpg"} class="img-radius" alt="User-Profile-Image" />
+                      <div className="user-image">
+                          <img src={expandedShop.garment_details?.icon ? expandedShop.garment_details?.icon : "https://5.imimg.com/data5/RL/PY/MY-3431802/all-type-of-garments-500x500.jpg"} className="img-radius" alt="User-Profile-Image" />
                       </div>
                     </div>
                     <div className="col-7 align-left">
-                      <h6 class="f-w-600 m-t-25 text-capitalize" style={{fontSize:20, marginBottom:5}}>{expandedShop.garment_details?.garment_type}</h6>
-                      <div className="m-t-10 text-capitalize">{expandedShop.city && <i class="fa fa-building-o" aria-hidden="true"></i>}<span style={{fontSize:18}}>{expandedShop.city}</span></div>
-                      <div className="m-t-10 text-capitalize">{expandedShop.category && <i class="fa fa-intersex" style={{fontSize:18}} aria-hidden="true"></i>}&nbsp;&nbsp;{expandedShop.category}</div>
+                      <h6 className="f-w-600 m-t-25 text-capitalize" style={{fontSize:20, marginBottom:5}}>{expandedShop.garment_details?.garment_type}</h6>
+                      <div className="m-t-10 text-capitalize">{expandedShop.city && <i className="fa fa-building-o" aria-hidden="true"></i>}<span style={{fontSize:18}}>{expandedShop.city}</span></div>
+                      <div className="m-t-10 text-capitalize">{expandedShop.category && <i className="fa fa-intersex" style={{fontSize:18}} aria-hidden="true"></i>}&nbsp;&nbsp;{expandedShop.category}</div>
                     </div>
                   </div>
                   <div style={{fontWeight:400, fontSize:17, textAlign:'left', margin:'5% 2%'}}>
@@ -335,10 +495,106 @@ class Fabric extends Component {
                     </div>
                   </Collapsible><hr/>
                   <Collapsible trigger="Stitching Category">
+                  <div className="my-2 d-flex justify-content-end">
+                    <button className="btn btn-danger mx-2" onClick={this.handleCategoryUpdate2}>Delete</button>
+                    <button className="btn btn-warning" onClick={() => this.handleCategoryModal({}, "Create")}>Create Category</button>
+                  </div><hr/>
                   <div className="mx-3 my-2">
-                    <button className="btn btn-danger">Delete</button>
-                    <button className="btn btn-warning mx-2">Create Category</button>
+                    <div><p>Category: {expandedShop?.stitching_category[0]?.category}</p></div>
+                    <div className="row mx-auto">
+                      <div className="col-2"><img className="bg-danger" style={{height: "100%"}} src={expandedShop.stitching_category[0]?.category_details[0]?.design[0] ? expandedShop.stitching_category[0]?.category_details[0]?.design[0] : expandedShop.garment_details.icon} alt="DesignImg"/></div>
+                      <div className="col-5">
+                        <p className="m-0">Subcategory</p>
+                        <strong>{expandedShop.stitching_category[0]?.category_details[0]?.subcategory}</strong>
+                      </div>
+                      <div className="col-5">
+                        <p className="m-0">Price</p>
+                        <strong>{expandedShop.stitching_category[0]?.category_details[0]?.price}</strong>
+                      </div>
+                    </div>
+                  </div><hr/>
+                  <div className="mx-3 my-2">
+                    <div><p>Category: Lehnga</p></div>
+                    <div className="row mx-auto">
+                      <div className="col-2"><img src={expandedShop.stitching_category[0]?.category_details[1]?.design[0] ? expandedShop.stitching_category[0]?.category_details[1]?.design[0] : expandedShop.garment_details.icon} alt="DesignImg"/></div>
+                      <div className="col-5">
+                        <p className="m-0">Subcategory</p>
+                        <strong>{expandedShop.stitching_category[0]?.category_details[1]?.subcategory}</strong>
+                      </div>
+                      <div className="col-5">
+                        <p className="m-0">Price</p>
+                        <strong>{expandedShop.stitching_category[0]?.category_details[1]?.price}</strong>
+                      </div>
+                    </div>
                   </div>
+                  <Modal show={this.state.showCategoryModal}>
+              <Modal.Header>
+                {this.state.modalFields2.operation} Category
+              </Modal.Header>
+              <Modal.Body>
+                <form
+                  onSubmit={this.handleCategoryUpdate}
+                    // this.state.modalFields2.operation === "Update"
+                    //   ? this.handleUpdate
+                    //   : this.handleCreate
+                  // }
+                >
+                <div className="form-group" style={{margin: "0 11px"}}>
+                      <label>Category</label>
+                      <input type="text"
+                      // defaultValue={modalShop.garment_details?.stitching_base_price}
+                      name="category" className="form-control" id="nameModal" onChange={this.handleChange2} placeholder="Enter Category" required/>
+                    </div>
+                    <hr className="mx-4"/>
+                 <div className="uploadOne">
+                  <div className="form-group" style={{margin: "0 11px"}}>
+                      <label>Upload Design 1 (Optional)</label>
+                      <input type="file" name="stitchingProcess" className="form-control" id="nameModal" placeholder="Upload Icon"/>
+                    </div>
+                    <div className="row mx-auto my-3">
+                      <div className="form-group col-6">
+                        <label>Subcatogery 1</label>
+                        <input type="text" name="subcategory1" className="form-control" id="nameModal" onChange={this.handleChange2} placeholder="Enter Subcatogery" required/>
+                      </div>
+                      <div className="form-group col-6">
+                        <label>Price</label>
+                        <input type="number" name="price1" className="form-control" id="nameModal" onChange={this.handleChange2} placeholder="Enter Price" required/>
+                      </div>
+                    </div>
+                 </div>
+                 <hr className="mx-4"/>
+                 <div className="uploadOne">
+                  <div className="form-group" style={{margin: "0 11px"}}>
+                      <label>Upload Design 2 (Optional)</label>
+                      <input type="file" name="stitchingProcess" className="form-control" id="nameModal" placeholder="Upload Icon"/>
+                    </div>
+                    <div className="row mx-auto my-3">
+                      <div className="form-group col-6">
+                        <label>Subcatogery 2</label>
+                        <input type="text" name="subcategory2" className="form-control" id="nameModal" onChange={this.handleChange2} placeholder="Enter Subcatogery" required/>
+                      </div>
+                      <div className="form-group col-6">
+                        <label>Price</label>
+                        <input type="number" name="price2" className="form-control" id="nameModal" onChange={this.handleChange2} placeholder="Enter Price" required/>
+                      </div>
+                    </div>
+                 </div>
+                  <div style={{ float: "right" }}>
+                    <span>
+                      <button type="submit" className="btn btn-primary">
+                        Submit
+                      </button>
+                    </span>
+                    <span>
+                      <button type="button" className="btn btn-primary" onClick={() => this.setState({ showCategoryModal: false })}>
+                        Close
+                      </button>
+                    </span>
+                  </div>
+                </form>
+              </Modal.Body>
+            </Modal>
+                  
                   </Collapsible><hr/>
                   <Collapsible trigger="Design for Representative">
                   <div className="mx-1 my-2 row">
@@ -349,21 +605,6 @@ class Fabric extends Component {
                   </div>
                   </Collapsible><hr/>
                   </div>
-                  {/* <div style={{fontWeight:400, fontSize:17, textAlign:'left', margin:'3% 7%'}}>
-                    <div class="text m-t-5">{expandedShop.shopVariety && "Variety "}&nbsp;&nbsp;{": "+expandedShop.shopVariety}</div>
-                    <div class="text m-t-5">{expandedShop.city && 'Owner '}&nbsp;{" : "+expandedShop.name}</div>
-                    <div class="text m-t-5">{expandedShop.address && 'Address'} {": "+expandedShop.address}</div>
-                  </div> */}
-                  {/* <hr/> */}
-                  {/* <p class="m-t-15 text" style={{fontWeight:500, fontSize:18}}>Specializations</p>
-                  <div class="specialization-grid-container">
-                  {expandedShop.specialisation.map(sp => (
-                    // <div className="m-t-5">{sp}</div>
-                    <div class="badge badge-primary">{sp}</div>
-
-                  ))}
-                  </div> */}
-                  
                 </div> 
               </div>
             </div>
